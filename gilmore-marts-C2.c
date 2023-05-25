@@ -199,7 +199,7 @@ DEFINE_ON_DEMAND(VSI_MINE_Trona_Stepped)
   
   thread_loop_c(t,d){
   begin_c_loop(c,t){ 
-    C_CENTROID(x,c,t) /* Get mesh cell location */
+    C_CENTROID(x,c,t); /* Get mesh cell location */
 	/*     Scale each section of the model to the curve fits.
 	UNITS in METERS                                                
 	                                                               
