@@ -1,3 +1,12 @@
+; allocate and initialize UDMs
+(ti-menu-load-string "define/user-defined/user-defined-memory 7")
+(ti-menu-load-string "solve/initialize/initialize-flow")
+
+; compile and load UDF library
+(ti-menu-load-string "define/user-defined/use-built-in-compiler yes")
+(ti-menu-load-string "define/user-defined/compiled-functions compile libudf yes gob.c """)
+(ti-menu-load-string "define/user-defined/compiled-functions load libudf")
+
 ; RP Variable Create Function
 (define (make-new-rpvar name default type)
 	(if (not (rp-var-object name))
