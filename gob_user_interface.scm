@@ -23,10 +23,12 @@
 (make-new-rpvar 'gob/panel-yoffset 0 'real)
 (make-new-rpvar 'gob/egz_radio_button #f 'boolean)
 ; Declare variables for Optional Settings Box
-(make-new-rpvar 'gob/min_vsi_input 0 'real)
-(make-new-rpvar 'gob/max_vsi_input 0 'real)
-(make-new-rpvar 'gob/init_poro_input 0 'real)
-(make-new-rpvar 'gob/resist_scalar_input 0 'real)
+(make-new-rpvar 'gob/resistance-scalar 0 'real)
+(make-new-rpvar 'gob/maximum-resistance 0 'real)
+(make-new-rpvar 'gob/minimum-resistance 0 'real)
+(make-new-rpvar 'gob/maximum-porosity 0 'real)
+(make-new-rpvar 'gob/initial-porosity 0 'real)
+(make-new-rpvar 'gob/minimum-vsi 0 'real)
 ; Declare Variables for Zone Selection box
 (make-new-rpvar 'gob/startup_center_radio_button #t 'boolean)
 (make-new-rpvar 'gob/startup_headgate_radio_button #f 'boolean)
@@ -38,7 +40,7 @@
 (make-new-rpvar 'gob/working_headgate_radio_button #f 'boolean)
 (make-new-rpvar 'gob/working_tailgate_radio_button #f 'boolean)
 
-; Model Type and Parameters Definition
+; Model Type and Required Settings Definition
 (define model-type-and-required-settings-box
 	;Let Statement, Local Variable Declarations
 	(let ((dialog-box #f)
@@ -51,7 +53,7 @@
 			(gob/egz_button_box)
 			(gob/egz_radio_button)
 
-			(gob/param_table)
+			(gob/required_param_table)
 			(gob/panel-width)
 			(gob/panel-length)
 			(gob/panel-xoffset)
@@ -103,11 +105,11 @@
 					(set! gob/egz_button_box (cx-create-button-box table "" 'radio-mode #f 'row 1 'col 0))
 					(set! gob/egz_radio_button (cx-create-toggle-button gob/egz_button_box "Explosive Gas Zone Colorization"))
 
-					(set! gob/param_table (cx-create-table table "Gob Parameters and Limits" 'row 0 'col 1))
-					(set! gob/panel-width (cx-create-real-entry gob/param_table "Panel Width" 'row 0))
-					(set! gob/panel-length (cx-create-real-entry gob/param_table "Panel Length" 'row 1))
-					(set! gob/panel-xoffset (cx-create-real-entry gob/param_table "Panel X Offset" 'row 2))
-					(set! gob/panel-yoffset (cx-create-real-entry gob/param_table "Panel Y Offset" 'row 3))
+					(set! gob/required_param_table (cx-create-table table "Required Settings" 'row 0 'col 1))
+					(set! gob/panel-width (cx-create-real-entry gob/required_param_table "Panel Width" 'row 0))
+					(set! gob/panel-length (cx-create-real-entry gob/required_param_table "Panel Length" 'row 1))
+					(set! gob/panel-xoffset (cx-create-real-entry gob/required_param_table "Panel X Offset" 'row 2))
+					(set! gob/panel-yoffset (cx-create-real-entry gob/required_param_table "Panel Y Offset" 'row 3))
 				
 				) ;End Of Let Statement
 			) ;End Of If Statement
@@ -117,6 +119,72 @@
 		) ;End Of Args Function
 	) ;End Of Let Statement
 ) ;End Of model-type-and-required-settings-box Definition
+
+; Optional Settings Definition
+(define optional-settings-box
+	;Let Statement, Local Variable Declarations
+	(let ((dialog-box #f)
+		(table)
+
+			(gob/optional_param_table)
+			(gob/resistance-scalar)
+			(gob/maximum-resistance)
+			(gob/minimum-resistance)
+			(gob/maximum-porosity)
+			(gob/initial-porosity)
+			(gob/minimum-vsi)
+
+		)
+
+		; update-cb - invoked when the dialog box is opened
+		(define (update-cb . args)
+
+			(cx-set-real-entry gob/resistance-scalar (rpgetvar 'gob/resistance-scalar))
+			(cx-set-real-entry gob/maximum-resistance (rpgetvar 'gob/maximum-resistance))
+			(cx-set-real-entry gob/minimum-resistance (rpgetvar 'gob/minimum-resistance))
+			(cx-set-real-entry gob/maximum-porosity (rpgetvar 'gob/maximum-porosity))
+			(cx-set-real-entry gob/initial-porosity (rpgetvar 'gob/initial-porosity))
+			(cx-set-real-entry gob/minimum-vsi (rpgetvar 'gob/minimum-vsi))
+
+		)
+
+		; apply-cb - invoked when you click "OK"
+		(define (apply-cb . args)
+
+			(rpsetvar 'gob/resistance-scalar (cx-show-real-entry gob/resistance-scalar))
+			(rpsetvar 'gob/maximum-resistance (cx-show-real-entry gob/maximum-resistance))
+			(rpsetvar 'gob/minimum-resistance (cx-show-real-entry gob/minimum-resistance))
+			(rpsetvar 'gob/maximum-porosity (cx-show-real-entry gob/maximum-porosity))
+			(rpsetvar 'gob/initial-porosity (cx-show-real-entry gob/initial-porosity))
+			(rpsetvar 'gob/minimum-vsi (cx-show-real-entry gob/minimum-vsi))
+
+			(%run-udf-apply 1)
+
+		)
+
+		(lambda args
+			(if (not dialog-box)
+				(let ()
+				
+					(set! dialog-box (cx-create-panel "Optional Settings" apply-cb update-cb))
+					(set! table (cx-create-table dialog-box ""))
+
+					(set! gob/optional_param_table (cx-create-table table "Optional Settings" 'row 0 'col 1))
+					(set! gob/resistance-scalar (cx-create-real-entry gob/optional_param_table "Resistance Scalar" 'row 0))
+					(set! gob/maximum-resistance (cx-create-real-entry gob/optional_param_table "Maximum Resistance" 'row 1))
+					(set! gob/minimum-resistance (cx-create-real-entry gob/optional_param_table "Minimum Resistance" 'row 2))
+					(set! gob/maximum-porosity (cx-create-real-entry gob/optional_param_table "Maximum Porosity" 'row 3))
+					(set! gob/initial-porosity (cx-create-real-entry gob/optional_param_table "Initial Porosity" 'row 4))
+					(set! gob/minimum-vsi (cx-create-real-entry gob/optional_param_table "Minimum VSI" 'row 5))
+				
+				) ;End Of Let Statement
+			) ;End Of If Statement
+			
+			;Call To Open Dialog Box
+			(cx-show-panel dialog-box)
+		) ;End Of Args Function
+	) ;End Of Let Statement
+) ;End Of optional-settings-box Definition
 
 ; Zone Selection Definition
 (define zone-selection-box
@@ -194,4 +262,5 @@
 (cx-add-hitem "Model Mine Gob" "Permeability and Porosity" #f #f #t #f)
 ;Menu Item Added To Above Created "New Menu->New Submenu" Submenu In Fluent
 (cx-add-item "Permeability and Porosity" "Mine Model and Required Settings" #\U #f #t model-type-and-required-settings-box)
+(cx-add-item "Permeability and Porosity" "Optional Settings" #\U #f #t optional-settings-box)
 (cx-add-item "Permeability and Porosity" "Zone Selection" #\U #f #t zone-selection-box)
