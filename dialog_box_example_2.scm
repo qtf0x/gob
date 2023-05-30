@@ -1,23 +1,29 @@
-; mock callback functions
 (define (apply-cb) #t)
 (define update-cb #f)
+(define table)
+(define myList1)
+(define myList2)
+(define checkBox1)
 
-; the dialogue box itself is a panel with a single table for organization
-(define mine_gob_dialogue_box (cx-create-panel "Mine Gob" apply-cb update-cb))
-(define table(cx-create-table mine_gob_dialogue_box ""))
+(define (make-new-rpvar name default type)
+	(if (not (rp-var-object name))
+		(rp-var-define name default type #f)))
 
-; buttons to choose gob zone type
-(define gob_zone_button_box (cx-create-button-box table "Gob Zone Type" 'radio-mode #t 'col 0))
+(make-new-rpvar 'gob/isBool #f 'boolean)
 
-(define startup_center_radio_button (cx-create-toggle-button gob_zone_button_box "Startup Center"))
-(define startup_headgate_radio_button (cx-create-toggle-button gob_zone_button_box "Startup Headgate"))
-(define startup_tailgate_radio_button (cx-create-toggle-button gob_zone_button_box "Startup Tailgate"))
-(define gob_center_radio_button (cx-create-toggle-button gob_zone_button_box "Gob Center"))
-(define mid_headgate_radio_button (cx-create-toggle-button gob_zone_button_box "Mid-panel Headgate"))
-(define mid_tailgate_radio_button (cx-create-toggle-button gob_zone_button_box "Mid-panel Tailgate"))
-(define working_center_radio_button (cx-create-toggle-button gob_zone_button_box "Working Face Center"))
-(define working_headgate_radio_button (cx-create-toggle-button gob_zone_button_box "Working Face Headgate"))
-(define working_tailgate_radio_button (cx-create-toggle-button gob_zone_button_box "Working Face Tailgate"))
+(define (button-cb . args)
+    (cx-set-list-items myList2 (cx-show-list-selections myList1))
+    (cx-set-list-selections myList2 (cx-show-list-selections myList1))
+)
+(define (button2-cb . args);                                 |
+    ; command to set variables of provided zone              v This is the zone being set up
+    (ti-menu-load-string "/define/boundary-conditions/fluid gob-multi-part-gob-gateroad-headgate no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::libudf\" yes yes udf \"set_perm_2_VSI::libudf\" yes yes \"udf\" \"set_perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_poro_VSI::libudf\" constant 1 no")
+)
+(define my-dialog-box (cx-create-panel "My Dialog Box" apply-cb update-cb))
+(set! table (cx-create-table my-dialog-box "This is an example Dialog Box"))
+(set! myList1 (cx-create-list table "List 1" 'visible-lines 3 'multiple-selections #t 'row 0))
+(cx-set-list-items myList1 (list "Item 1" "Item 2" "Item 3" "Item 4" "Item 5"))
+(set! myList2 (cx-create-list table "List 2" 'visible-lines 5 'multiple-selections #t 'row 1))
 
-; display the dialogue box
-(cx-show-panel mine_gob_dialogue_box)
+(cx-create-button table "Go" 'activate-callback button2-cb 'row 2 'col 1)
+(cx-show-panel my-dialog-box)
