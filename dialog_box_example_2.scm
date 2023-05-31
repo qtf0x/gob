@@ -49,7 +49,7 @@
 (define my-dialog-box (cx-create-panel "My Dialog Box" apply-cb update-cb))
 (set! table (cx-create-table my-dialog-box "This is an example Dialog Box"))
 (set! myList1 (cx-create-list table "List 1" 'visible-lines 3 'multiple-selections #t 'row 0))
-(cx-set-list-items myList1 (list (list-ref zone_names 0) (list-ref zone_names 1) (list-ref zone_names 2) (list-ref zone_names 3) (list-ref zone_names 4) (list-ref zone_names 5) (list-ref zone_names 6) (list-ref zone_names 7) (list-ref zone_names 8)))
+(cx-set-list-items myList1 zone_names)
 (set! myList2 (cx-create-list table "List 2" 'visible-lines 5 'multiple-selections #t 'row 1))
 
 (cx-create-button table "Go" 'activate-callback button2-cb 'row 2 'col 1)
