@@ -5,6 +5,33 @@
 (define myList2)
 (define checkBox1)
 
+; get names of fluid zones
+(define zone_names
+	(map symbol->string
+		(filter
+			(lambda (name)
+				(equal?
+					(symbol->string
+						(zone-type (get-zone name))
+					)
+					"fluid"
+				)
+			)
+			(inquire-zone-names)
+		)
+	)
+)
+
+; get ids of fluid zones
+(define zone_ids
+	(map 
+		(lambda (zone_name)
+			(zone-name->id zone_name)
+		)
+		zone_names
+	)
+)
+
 (define (make-new-rpvar name default type)
 	(if (not (rp-var-object name))
 		(rp-var-define name default type #f)))
@@ -22,7 +49,7 @@
 (define my-dialog-box (cx-create-panel "My Dialog Box" apply-cb update-cb))
 (set! table (cx-create-table my-dialog-box "This is an example Dialog Box"))
 (set! myList1 (cx-create-list table "List 1" 'visible-lines 3 'multiple-selections #t 'row 0))
-(cx-set-list-items myList1 (list "Item 1" "Item 2" "Item 3" "Item 4" "Item 5"))
+(cx-set-list-items myList1 (list (list-ref zone_names 0) (list-ref zone_names 1) (list-ref zone_names 2) (list-ref zone_names 3) (list-ref zone_names 4) (list-ref zone_names 5) (list-ref zone_names 6) (list-ref zone_names 7) (list-ref zone_names 8)))
 (set! myList2 (cx-create-list table "List 2" 'visible-lines 5 'multiple-selections #t 'row 1))
 
 (cx-create-button table "Go" 'activate-callback button2-cb 'row 2 'col 1)
