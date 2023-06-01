@@ -7,6 +7,41 @@
 (ti-menu-load-string "define/user-defined/compiled-functions compile libudf yes gob.c """)
 (ti-menu-load-string "define/user-defined/compiled-functions load libudf")
 
+; get names of fluid zones
+(define zone_names
+	(map symbol->string
+		(filter
+			(lambda (name)
+				(and
+				(equal?
+					(symbol->string
+						(zone-type (get-zone name))
+					)
+					"fluid"
+				)
+				(substring?
+					"gob"
+					(symbol->string
+						name
+					)
+				)
+				)
+			)
+			(inquire-zone-names)
+		)
+	)
+)
+
+; get ids of fluid zones
+(define zone_ids
+	(map 
+		(lambda (zone_name)
+			(zone-name->id zone_name)
+		)
+		zone_names
+	)
+)
+
 ; RP Variable Create Function
 (define (make-new-rpvar name default type)
 	(if (not (rp-var-object name))
@@ -39,6 +74,9 @@
 (make-new-rpvar 'gob/working_center_radio_button #f 'boolean)
 (make-new-rpvar 'gob/working_headgate_radio_button #f 'boolean)
 (make-new-rpvar 'gob/working_tailgate_radio_button #f 'boolean)
+; Declare variables for zone info lists
+(make-new-rpvar 'gob/zone_names_selected '() 'list)
+; (make-new-rpvar 'gob/zone_ids zone_ids 'list)
 
 ; Model Type and Required Settings Definition
 (define model-type-and-required-settings-box
@@ -200,7 +238,8 @@
 			(gob/mid_tailgate_radio_button)	
 			(gob/working_center_radio_button)	
 			(gob/working_headgate_radio_button)	
-			(gob/working_tailgate_radio_button)		
+			(gob/working_tailgate_radio_button)
+			(gob/zone_names)
 	)
 
 		; update-cb - invoked when the dialog box is opened
@@ -214,6 +253,7 @@
 			(cx-set-toggle-button gob/working_center_radio_button (rpgetvar 'gob/working_center_radio_button))
 			(cx-set-toggle-button gob/working_headgate_radio_button (rpgetvar 'gob/working_headgate_radio_button))
 			(cx-set-toggle-button gob/working_tailgate_radio_button (rpgetvar 'gob/working_tailgate_radio_button))
+			(cx-set-list-items gob/zone_names zone_names)
 		)
 
 		; apply-cb - invoked when you click "OK"
@@ -227,6 +267,7 @@
 			(rpsetvar 'gob/working_center_radio_button (cx-show-toggle-button gob/working_center_radio_button))
 			(rpsetvar 'gob/working_headgate_radio_button (cx-show-toggle-button gob/working_headgate_radio_button))
 			(rpsetvar 'gob/working_tailgate_radio_button (cx-show-toggle-button gob/working_tailgate_radio_button))
+			(rpsetvar 'gob/zone_names_selected (cx-show-list-selections gob/zone_names))
 		
 			(%run-udf-apply 1)
 		)
@@ -249,6 +290,8 @@
 					(set! gob/working_center_radio_button (cx-create-toggle-button gob/zone_button_box "Working Center"))
 					(set! gob/working_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Working Headgate"))
 					(set! gob/working_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Working Tailgate"))
+
+					(set! gob/zone_names (cx-create-list table "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
 
 				) ;End Of Let Statement
 			) ;End Of If Statement
