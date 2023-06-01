@@ -23,12 +23,12 @@
 (make-new-rpvar 'gob/panel-yoffset 0 'real)
 (make-new-rpvar 'gob/egz_radio_button #f 'boolean)
 ; Declare variables for Optional Settings Box
-(make-new-rpvar 'gob/resistance-scalar 0 'real)
-(make-new-rpvar 'gob/maximum-resistance 0 'real)
-(make-new-rpvar 'gob/minimum-resistance 0 'real)
-(make-new-rpvar 'gob/maximum-porosity 0 'real)
-(make-new-rpvar 'gob/initial-porosity 0 'real)
-(make-new-rpvar 'gob/minimum-vsi 0 'real)
+(make-new-rpvar 'gob/resistance-scalar 10 'real)
+(make-new-rpvar 'gob/maximum-resistance 5.0E6 'real)
+(make-new-rpvar 'gob/minimum-resistance 1.45E5 'real)
+(make-new-rpvar 'gob/maximum-porosity 0.40 'real)
+(make-new-rpvar 'gob/initial-porosity 0.25778 'real)
+(make-new-rpvar 'gob/maximum-vsi 0.40 'real)
 ; Declare Variables for Zone Selection box
 (make-new-rpvar 'gob/startup_center_radio_button #t 'boolean)
 (make-new-rpvar 'gob/startup_headgate_radio_button #f 'boolean)
@@ -132,7 +132,7 @@
 			(gob/minimum-resistance)
 			(gob/maximum-porosity)
 			(gob/initial-porosity)
-			(gob/minimum-vsi)
+			(gob/maximum-vsi)
 
 		)
 
@@ -144,7 +144,7 @@
 			(cx-set-real-entry gob/minimum-resistance (rpgetvar 'gob/minimum-resistance))
 			(cx-set-real-entry gob/maximum-porosity (rpgetvar 'gob/maximum-porosity))
 			(cx-set-real-entry gob/initial-porosity (rpgetvar 'gob/initial-porosity))
-			(cx-set-real-entry gob/minimum-vsi (rpgetvar 'gob/minimum-vsi))
+			(cx-set-real-entry gob/maximum-vsi (rpgetvar 'gob/maximum-vsi))
 
 		)
 
@@ -156,7 +156,7 @@
 			(rpsetvar 'gob/minimum-resistance (cx-show-real-entry gob/minimum-resistance))
 			(rpsetvar 'gob/maximum-porosity (cx-show-real-entry gob/maximum-porosity))
 			(rpsetvar 'gob/initial-porosity (cx-show-real-entry gob/initial-porosity))
-			(rpsetvar 'gob/minimum-vsi (cx-show-real-entry gob/minimum-vsi))
+			(rpsetvar 'gob/maximum-vsi (cx-show-real-entry gob/maximum-vsi))
 
 			(%run-udf-apply 1)
 
@@ -175,7 +175,7 @@
 					(set! gob/minimum-resistance (cx-create-real-entry gob/optional_param_table "Minimum Resistance" 'row 2))
 					(set! gob/maximum-porosity (cx-create-real-entry gob/optional_param_table "Maximum Porosity" 'row 3))
 					(set! gob/initial-porosity (cx-create-real-entry gob/optional_param_table "Initial Porosity" 'row 4))
-					(set! gob/minimum-vsi (cx-create-real-entry gob/optional_param_table "Minimum VSI" 'row 5))
+					(set! gob/maximum-vsi (cx-create-real-entry gob/optional_param_table "Maximum VSI" 'row 5))
 				
 				) ;End Of Let Statement
 			) ;End Of If Statement
