@@ -3,7 +3,8 @@
 ; https://sjmgarnier.github.io/viridis/
 
 ; To see built in colormap options using the console: preferences/graphics/colormap-settings/colormap 
-; To change colormap: preferences/graphics/colormap-settings/colormap/<colormap> e.g. command preferences/graphics/colormap-settings/colormap/field-velocity
+; To change colormap: preferences/graphics/colormap-settings/colormap/<colormap> 
+; e.g. preferences/graphics/colormap-settings/colormap/field-velocity
 ; Use "q" or "quit" in the prompt to move back to the previously occupied menu, if needed
 
 ; TODO:
@@ -15,6 +16,7 @@
 ;   -Add a console message for the instructions
 ; Maybe add to larger interface
 ; Add instructions to readme
+; Research display/objects/display, display/re-render, and other commands to see if colormap can automatically be applied
 
 ; Taken from https://github.com/jrwrigh/fluent_colormaps/tree/master
 ; ------------------------- START -------------------------
@@ -63,7 +65,7 @@
 (make-new-rpvar 'gob/kindlmann-extended-button #f 'boolean)
 (make-new-rpvar 'gob/magma-button #f 'boolean)
 (make-new-rpvar 'gob/plasma-button #f 'boolean)
-(make-new-rpvar 'gob/viridis-button #f 'boolean)
+(make-new-rpvar 'gob/viridis-button #f 'boolean) ; Viridis is the Matplotlib default colormap
 
 ; Create a menu for various colormap options 
 ; Colormap Selection Definition
@@ -117,7 +119,7 @@
 			(rpsetvar 'gob/plasma-button (cx-show-toggle-button gob/plasma-button))
             (rpsetvar 'gob/viridis-button (cx-show-toggle-button gob/viridis-button))
             ; Set colormap based on radio button selection
-            ;(if (equal? (rpgetvar 'gob/plasma-button) #t) (display (rpgetvar 'gob/plasma-button)) (display (rpgetvar 'gob/plasma-button)) )
+            ; (if (equal? (rpgetvar 'gob/plasma-button) #t) (display (rpgetvar 'gob/plasma-button)) (display (rpgetvar 'gob/plasma-button)) )
             ; (if (equal? (rpgetvar 'gob/plasma-button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap") () )
             ; (if (equal? (rpgetvar 'gob/field-velocity-button) #t) (ti-menu-load-string "preferences/graphics/colormap-settings/colormap/field-velocity\nGo to Contours>Colormap Options...>Currently Defined>field-velocity to apply")) 
             (if (equal? (rpgetvar 'gob/field-velocity-button) #t) (display "Go to Contours>Colormap Options...>Currently Defined>field-velocity to apply\n")) 
