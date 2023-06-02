@@ -76,7 +76,7 @@
 			(rpsetvar 'gob/plasma-button (cx-show-toggle-button gob/plasma-button))
             ;(if (equal? (rpgetvar 'gob/plasma-button) #t) (display (rpgetvar 'gob/plasma-button)) (display (rpgetvar 'gob/plasma-button)) )
             ; (if (equal? (rpgetvar 'gob/plasma-button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap") () )
-            (if (equal? (rpgetvar 'gob/plasma-button) #t) (file/read-colormap "colormaps/plasma.colormap") () )
+            (if (equal? (rpgetvar 'gob/plasma-button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap") () ) ; Load plasma colormap if radiobutton selected
 		)
 
 		(lambda args
