@@ -13,6 +13,7 @@
 ; Add additional colormap options to GUI
 ; Find better way to execute command
 ; Maybe add to larger interface
+; Add instructions to readme
 
 ; Taken from https://github.com/jrwrigh/fluent_colormaps/tree/master
 ; ------- START
