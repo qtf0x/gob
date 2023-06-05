@@ -76,7 +76,10 @@
 (make-new-rpvar 'longwallgobs/working_tailgate_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/single_part_mesh_radio_button #f 'boolean)
 ; Creating 'apply' button
+(define counter 0)
 (define (button-cb . args)
+	(set! counter (+ counter 1))
+
 )
 ; Declare variables for zone info lists
 (make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
