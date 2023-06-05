@@ -52,18 +52,18 @@
 (make-new-rpvar 'longwallgobs/mine_C_radio_button #t 'boolean)
 (make-new-rpvar 'longwallgobs/mine_E_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/mine_T_radio_button #f 'boolean)
-(make-new-rpvar 'longwallgobs/panel-width 0 'real)
-(make-new-rpvar 'longwallgobs/panel-length 0 'real)
-(make-new-rpvar 'longwallgobs/panel-xoffset 0 'real)
-(make-new-rpvar 'longwallgobs/panel-yoffset 0 'real)
+(make-new-rpvar 'longwallgobs/panel_half_width 0 'real)
+(make-new-rpvar 'longwallgobs/panel_length 0 'real)
+(make-new-rpvar 'longwallgobs/panel_x_offset 0 'real)
+(make-new-rpvar 'longwallgobs/panel_y_offset 0 'real)
 (make-new-rpvar 'longwallgobs/egz_radio_button #f 'boolean)
 ; Declare variables for Optional Settings Box
-(make-new-rpvar 'longwallgobs/resistance-scalar 10 'real)
-(make-new-rpvar 'longwallgobs/maximum-resistance 5.0E6 'real)
-(make-new-rpvar 'longwallgobs/minimum-resistance 1.45E5 'real)
-(make-new-rpvar 'longwallgobs/maximum-porosity 0.40 'real)
-(make-new-rpvar 'longwallgobs/initial-porosity 0.25778 'real)
-(make-new-rpvar 'longwallgobs/maximum-vsi 0.40 'real)
+(make-new-rpvar 'longwallgobs/resist_scaler 10 'real)
+(make-new-rpvar 'longwallgobs/max_resistance 5.0E6 'real)
+(make-new-rpvar 'longwallgobs/min_resistance 1.45E5 'real)
+(make-new-rpvar 'longwallgobs/max_porosity 0.40 'real)
+(make-new-rpvar 'longwallgobs/initial_porosity 0.25778 'real)
+(make-new-rpvar 'longwallgobs/max_vsi 0.40 'real)
 ; Declare Variables for Zone Selection box
 (make-new-rpvar 'longwallgobs/startup_center_radio_button #t 'boolean)
 (make-new-rpvar 'longwallgobs/startup_headgate_radio_button #f 'boolean)
@@ -79,7 +79,7 @@
 ; (make-new-rpvar 'longwallgobs/zone_ids zone_ids 'list)
 
 ; Model Type and Required Settings Definition
-(define model-type-and-required-settings-box
+(define model_type_and_required_settings_box
 	;Let Statement, Local Variable Declarations
 	(let ((dialog-box #f)
 		(table)
@@ -92,10 +92,10 @@
 			(longwallgobs/egz_radio_button)
 
 			(longwallgobs/required_param_table)
-			(longwallgobs/panel-width)
-			(longwallgobs/panel-length)
-			(longwallgobs/panel-xoffset)
-			(longwallgobs/panel-yoffset)
+			(longwallgobs/panel_half_width)
+			(longwallgobs/panel_length)
+			(longwallgobs/panel_x_offset)
+			(longwallgobs/panel_y_offset)
 		)
 
 		; update-cb - invoked when the dialog box is opened
@@ -106,10 +106,10 @@
 
 			(cx-set-toggle-button longwallgobs/egz_radio_button (rpgetvar 'longwallgobs/egz_radio_button))
 
-			(cx-set-real-entry longwallgobs/panel-width (rpgetvar 'longwallgobs/panel-width))
-			(cx-set-real-entry longwallgobs/panel-length (rpgetvar 'longwallgobs/panel-length))
-			(cx-set-real-entry longwallgobs/panel-xoffset (rpgetvar 'longwallgobs/panel-xoffset))
-			(cx-set-real-entry longwallgobs/panel-yoffset (rpgetvar 'longwallgobs/panel-yoffset))
+			(cx-set-real-entry longwallgobs/panel_half_width (rpgetvar 'longwallgobs/panel_half_width))
+			(cx-set-real-entry longwallgobs/panel_length (rpgetvar 'longwallgobs/panel_length))
+			(cx-set-real-entry longwallgobs/panel_x_offset (rpgetvar 'longwallgobs/panel_x_offset))
+			(cx-set-real-entry longwallgobs/panel_y_offset (rpgetvar 'longwallgobs/panel_y_offset))
 		)
 
 		; apply-cb - invoked when you click "OK"
@@ -120,10 +120,10 @@
 
 			(rpsetvar 'longwallgobs/egz_radio_button (cx-show-toggle-button longwallgobs/egz_radio_button))
 
-			(rpsetvar 'longwallgobs/panel-width (cx-show-real-entry longwallgobs/panel-width))
-			(rpsetvar 'longwallgobs/panel-length (cx-show-real-entry longwallgobs/panel-length))
-			(rpsetvar 'longwallgobs/panel-xoffset (cx-show-real-entry longwallgobs/panel-xoffset))
-			(rpsetvar 'longwallgobs/panel-yoffset (cx-show-real-entry longwallgobs/panel-yoffset))
+			(rpsetvar 'longwallgobs/panel_half_width (cx-show-real-entry longwallgobs/panel_half_width))
+			(rpsetvar 'longwallgobs/panel_length (cx-show-real-entry longwallgobs/panel_length))
+			(rpsetvar 'longwallgobs/panel_x_offset (cx-show-real-entry longwallgobs/panel_x_offset))
+			(rpsetvar 'longwallgobs/panel_y_offset (cx-show-real-entry longwallgobs/panel_y_offset))
 		
 			(%run-udf-apply 1)
 		)
@@ -144,10 +144,10 @@
 					(set! longwallgobs/egz_radio_button (cx-create-toggle-button longwallgobs/egz_button_box "Explosive Gas Zone Colorization"))
 
 					(set! longwallgobs/required_param_table (cx-create-table table "Required Settings" 'row 0 'col 1))
-					(set! longwallgobs/panel-width (cx-create-real-entry longwallgobs/required_param_table "Panel Width" 'row 0))
-					(set! longwallgobs/panel-length (cx-create-real-entry longwallgobs/required_param_table "Panel Length" 'row 1))
-					(set! longwallgobs/panel-xoffset (cx-create-real-entry longwallgobs/required_param_table "Panel X Offset" 'row 2))
-					(set! longwallgobs/panel-yoffset (cx-create-real-entry longwallgobs/required_param_table "Panel Y Offset" 'row 3))
+					(set! longwallgobs/panel_half_width (cx-create-real-entry longwallgobs/required_param_table "Panel Half Width" 'row 0))
+					(set! longwallgobs/panel_length (cx-create-real-entry longwallgobs/required_param_table "Panel Length" 'row 1))
+					(set! longwallgobs/panel_x_offset (cx-create-real-entry longwallgobs/required_param_table "Panel X Offset" 'row 2))
+					(set! longwallgobs/panel_y_offset (cx-create-real-entry longwallgobs/required_param_table "Panel Y Offset" 'row 3))
 				
 				) ;End Of Let Statement
 			) ;End Of If Statement
@@ -156,45 +156,45 @@
 			(cx-show-panel dialog-box)
 		) ;End Of Args Function
 	) ;End Of Let Statement
-) ;End Of model-type-and-required-settings-box Definition
+) ;End Of model_type_and_required_settings_box Definition
 
 ; Optional Settings Definition
-(define optional-settings-box
+(define optional_settings_box
 	;Let Statement, Local Variable Declarations
 	(let ((dialog-box #f)
 		(table)
 
 			(longwallgobs/optional_param_table)
-			(longwallgobs/resistance-scalar)
-			(longwallgobs/maximum-resistance)
-			(longwallgobs/minimum-resistance)
-			(longwallgobs/maximum-porosity)
-			(longwallgobs/initial-porosity)
-			(longwallgobs/maximum-vsi)
+			(longwallgobs/resist_scaler)
+			(longwallgobs/max_resistance)
+			(longwallgobs/min_resistance)
+			(longwallgobs/max_porosity)
+			(longwallgobs/initial_porosity)
+			(longwallgobs/max_vsi)
 
 		)
 
 		; update-cb - invoked when the dialog box is opened
 		(define (update-cb . args)
 
-			(cx-set-real-entry longwallgobs/resistance-scalar (rpgetvar 'longwallgobs/resistance-scalar))
-			(cx-set-real-entry longwallgobs/maximum-resistance (rpgetvar 'longwallgobs/maximum-resistance))
-			(cx-set-real-entry longwallgobs/minimum-resistance (rpgetvar 'longwallgobs/minimum-resistance))
-			(cx-set-real-entry longwallgobs/maximum-porosity (rpgetvar 'longwallgobs/maximum-porosity))
-			(cx-set-real-entry longwallgobs/initial-porosity (rpgetvar 'longwallgobs/initial-porosity))
-			(cx-set-real-entry longwallgobs/maximum-vsi (rpgetvar 'longwallgobs/maximum-vsi))
+			(cx-set-real-entry longwallgobs/resist_scaler (rpgetvar 'longwallgobs/resist_scaler))
+			(cx-set-real-entry longwallgobs/max_resistance (rpgetvar 'longwallgobs/max_resistance))
+			(cx-set-real-entry longwallgobs/min_resistance (rpgetvar 'longwallgobs/min_resistance))
+			(cx-set-real-entry longwallgobs/max_porosity (rpgetvar 'longwallgobs/max_porosity))
+			(cx-set-real-entry longwallgobs/initial_porosity (rpgetvar 'longwallgobs/initial_porosity))
+			(cx-set-real-entry longwallgobs/max_vsi (rpgetvar 'longwallgobs/max_vsi))
 
 		)
 
 		; apply-cb - invoked when you click "OK"
 		(define (apply-cb . args)
 
-			(rpsetvar 'longwallgobs/resistance-scalar (cx-show-real-entry longwallgobs/resistance-scalar))
-			(rpsetvar 'longwallgobs/maximum-resistance (cx-show-real-entry longwallgobs/maximum-resistance))
-			(rpsetvar 'longwallgobs/minimum-resistance (cx-show-real-entry longwallgobs/minimum-resistance))
-			(rpsetvar 'longwallgobs/maximum-porosity (cx-show-real-entry longwallgobs/maximum-porosity))
-			(rpsetvar 'longwallgobs/initial-porosity (cx-show-real-entry longwallgobs/initial-porosity))
-			(rpsetvar 'longwallgobs/maximum-vsi (cx-show-real-entry longwallgobs/maximum-vsi))
+			(rpsetvar 'longwallgobs/resist_scaler (cx-show-real-entry longwallgobs/resist_scaler))
+			(rpsetvar 'longwallgobs/max_resistance (cx-show-real-entry longwallgobs/max_resistance))
+			(rpsetvar 'longwallgobs/min_resistance (cx-show-real-entry longwallgobs/min_resistance))
+			(rpsetvar 'longwallgobs/max_porosity (cx-show-real-entry longwallgobs/max_porosity))
+			(rpsetvar 'longwallgobs/initial_porosity (cx-show-real-entry longwallgobs/initial_porosity))
+			(rpsetvar 'longwallgobs/max_vsi (cx-show-real-entry longwallgobs/max_vsi))
 
 			(%run-udf-apply 1)
 
@@ -208,12 +208,12 @@
 					(set! table (cx-create-table dialog-box ""))
 
 					(set! longwallgobs/optional_param_table (cx-create-table table "Optional Settings" 'row 0 'col 1))
-					(set! longwallgobs/resistance-scalar (cx-create-real-entry longwallgobs/optional_param_table "Resistance Scalar" 'row 0))
-					(set! longwallgobs/maximum-resistance (cx-create-real-entry longwallgobs/optional_param_table "Maximum Resistance" 'row 1))
-					(set! longwallgobs/minimum-resistance (cx-create-real-entry longwallgobs/optional_param_table "Minimum Resistance" 'row 2))
-					(set! longwallgobs/maximum-porosity (cx-create-real-entry longwallgobs/optional_param_table "Maximum Porosity" 'row 3))
-					(set! longwallgobs/initial-porosity (cx-create-real-entry longwallgobs/optional_param_table "Initial Porosity" 'row 4))
-					(set! longwallgobs/maximum-vsi (cx-create-real-entry longwallgobs/optional_param_table "Maximum VSI" 'row 5))
+					(set! longwallgobs/resist_scaler (cx-create-real-entry longwallgobs/optional_param_table "Resistance Scalar" 'row 0))
+					(set! longwallgobs/max_resistance (cx-create-real-entry longwallgobs/optional_param_table "Max Resistance" 'row 1))
+					(set! longwallgobs/min_resistance (cx-create-real-entry longwallgobs/optional_param_table "Min Resistance" 'row 2))
+					(set! longwallgobs/max_porosity (cx-create-real-entry longwallgobs/optional_param_table "Max Porosity" 'row 3))
+					(set! longwallgobs/initial_porosity (cx-create-real-entry longwallgobs/optional_param_table "Initial Porosity" 'row 4))
+					(set! longwallgobs/max_vsi (cx-create-real-entry longwallgobs/optional_param_table "Max VSI" 'row 5))
 				
 				) ;End Of Let Statement
 			) ;End Of If Statement
@@ -225,7 +225,7 @@
 ) ;End Of optional-settings-box Definition
 
 ; Zone Selection Definition
-(define zone-selection-box
+(define zone_selection_box
 	; Let Statement, Local Varaible Declarations
 	(let ((dialog-box #f)
 		(table)
@@ -304,6 +304,6 @@
 (cx-add-menu "Model Mine Gob" #f)
 (cx-add-hitem "Model Mine Gob" "Permeability and Porosity" #f #f #t #f)
 ;Menu Item Added To Above Created "New Menu->New Submenu" Submenu In Fluent
-(cx-add-item "Permeability and Porosity" "Mine Model and Required Settings" #\U #f #t model-type-and-required-settings-box)
-(cx-add-item "Permeability and Porosity" "Optional Settings" #\U #f #t optional-settings-box)
-(cx-add-item "Permeability and Porosity" "Zone Selection" #\U #f #t zone-selection-box)
+(cx-add-item "Permeability and Porosity" "Mine Model and Required Settings" #\U #f #t model_type_and_required_settings_box)
+(cx-add-item "Permeability and Porosity" "Optional Settings" #\U #f #t optional_settings_box)
+(cx-add-item "Permeability and Porosity" "Zone Selection" #\U #f #t zone_selection_box)
