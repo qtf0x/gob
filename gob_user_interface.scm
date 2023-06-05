@@ -247,7 +247,7 @@
 			(longwallgobs/working_headgate_radio_button)	
 			(longwallgobs/working_tailgate_radio_button)
 			(longwallgobs/single_part_mesh_radio_button)
-			(cx-create-button table "Apply" 'activate-callback button-cb)
+			(longwallgobs/apply_button)
 
 			(longwallgobs/zone_names)
 	)
@@ -303,6 +303,8 @@
 					(set! longwallgobs/working_headgate_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Headgate"))
 					(set! longwallgobs/working_tailgate_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Tailgate"))
 					(set! longwallgobs/single_part_mesh_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Single-Part Mesh"))
+
+					(set! longwallgobs/apply_button (cx-create-button table "Apply" 'activate-callback button-cb 'row 1 'col 1))
 
 					(set! longwallgobs/zone_names (cx-create-list table "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
 
