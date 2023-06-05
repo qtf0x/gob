@@ -20,7 +20,7 @@
 					"fluid"
 				)
 				(substring?
-					"longwallgobs"
+					"gob"
 					(symbol->string
 						name
 					)
@@ -80,12 +80,6 @@
 (make-new-rpvar 'longwallgobs/working_face_center_id 0 'integer)
 (make-new-rpvar 'longwallgobs/working_face_corner_id 0 'integer)
 (make-new-rpvar 'longwallgobs/single_part_mesh_id 0 'integer)
-; Creating 'apply' button
-(define counter 0)
-(define (button-cb . args)
-	(set! counter (+ counter 1))
-
-)
 ; Declare variables for zone info lists
 (make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
 ; (make-new-rpvar 'longwallgobs/zone_ids zone_ids 'list)
@@ -251,6 +245,8 @@
 			(longwallgobs/single_part_mesh_radio_button)
 			(longwallgobs/apply_button)
 
+			;(longwallgobs/startup_room_center_id)
+
 			(longwallgobs/zone_names)
 	)
 
@@ -280,6 +276,20 @@
 			(%run-udf-apply 1)
 		)
 
+		; Creating 'apply' button
+		;(define counter 0)
+		(define (button-cb . args)
+			;(set! counter (+ counter 1))
+			; (if (equal? (rpgetvar 'longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id (zone-name->id (symbol->string (list-ref '(cx-show-list-selections longwallgobs/zone_names) 0)))))
+			(if (equal? (rpgetvar 'longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id (cx-show-list-selections longwallgobs/zone_names)))
+			(if (equal? (rpgetvar 'longwallgobs/startup_room_corner_radio_button) #t) ()) 
+			(if (equal? (rpgetvar 'longwallgobs/mid_panel_center_radio_button) #t) ()) 
+			(if (equal? (rpgetvar 'longwallgobs/mid_panel_gateroad_radio_button) #t) ()) 
+			(if (equal? (rpgetvar 'longwallgobs/working_face_center_radio_button) #t) ()) 
+			(if (equal? (rpgetvar 'longwallgobs/working_face_corner_radio_button) #t) ()) 
+			(if (equal? (rpgetvar 'longwallgobs/single_part_mesh_radio_button) #t) ()) 
+		)
+
 		(lambda args
 			(if (not dialog-box)
 				(let ()
@@ -299,7 +309,7 @@
 
 					(set! longwallgobs/apply_button (cx-create-button table "Apply" 'activate-callback button-cb 'row 1 'col 1))
 
-					(set! longwallgobs/zone_names (cx-create-list table "Zone Selection" 'visible-lines 7 'multiple-selections #f 'row 0 'col 1))
+					(set! longwallgobs/zone_names (cx-create-list table "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
 
 				) ;End Of Let Statement
 			) ;End Of If Statement
