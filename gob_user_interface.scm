@@ -72,6 +72,14 @@
 (make-new-rpvar 'longwallgobs/working_face_center_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/working_face_corner_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/single_part_mesh_radio_button #f 'boolean)
+; Declare variables for zone IDs
+(make-new-rpvar 'longwallgobs/startup_room_center_id 0 'integer)
+(make-new-rpvar 'longwallgobs/startup_room_corner_id 0 'integer)
+(make-new-rpvar 'longwallgobs/mid_panel_center_id 0 'integer)
+(make-new-rpvar 'longwallgobs/mid_panel_gateroad_id 0 'integer)
+(make-new-rpvar 'longwallgobs/working_face_center_id 0 'integer)
+(make-new-rpvar 'longwallgobs/working_face_corner_id 0 'integer)
+(make-new-rpvar 'longwallgobs/single_part_mesh_id 0 'integer)
 ; Creating 'apply' button
 (define counter 0)
 (define (button-cb . args)
@@ -291,7 +299,7 @@
 
 					(set! longwallgobs/apply_button (cx-create-button table "Apply" 'activate-callback button-cb 'row 1 'col 1))
 
-					(set! longwallgobs/zone_names (cx-create-list table "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
+					(set! longwallgobs/zone_names (cx-create-list table "Zone Selection" 'visible-lines 7 'multiple-selections #f 'row 0 'col 1))
 
 				) ;End Of Let Statement
 			) ;End Of If Statement
