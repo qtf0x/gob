@@ -74,6 +74,7 @@
 (make-new-rpvar 'longwallgobs/working_center_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/working_headgate_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/working_tailgate_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/single_part_mesh_radio_button #f 'boolean)
 ; Declare variables for zone info lists
 (make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
 ; (make-new-rpvar 'longwallgobs/zone_ids zone_ids 'list)
@@ -239,6 +240,8 @@
 			(longwallgobs/working_center_radio_button)	
 			(longwallgobs/working_headgate_radio_button)	
 			(longwallgobs/working_tailgate_radio_button)
+			(longwallgobs/single_part_mesh_radio_button)
+
 			(longwallgobs/zone_names)
 	)
 
@@ -253,6 +256,7 @@
 			(cx-set-toggle-button longwallgobs/working_center_radio_button (rpgetvar 'longwallgobs/working_center_radio_button))
 			(cx-set-toggle-button longwallgobs/working_headgate_radio_button (rpgetvar 'longwallgobs/working_headgate_radio_button))
 			(cx-set-toggle-button longwallgobs/working_tailgate_radio_button (rpgetvar 'longwallgobs/working_tailgate_radio_button))
+			(cx-set-toggle-button longwallgobs/single_part_mesh_radio_button (rpgetvar 'longwallgobs/single_part_mesh_radio_button))
 			(cx-set-list-items longwallgobs/zone_names zone_names)
 		)
 
@@ -267,6 +271,7 @@
 			(rpsetvar 'longwallgobs/working_center_radio_button (cx-show-toggle-button longwallgobs/working_center_radio_button))
 			(rpsetvar 'longwallgobs/working_headgate_radio_button (cx-show-toggle-button longwallgobs/working_headgate_radio_button))
 			(rpsetvar 'longwallgobs/working_tailgate_radio_button (cx-show-toggle-button longwallgobs/working_tailgate_radio_button))
+			(rpsetvar 'longwallgobs/single_part_mesh_radio_button (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button))
 			(rpsetvar 'longwallgobs/zone_names_selected (cx-show-list-selections longwallgobs/zone_names))
 		
 			(%run-udf-apply 1)
@@ -290,6 +295,7 @@
 					(set! longwallgobs/working_center_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Center"))
 					(set! longwallgobs/working_headgate_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Headgate"))
 					(set! longwallgobs/working_tailgate_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Tailgate"))
+					(set! longwallgobs/single_part_mesh_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Single-Part Mesh"))
 
 					(set! longwallgobs/zone_names (cx-create-list table "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
 
