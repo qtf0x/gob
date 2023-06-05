@@ -75,6 +75,9 @@
 (make-new-rpvar 'longwallgobs/working_headgate_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/working_tailgate_radio_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/single_part_mesh_radio_button #f 'boolean)
+; Creating 'apply' button
+(define (button-cb . args)
+)
 ; Declare variables for zone info lists
 (make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
 ; (make-new-rpvar 'longwallgobs/zone_ids zone_ids 'list)
@@ -241,6 +244,7 @@
 			(longwallgobs/working_headgate_radio_button)	
 			(longwallgobs/working_tailgate_radio_button)
 			(longwallgobs/single_part_mesh_radio_button)
+			(cx-create-button table "Apply" 'activate-callback button-cb)
 
 			(longwallgobs/zone_names)
 	)
