@@ -1,19 +1,83 @@
-; Note: Make sure that the folder "colormaps" is in your working directory
-; (load "\colormap_selection.scm") 
-; https://sjmgarnier.github.io/viridis/
+;;;; This file is used to read and set custom colormaps in Ansys Fluent
+; Authors: 
+; Emmaleigh Hawkins
+; Vincent Marias
+; Will Meinert
+; Daniel Nau
 
+; Using This File
+;
+; Make sure that the folder titled "colormaps" containing all of the .colormap files is in your working directory 
+;
+; Load this file in Ansys Fluent
+; Option 1: Go to File>Read>Scheme...>colormap_selection.scm 
+; Option 2: Type the relative path into the console: (load "colormap_selection.scm") 
+; Option 3: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm")
+; Note: If this is done multiple times, the ribbon cannot be removed unless Ansys Fluent is restarted
+;
+; In the top ribbon menu, select the "Colormap Selection" tab and the dropdown to open the menu
+; Select your colormap and then click "OK" for it to apply
+; A command will automatically be applied and it can be seen in the console
+; 
+; To have a colormap selection apply to an existing model, a new contour must be created
+;
+; To load this file automatically, the following command must be added to your .fluent file:
+; (ti-menu-load-string "file read-journal colormap_selection.scm")
+
+; Using Ansys Fluent Predefined Colormaps
 ; To see built in colormap options using the console: preferences/graphics/colormap-settings/colormap 
 ; To change colormap: preferences/graphics/colormap-settings/colormap/<colormap> 
 ; e.g. preferences/graphics/colormap-settings/colormap/field_velocity
 ; Use "q" or "quit" in the prompt to move back to the previously occupied menu, if needed
 
-; TODO:
-; Currently requires creating a new contour or go to Contours>Colormap Options...>Currently Defined>
-; if the option was previously selected and loaded to be able to apply the change
+; Adding Ansys Fluent Predefined Colormaps to Selection Box
+;
+; Step 1: Add this file to Fluent
+; Option 1: Go to File>Read>Scheme...>colormap_selection.scm 
+; Option 2: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm" )
+;
+; Step 2: In Ansys Fluent, change the currently selected colormap
+; To see colormap options, type into the console: preferences/graphics/colormap-settings/colormap
+; To select a colormap, type into the console: preferences/graphics/colormap-settings/colormap/<colormap> 
+; e.g. preferences/graphics/colormap-settings/colormap/field_velocity
+; Use "q" or "quit" in the prompt to move back to the previously occupied menu, if needed
+;
+; Step 3: Save the colormap file to the colormaps folder
+; Into the console, type: file/write-colormap colormaps/<file name>.colormap
+; e.g. file/write-colormap colormaps/gray.colormap
+;
+; Step 4: Add button for colormap into this .scm file
+; In the code below, there are 6 locations that must be edited. They can be searched for by finding "NEW COLORMAP"
+; Uncomment these lines (comments start with semicolons) 
+; Replace what is inside the angle brackets (<>) with the appropriate names
+;
+; Step 5: Add this .scm file to Fluent again
+; Option 1: Go to File>Read>Scheme...>colormap_selection.scm 
+; Option 2: Type the relative path into the console: (load "colormap_selection.scm") 
+; Option 3: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm")
+; Note: The previous ribbon cannot be removed from Fluent unless Fluent is restarted
+
+; Adding Downloaded Colormaps to Selection Box
+; 
+; Step 1: Add the .colormap file to the colormaps folder
+;
+; Step 2: Add button for colormap into this .scm file
+; In the code below, there are 6 locations that must be edited. They can be searched for by finding "NEW COLORMAP"
+; Uncomment these lines (comments start with semicolons) 
+; Replace what is inside the angle brackets (<>) with the appropriate names
+;
+; Step 3: Add this .scm file to Fluent again
+; Option 1: Go to File>Read>Scheme...>colormap_selection.scm 
+; Option 2: Type the relative path into the console: (load "colormap_selection.scm") 
+; Option 3: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm")
+; Note: The previous ribbon cannot be removed from Fluent unless Fluent is restarted
+
+; Acknowledgements 
+; The Scheme commands for reading and writing .colormap files along with custom colormaps
+; were created/provided by James Wright and can be found here:
+; https://github.com/jrwrigh/fluent_colormaps/tree/master 
+
 ; Ideas: 
-;   -Preload all options so that they're available. Issue: don't know how to change back to default field_velocity after this 
-;   -Find out how change the Currently Defined selection 
-;   -Add a console message for the instructions
 ; Maybe add to larger interface
 ; Add instructions to readme
 ; Research display/objects/display, display/re-render, and other commands to see if colormap can automatically be applied
@@ -49,8 +113,7 @@
 
 (ti-menu-insert-item!
   file-menu
-  (make-menu-item "write-colormap" #t ti-write-cmap
-  "Write a colormap to a file."))
+  (make-menu-item "write-colormap" #t ti-write-cmap "Write a colormap to a file."))
 ; ------------------------- END ------------------------- 
 
 ; Define variables for menu
@@ -67,11 +130,12 @@
 (make-new-rpvar 'longwallgobs/magma_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/plasma_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/viridis_button #f 'boolean) ; Viridis is the Matplotlib default colormap
+; (make-new-rpvar 'longwallgobs/<button name> #f 'boolean) ; NEW COLORMAP
 
 ; Create a menu for various colormap options 
 ; Colormap Selection Definition
 (define colormap-selection-box
-	; Let Statement, Local Varaible Declarations
+	; Let Statement, Local Variable Declarations
 	(let ((dialog-box #f)
 		(table)
 			(longwallgobs/colormap_button_box)
@@ -88,6 +152,7 @@
       (longwallgobs/magma_button)
       (longwallgobs/plasma_button)
 			(longwallgobs/viridis_button)
+      ; (longwallgobs/<button name>) ; NEW COLORMAP
 	  )
 		; update-cb - invoked when the dialog box is opened
 		(define (update-cb . args)
@@ -104,6 +169,7 @@
       (cx-set-toggle-button longwallgobs/magma_button (rpgetvar 'longwallgobs/magma_button))
       (cx-set-toggle-button longwallgobs/plasma_button (rpgetvar 'longwallgobs/plasma_button))
       (cx-set-toggle-button longwallgobs/viridis_button (rpgetvar 'longwallgobs/viridis_button))
+      ; (cx-set-toggle-button longwallgobs/<button name> (rpgetvar 'longwallgobs/<button name>)) ; NEW COLORMAP
 		)
 
 		; apply-cb - invoked when you click "OK"
@@ -122,6 +188,7 @@
       (rpsetvar 'longwallgobs/magma_button (cx-show-toggle-button longwallgobs/magma_button))
       (rpsetvar 'longwallgobs/plasma_button (cx-show-toggle-button longwallgobs/plasma_button))
       (rpsetvar 'longwallgobs/viridis_button (cx-show-toggle-button longwallgobs/viridis_button))
+      ; (rpsetvar 'longwallgobs/<button name> (cx-show-toggle-button longwallgobs/<button name>)) ; NEW COLORMAP 
       ; Set colormap based on radio button selection
       ; (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (display (rpgetvar 'longwallgobs/plasma_button)) (display (rpgetvar 'longwallgobs/plasma_button)) )
       ; (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap") () )
@@ -139,6 +206,7 @@
       (if (equal? (rpgetvar 'longwallgobs/magma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/magma.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap\n"))
       (if (equal? (rpgetvar 'longwallgobs/viridis_button) #t) (ti-menu-load-string "file/read-colormap colormaps/viridis.colormap\n")) 
+      ; (if (equal? (rpgetvar 'longwallgobs/<button name>) #t) (ti-menu-load-string "file/read-colormap colormaps/<file name>\n")) ; NEW COLORMAP
     )
 
 		(lambda args
@@ -163,6 +231,7 @@
 					(set! longwallgobs/magma_button (cx-create-toggle-button longwallgobs/colormap_button_box "Magma"))
 					(set! longwallgobs/plasma_button (cx-create-toggle-button longwallgobs/colormap_button_box "Plasma"))
 					(set! longwallgobs/viridis_button (cx-create-toggle-button longwallgobs/colormap_button_box "Viridis"))
+          ; (set! longwallgobs/<button name> (cx-create-toggle-button longwallgobs/colormap_button_box "<name to be displayed>")) ; NEW COLORMAP
 				) ;End Of Let Statement
 			) ;End Of If Statement
 			;Call To Open Dialog Box
