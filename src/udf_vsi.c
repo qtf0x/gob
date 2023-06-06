@@ -73,39 +73,39 @@ void vsi_trona_stepped()
 	/* Scale each section of the model to the curve fits.
 	UNITS in METERS
 
-	    TG  RECOVERY ROOM / ACTIVE FACE        HG
+	    TG     RECOVERY ROOM / ACTIVE FACE     HG
 	Fit 100                  0                 100
-	1000|---------------------------------------| 0
-	    |0                  1|1                0|
-	    |    3               |                  |
-	    | Recovery           |                  |
-	    | Gateroad           |                  |
-	    | Exact-Size    Sub-Critial no-Expansion|
-	    |1                  1|1                1|
-	600 |---------------------------------------| 300
-	    |                    |                  |
-	    |                    |                  |
-	    |    2               |                  |
-	    |  Center            |                  |
-	    | Gateroad           |                  |
-	    |                    |                  |
-	    | Expansion          |                  |
-	    | Equation           |                  |
-	    |                    |                  |
-	    |                    |                  |
-	190 |---------------------------------------| 810
-	    |1                  1|1                1|
-	    |    1               |                  |
-	    | Startup            |                  |
-	    | Gateroad           |                  |
-	    |Exact-Size          |                  |
-	    |0                  1|1                0|
-	  0 |---------------------------------------| 1000
-	 -152.5      -52.5               0        92.5      +152.5 My Panel
+	1000 |---------------------------------------| 0
+	     |0                  1|1                0|
+	     |    3               |                  |
+	     | Recovery           |                  |
+	     | Gateroad           |                  |
+	     | Exact-Size    Sub-Critial no-Expansion|
+	     |1                  1|1                1|
+	 600 |---------------------------------------| 300
+	     |                    |                  |
+	     |                    |                  |
+	     |    2               |                  |
+	     |  Center            |                  |
+	     | Gateroad           |                  |
+	     |                    |                  |
+	     | Expansion          |                  |
+	     | Equation           |                  |
+	     |                    |                  |
+	     |                    |                  |
+	 190 |---------------------------------------| 810
+	     |1                  1|1                1|
+	     |    1               |                  |
+	     | Startup            |                  |
+	     | Gateroad           |                  |
+	     |Exact-Size          |                  |
+	     |0                  1|1                0|
+	   0 |---------------------------------------| 1000
+	   -152.5      -52.5               0        92.5      +152.5 My Panel
 
-	box=[0 92.5 160 0 190 1010 1200] [0 100 0 190 600 1000]
+	box = [0 92.5 160 0 190 1010 1200] [0 100 0 190 600 1000]
 
-	MIN=144871.4 1/m^2	MAX=492170 1/m^2
+	MIN = 144871.4 1/m^2	MAX=492170 1/m^2
 	*/
 
 	// Fluent data structures used in calculation
@@ -249,37 +249,40 @@ void vsi_mine_C_stepped()
 	/* Scale each section of the model to the curve fits.
 	UNITS in METERS
 
-	           TG           RECOVERY ROOM / ACTIVE FACE        HG
-	       Fit 160        100             0            100        160
-	       1200|--------------------------------------------------| 0
-	           |0        1|                            |1        0|
-	           |    5     |    6                       |          |
-	           | Recovery |  Recovery                  |          |
-	           | Gateroad |  Center                    |          |
-	           |Exact-Size|   Super Critial Expansion  |          |
-	           |1         |                            |         1|
-	       1010|--------------------------------------------------| 190
-	           |          |                            |          |
-	           |          |                            |          |
-	           |    3     |    4                       |          |
-	           |  Center  | Center                     |          |
-	           | Gateroad | Panel                      |          |
-	           |          |                            |          |
-	           | Expansion| Expansion                  |          |
-	           | Equation | Equation                   |          |
-	           |          |                            |          |
-	           |          |                            |          |
-	        190|--------------------------------------------------| 1010
-	           |1         |                            |         1|
-	           |    1     |     2                      |          |
-	           | Startup  |  Startup                   |          |
-	           | Gateroad |  Center                    |          |
-	           |Exact-Size|   Super Critial Expansion  |          |
-	           |0        1|                            |1        0|
-	          0|--------------------------------------------------| 1200
-	         -152.5      -52.5               0        92.5      +152.5  My Panel
-	          box=[0 92.5 160 0 190 1010 1200]   
-	MIN=144871.4  1/m^2	MAX=492170 1/m^2	*/
+	    TG           RECOVERY ROOM / ACTIVE FACE           HG
+	Fit 160        100             0            100        160
+	1200 |--------------------------------------------------| 0
+	     |0        1|                            |1        0|
+	     |    5     |    6                       |          |
+	     | Recovery |  Recovery                  |          |
+	     | Gateroad |  Center                    |          |
+	     |Exact-Size|   Super Critial Expansion  |          |
+	     |1         |                            |         1|
+	1010 |--------------------------------------------------| 190
+	     |          |                            |          |
+	     |          |                            |          |
+	     |    3     |    4                       |          |
+	     |  Center  | Center                     |          |
+	     | Gateroad | Panel                      |          |
+	     |          |                            |          |
+	     | Expansion| Expansion                  |          |
+	     | Equation | Equation                   |          |
+	     |          |                            |          |
+	     |          |                            |          |
+	 190 |--------------------------------------------------| 1010
+	     |1         |                            |         1|
+	     |    1     |     2                      |          |
+	     | Startup  |  Startup                   |          |
+	     | Gateroad |  Center                    |          |
+	     |Exact-Size|   Super Critial Expansion  |          |
+	     |0        1|                            |1        0|
+	   0 |--------------------------------------------------| 1200
+	   -152.5      -52.5               0        92.5      +152.5  My Panel
+
+	box = [0 92.5 160 0 190 1010 1200]
+
+	MIN = 144871.4 1/m^2	MAX=492170 1/m^2
+	*/
 
 	// Fluent data structures used in calculation
 
@@ -545,9 +548,13 @@ void VSI_MINE_E_Stepped()
 	else {
 		Message("The y-direction displacement to the recovery room of the panel is to zero.\n You may set it with TUI Command: (rp-var-define 'vsi/panel-yoffset VALUE 'real #f)\n");
 	}
-	thread_loop_c(t, d){ begin_c_loop(c, t){ C_CENTROID(x, c, t);
+	thread_loop_c(t, d)
+	{
+		begin_c_loop(c, t)
+		{
+			C_CENTROID(x, c, t);
 
-	/*     Scale each section of the model to the curve fits.             
+			/*     Scale each section of the model to the curve fits.             
 									
 	UNITS in METERS                                                            
 	                                                                           
@@ -582,128 +589,136 @@ void VSI_MINE_E_Stepped()
 	         -152.5      -52.5               0        92.5      +152.5  My Panel
 	          box=[0 92.5 160 0 190 1010 1200]   
 	MIN=144871.4  1/m^2	MAX=492170 1/m^2	*/
-	x_loc = fabs(x[0] - panelxoffset); /* Center of Panel is Zero and Mirrored */
-	y_loc = (panelength + x[1]) -
-		panelyoffset; /* Shift FLUENT MESH to FLAC3D data Zero point at startup room for equations */
-	if (x_loc > panelwidth) {
-		VSI = 0;
-	} /* limit VSI function to only within panel domain sizing */
+			x_loc = fabs(x[0] - panelxoffset); /* Center of Panel is Zero and Mirrored */
+			y_loc = (panelength + x[1]) -
+				panelyoffset; /* Shift FLUENT MESH to FLAC3D data Zero point at startup room for equations */
+			if (x_loc > panelwidth) {
+				VSI = 0;
+			} /* limit VSI function to only within panel domain sizing */
 
-	else {
-		if (x_loc < (box[1] - blendrange)) {
-			if (y_loc < 0) {
-				VSI = 0;
-			} else if (y_loc < box[4] - blendrangey - 15) {
-				x_loc_norm = (-(x_loc - box[1] + 20) / (box[1])); /* NORMALIZE to equation */
-				y_loc_norm = (y_loc / box[4]);
-				VSI = SUPER_CRITICAL_MINE_E_STARTUP_CENTER(x_loc_norm, y_loc_norm);
-			} else if ((y_loc > (box[4] - blendrangey - 15)) && (y_loc < box[4] + blendrangey - 15)) {
-				mix = ((y_loc - (box[4] + blendrangey - 15)) / (2 * blendrangey));
-				x_loc_norm = (-(x_loc - box[1] + 20) / (box[1])); /* NORMALIZE to equation */
-				y_loc_norm = (y_loc / box[4]);
-				FUN1 = SUPER_CRITICAL_MINE_E_STARTUP_CENTER(x_loc_norm, y_loc_norm);
-				x_loc_norm = (-(x_loc - box[1] + 10) / (box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				FUN2 = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
-				VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
-			} else if ((y_loc < (box[5] - blendrangey - 15)) && (y_loc > (box[4] + blendrangey - 15))) {
-				x_loc_norm = (-(x_loc - box[1] + 10) / (box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				VSI = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
-			} else if ((y_loc > (box[5] - blendrangey - 15)) && (y_loc < box[5] + blendrangey - 15)) {
-				mix = -((y_loc - (box[5] + blendrangey - 15)) / (2 * blendrangey));
-				x_loc_norm = (-(x_loc - box[1]) / (box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				FUN1 = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
-				x_loc_norm = ((x_loc - box[1] + blendrange + 15) / (box[1]));
-				y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
-				FUN2 = SUPER_CRITICAL_MINE_E_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
-				VSI = (FUN1 * (mix) + FUN2 * (1 - mix));
-			} else if ((y_loc < box[6]) &&
-				   (y_loc > (box[5] + blendrangey -
-					     15))) { /* Remained of data points are in the recovery room 600-1000m */
-				x_loc_norm = ((x_loc - box[1] + blendrange + 15) / (box[1]));
-				y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
-				VSI = SUPER_CRITICAL_MINE_E_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
-			} else {
-				VSI = 0;
-			}
-		} else if (x_loc <= (box[1] + blendrange)) {
-			mix = ((x_loc - box[1] + blendrange) / (2 * blendrange));
-			if (y_loc < 0) {
-				VSI = 0;
-			} else if (y_loc < box[4]) {
-				x_loc_norm = (-(x_loc - box[1]) / (box[1])); /* NORMALIZE to equation */
-				y_loc_norm = (y_loc / box[4]);
-				FUN1 = SUPER_CRITICAL_MINE_E_STARTUP_CENTER(x_loc_norm, y_loc_norm);
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = (y_loc / box[4]);
-				FUN2 = SUPER_CRITICAL_MINE_E_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
-				VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
-			} else if (y_loc <= box[5]) {
-				x_loc_norm = (-(x_loc - box[1]) / (box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				FUN1 = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				FUN2 = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-				VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
-			} else if (y_loc < box[6]) {
-				x_loc_norm = ((x_loc - (box[1])) / (box[1]));
-				y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
-				FUN1 = SUPER_CRITICAL_MINE_E_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
-				x_loc_norm = (1 - (x_loc - (box[1])) / (box[2] - box[1]));
-				y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
-				FUN2 = SUPER_CRITICAL_MINE_E_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
-				VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
-			} else {
-				VSI = 0;
-			}
-		}
+			else {
+				if (x_loc < (box[1] - blendrange)) {
+					if (y_loc < 0) {
+						VSI = 0;
+					} else if (y_loc < box[4] - blendrangey - 15) {
+						x_loc_norm =
+							(-(x_loc - box[1] + 20) / (box[1])); /* NORMALIZE to equation */
+						y_loc_norm = (y_loc / box[4]);
+						VSI = SUPER_CRITICAL_MINE_E_STARTUP_CENTER(x_loc_norm, y_loc_norm);
+					} else if ((y_loc > (box[4] - blendrangey - 15)) &&
+						   (y_loc < box[4] + blendrangey - 15)) {
+						mix = ((y_loc - (box[4] + blendrangey - 15)) / (2 * blendrangey));
+						x_loc_norm =
+							(-(x_loc - box[1] + 20) / (box[1])); /* NORMALIZE to equation */
+						y_loc_norm = (y_loc / box[4]);
+						FUN1 = SUPER_CRITICAL_MINE_E_STARTUP_CENTER(x_loc_norm, y_loc_norm);
+						x_loc_norm = (-(x_loc - box[1] + 10) / (box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						FUN2 = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
+						VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
+					} else if ((y_loc < (box[5] - blendrangey - 15)) &&
+						   (y_loc > (box[4] + blendrangey - 15))) {
+						x_loc_norm = (-(x_loc - box[1] + 10) / (box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						VSI = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
+					} else if ((y_loc > (box[5] - blendrangey - 15)) &&
+						   (y_loc < box[5] + blendrangey - 15)) {
+						mix = -((y_loc - (box[5] + blendrangey - 15)) / (2 * blendrangey));
+						x_loc_norm = (-(x_loc - box[1]) / (box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						FUN1 = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
+						x_loc_norm = ((x_loc - box[1] + blendrange + 15) / (box[1]));
+						y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
+						FUN2 = SUPER_CRITICAL_MINE_E_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
+						VSI = (FUN1 * (mix) + FUN2 * (1 - mix));
+					} else if ((y_loc < box[6]) &&
+						   (y_loc >
+						    (box[5] + blendrangey -
+						     15))) { /* Remained of data points are in the recovery room 600-1000m */
+						x_loc_norm = ((x_loc - box[1] + blendrange + 15) / (box[1]));
+						y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
+						VSI = SUPER_CRITICAL_MINE_E_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
+					} else {
+						VSI = 0;
+					}
+				} else if (x_loc <= (box[1] + blendrange)) {
+					mix = ((x_loc - box[1] + blendrange) / (2 * blendrange));
+					if (y_loc < 0) {
+						VSI = 0;
+					} else if (y_loc < box[4]) {
+						x_loc_norm = (-(x_loc - box[1]) / (box[1])); /* NORMALIZE to equation */
+						y_loc_norm = (y_loc / box[4]);
+						FUN1 = SUPER_CRITICAL_MINE_E_STARTUP_CENTER(x_loc_norm, y_loc_norm);
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = (y_loc / box[4]);
+						FUN2 = SUPER_CRITICAL_MINE_E_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
+						VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
+					} else if (y_loc <= box[5]) {
+						x_loc_norm = (-(x_loc - box[1]) / (box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						FUN1 = SUPER_CRITICAL_MINE_E_CENTER_PANEL(x_loc_norm, y_loc_norm);
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						FUN2 = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
+						VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
+					} else if (y_loc < box[6]) {
+						x_loc_norm = ((x_loc - (box[1])) / (box[1]));
+						y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
+						FUN1 = SUPER_CRITICAL_MINE_E_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
+						x_loc_norm = (1 - (x_loc - (box[1])) / (box[2] - box[1]));
+						y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
+						FUN2 = SUPER_CRITICAL_MINE_E_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
+						VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
+					} else {
+						VSI = 0;
+					}
+				}
 
-		else {
-			if (y_loc < 0) {
-				VSI = 0;
-			} else if (y_loc < box[4] - blendrangey) {
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = (y_loc / box[4]);
-				VSI = SUPER_CRITICAL_MINE_E_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
-			} else if ((y_loc > (box[4] - blendrangey)) && (y_loc < (box[4] + blendrangey))) {
-				mix = ((y_loc - box[4] + blendrangey) / (2 * blendrangey));
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = (y_loc / box[4]);
-				FUN1 = SUPER_CRITICAL_MINE_E_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				FUN2 = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-				VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
-			} else if ((y_loc < (box[5] - blendrangey - 20)) && (y_loc > (box[4] + blendrangey))) {
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				VSI = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-			} else if ((y_loc > (box[5] - blendrangey - 20)) && (y_loc < box[5] + blendrangey + 20)) {
-				mix = ((y_loc - box[5] + blendrangey) / (2 * blendrangey));
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
-				FUN1 = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
-				FUN2 = SUPER_CRITICAL_MINE_E_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
-				VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
-			} else if (y_loc < panelength) {
-				x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
-				y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
-				VSI = SUPER_CRITICAL_MINE_E_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
-			} else {
-				VSI = 0;
+				else {
+					if (y_loc < 0) {
+						VSI = 0;
+					} else if (y_loc < box[4] - blendrangey) {
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = (y_loc / box[4]);
+						VSI = SUPER_CRITICAL_MINE_E_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
+					} else if ((y_loc > (box[4] - blendrangey)) &&
+						   (y_loc < (box[4] + blendrangey))) {
+						mix = ((y_loc - box[4] + blendrangey) / (2 * blendrangey));
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = (y_loc / box[4]);
+						FUN1 = SUPER_CRITICAL_MINE_E_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						FUN2 = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
+						VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
+					} else if ((y_loc < (box[5] - blendrangey - 20)) &&
+						   (y_loc > (box[4] + blendrangey))) {
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						VSI = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
+					} else if ((y_loc > (box[5] - blendrangey - 20)) &&
+						   (y_loc < box[5] + blendrangey + 20)) {
+						mix = ((y_loc - box[5] + blendrangey) / (2 * blendrangey));
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = ((y_loc - box[4]) / (box[5] - box[4]));
+						FUN1 = SUPER_CRITICAL_MINE_E_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
+						FUN2 = SUPER_CRITICAL_MINE_E_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
+						VSI = (FUN2 * (mix) + FUN1 * (1 - mix));
+					} else if (y_loc < panelength) {
+						x_loc_norm = (1 - (x_loc - box[1]) / (box[2] - box[1]));
+						y_loc_norm = (1 - (y_loc - box[5]) / (box[6] - box[5]));
+						VSI = SUPER_CRITICAL_MINE_E_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
+					} else {
+						VSI = 0;
+					}
+				}
 			}
+			VSI = (VSI < 0.0) ? 0 : VSI;
+			VSI = (VSI > maximum_vsi) ? maximum_vsi : VSI;
+			C_UDMI(c, t, 4) = VSI;
 		}
+		end_c_loop(c, t)
 	}
-	VSI = (VSI < 0.0) ? 0 : VSI;
-	VSI = (VSI > maximum_vsi) ? maximum_vsi : VSI;
-	C_UDMI(c, t, 4) = VSI;
-}
-end_c_loop(c, t)
-}
-Print_Scheme_Variable_Settings();
 }
