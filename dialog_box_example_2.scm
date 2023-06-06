@@ -1,60 +1,3 @@
-(define (apply-cb) #t)
-(define update-cb #f)
-(define table)
-(define myList1)
-(define myList2)
-(define checkBox1)
-
-; get names of fluid zones
-(define zone_names
-	(map symbol->string
-		(filter
-			(lambda (name)
-				(equal?
-					(symbol->string
-						(zone-type (get-zone name))
-					)
-					"fluid"
-				)
-			)
-			(inquire-zone-names)
-		)
-	)
-)
-
-; get ids of fluid zones
-(define zone_ids
-	(map 
-		(lambda (zone_name)
-			(zone-name->id zone_name)
-		)
-		zone_names
-	)
-)
-
-(define (make-new-rpvar name default type)
-	(if (not (rp-var-object name))
-		(rp-var-define name default type #f)))
-
-(make-new-rpvar 'gob/isBool #f 'boolean)
-
-(define (button-cb . args)
-    (cx-set-list-items myList2 (cx-show-list-selections myList1))
-    (cx-set-list-selections myList2 (cx-show-list-selections myList1))
-)
-(define (button2-cb . args);                                 |
-    ; command to set variables of provided zone              v This is the zone being set up
-    (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::libudf\" yes yes udf \"set_perm_2_VSI::libudf\" yes yes \"udf\" \"set_perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections myList1))
-)
-(define my-dialog-box (cx-create-panel "My Dialog Box" apply-cb update-cb))
-(set! table (cx-create-table my-dialog-box "This is an example Dialog Box"))
-(set! myList1 (cx-create-list table "List 1" 'visible-lines 3 'multiple-selections #t 'row 0))
-(cx-set-list-items myList1 zone_names)
-(set! myList2 (cx-create-list table "List 2" 'visible-lines 5 'multiple-selections #t 'row 1))
-
-(cx-create-button table "Go" 'activate-callback button2-cb 'row 2 'col 1)
-(cx-show-panel my-dialog-box)
-
 ; allocate and initialize UDMs
 (ti-menu-load-string "define/user-defined/user-defined-memory 7")
 (ti-menu-load-string "solve/initialize/initialize-flow")
@@ -122,18 +65,25 @@
 (make-new-rpvar 'gob/initial-porosity 0.25778 'real)
 (make-new-rpvar 'gob/maximum-vsi 0.40 'real)
 ; Declare Variables for Zone Selection box
-(make-new-rpvar 'gob/startup_center_radio_button #t 'boolean)
-(make-new-rpvar 'gob/startup_headgate_radio_button #f 'boolean)
-(make-new-rpvar 'gob/startup_tailgate_radio_button #f 'boolean)
-(make-new-rpvar 'gob/gob_center_radio_button #f 'boolean)
-(make-new-rpvar 'gob/mid_headgate_radio_button #f 'boolean)
-(make-new-rpvar 'gob/mid_tailgate_radio_button #f 'boolean)
-(make-new-rpvar 'gob/working_center_radio_button #f 'boolean)
-(make-new-rpvar 'gob/working_headgate_radio_button #f 'boolean)
-(make-new-rpvar 'gob/working_tailgate_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/startup_room_center_radio_button #t 'boolean)
+(make-new-rpvar 'longwallgobs/startup_room_corner_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/mid_panel_center_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/mid_panel_gateroad_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/working_face_center_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/working_face_corner_radio_button #f 'boolean)
+(make-new-rpvar 'longwallgobs/single_part_mesh_radio_button #f 'boolean)
+; Declare variables for zone IDs
+(make-new-rpvar 'longwallgobs/startup_room_center_id 0 'integer)
+(make-new-rpvar 'longwallgobs/startup_room_corner_id 0 'integer)
+(make-new-rpvar 'longwallgobs/mid_panel_center_id 0 'integer)
+(make-new-rpvar 'longwallgobs/mid_panel_gateroad_id 0 'integer)
+(make-new-rpvar 'longwallgobs/working_face_center_id 0 'integer)
+(make-new-rpvar 'longwallgobs/working_face_corner_id 0 'integer)
+(make-new-rpvar 'longwallgobs/single_part_mesh_id 0 'integer)
 ; Declare variables for zone info lists
-(make-new-rpvar 'gob/zone_names_selected '() 'list)
-(make-new-rpvar 'gob/zone_ids zone_names 'list)
+(make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
+(make-new-rpvar 'longwallgobs/zone_names '() 'list)
+; (make-new-rpvar 'longwallgobs/zone_ids zone_ids 'list)
 
 ; Model Type and Required Settings Definition
 (define model-type-and-required-settings-box
@@ -167,17 +117,17 @@
 
 		; Zone selection
 		(table3)
-			(gob/zone_button_box)
-			(gob/startup_center_radio_button)	
-			(gob/startup_headgate_radio_button)
-			(gob/startup_tailgate_radio_button)	
-			(gob/gob_center_radio_button)	
-			(gob/mid_headgate_radio_button)	
-			(gob/mid_tailgate_radio_button)	
-			(gob/working_center_radio_button)	
-			(gob/working_headgate_radio_button)	
-			(gob/working_tailgate_radio_button)
-			(gob/zone_names)
+			(longwallgobs/zone_button_box)
+			(longwallgobs/startup_room_center_radio_button)	
+			(longwallgobs/startup_room_corner_radio_button)
+			(longwallgobs/mid_panel_center_radio_button)	
+			(longwallgobs/mid_panel_gateroad_radio_button)	
+			(longwallgobs/working_face_center_radio_button)	
+			(longwallgobs/working_face_corner_radio_button)	
+			(longwallgobs/single_part_mesh_radio_button)
+			(longwallgobs/apply_button)
+
+            (longwallgobs/zone_names)
 
 		)
 
@@ -204,16 +154,14 @@
 			(cx-set-real-entry gob/maximum-vsi (rpgetvar 'gob/maximum-vsi))
 
 			; Zone selection
-			(cx-set-toggle-button gob/startup_center_radio_button (rpgetvar 'gob/startup_center_radio_button))
-			(cx-set-toggle-button gob/startup_headgate_radio_button (rpgetvar 'gob/startup_headgate_radio_button))
-			(cx-set-toggle-button gob/startup_tailgate_radio_button (rpgetvar 'gob/startup_tailgate_radio_button))
-			(cx-set-toggle-button gob/gob_center_radio_button (rpgetvar 'gob/gob_center_radio_button))
-			(cx-set-toggle-button gob/mid_headgate_radio_button (rpgetvar 'gob/mid_headgate_radio_button))
-			(cx-set-toggle-button gob/mid_tailgate_radio_button (rpgetvar 'gob/mid_tailgate_radio_button))
-			(cx-set-toggle-button gob/working_center_radio_button (rpgetvar 'gob/working_center_radio_button))
-			(cx-set-toggle-button gob/working_headgate_radio_button (rpgetvar 'gob/working_headgate_radio_button))
-			(cx-set-toggle-button gob/working_tailgate_radio_button (rpgetvar 'gob/working_tailgate_radio_button))
-			(cx-set-list-items gob/zone_names zone_names)
+			(cx-set-toggle-button longwallgobs/startup_room_center_radio_button (rpgetvar 'longwallgobs/startup_room_center_radio_button))
+			(cx-set-toggle-button longwallgobs/startup_room_corner_radio_button (rpgetvar 'longwallgobs/startup_room_corner_radio_button))
+			(cx-set-toggle-button longwallgobs/mid_panel_center_radio_button (rpgetvar 'longwallgobs/mid_panel_center_radio_button))
+			(cx-set-toggle-button longwallgobs/mid_panel_gateroad_radio_button (rpgetvar 'longwallgobs/mid_panel_gateroad_radio_button))
+			(cx-set-toggle-button longwallgobs/working_face_center_radio_button (rpgetvar 'longwallgobs/working_face_center_radio_button))
+			(cx-set-toggle-button longwallgobs/working_face_corner_radio_button (rpgetvar 'longwallgobs/working_face_corner_radio_button))
+			(cx-set-toggle-button longwallgobs/single_part_mesh_radio_button (rpgetvar 'longwallgobs/single_part_mesh_radio_button))
+			(cx-set-list-items longwallgobs/zone_names zone_names)
 		)
 
 		; apply-cb - invoked when you click "OK"
@@ -239,23 +187,32 @@
 			(rpsetvar 'gob/maximum-vsi (cx-show-real-entry gob/maximum-vsi))
 
 			; Zone selection
-			(rpsetvar 'gob/startup_center_radio_button (cx-show-toggle-button gob/startup_center_radio_button))
-			(rpsetvar 'gob/startup_headgate_radio_button (cx-show-toggle-button gob/startup_headgate_radio_button))
-			(rpsetvar 'gob/startup_tailgate_radio_button (cx-show-toggle-button gob/startup_tailgate_radio_button))
-			(rpsetvar 'gob/gob_center_radio_button (cx-show-toggle-button gob/gob_center_radio_button))
-			(rpsetvar 'gob/mid_headgate_radio_button (cx-show-toggle-button gob/mid_headgate_radio_button))
-			(rpsetvar 'gob/mid_tailgate_radio_button  (cx-show-toggle-button gob/mid_tailgate_radio_button ))
-			(rpsetvar 'gob/working_center_radio_button (cx-show-toggle-button gob/working_center_radio_button))
-			(rpsetvar 'gob/working_headgate_radio_button (cx-show-toggle-button gob/working_headgate_radio_button))
-			(rpsetvar 'gob/working_tailgate_radio_button (cx-show-toggle-button gob/working_tailgate_radio_button))
-			(rpsetvar 'gob/zone_names_selected (cx-show-list-selections gob/zone_names))
+			(rpsetvar 'longwallgobs/startup_room_center_radio_button (cx-show-toggle-button longwallgobs/startup_room_center_radio_button))
+			(rpsetvar 'longwallgobs/startup_room_corner_radio_button (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button))
+			(rpsetvar 'longwallgobs/mid_panel_center_radio_button (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button))
+			(rpsetvar 'longwallgobs/mid_panel_gateroad_radio_button  (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button ))
+			(rpsetvar 'longwallgobs/working_face_center_radio_button (cx-show-toggle-button longwallgobs/working_face_center_radio_button))
+			(rpsetvar 'longwallgobs/working_face_corner_radio_button (cx-show-toggle-button longwallgobs/working_face_corner_radio_button))
+			(rpsetvar 'longwallgobs/single_part_mesh_radio_button (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button))
+			(rpsetvar 'longwallgobs/zone_names_selected (cx-show-list-selections longwallgobs/zone_names))
+
+            (%run-udf-apply 1)
+        )
+
+        (define (button-cb . args)
+            ; Get zone id for each zone
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0))))
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_corner_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_center_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_gateroad_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (rpsetvar 'longwallgobs/working_face_center_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (rpsetvar 'longwallgobs/working_face_corner_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (rpsetvar 'longwallgobs/single_part_mesh_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
 
 			; Set up zone selected based on what mine model is selected
-			(if (equal? (rpgetvar 'gob/mine_C_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_1perm_1_VSI::libudf\" yes yes udf \"set_1perm_2_VSI::libudf\" yes yes \"udf\" \"set_1perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_1poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections gob/zone_names)))
-			(if (equal? (rpgetvar 'gob/mine_E_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_2perm_1_VSI::libudf\" yes yes udf \"set_2perm_2_VSI::libudf\" yes yes \"udf\" \"set_2perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_2poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections gob/zone_names)))
-			(if (equal? (rpgetvar 'gob/mine_T_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_3perm_1_VSI::libudf\" yes yes udf \"set_3perm_2_VSI::libudf\" yes yes \"udf\" \"set_3perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_3poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections gob/zone_names)))
-
-			(%run-udf-apply 1)
+			(if (equal? (rpgetvar 'gob/mine_C_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_1perm_1_VSI::libudf\" yes yes udf \"set_1perm_2_VSI::libudf\" yes yes \"udf\" \"set_1perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_1poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			(if (equal? (rpgetvar 'gob/mine_E_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_2perm_1_VSI::libudf\" yes yes udf \"set_2perm_2_VSI::libudf\" yes yes \"udf\" \"set_2perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_2poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			(if (equal? (rpgetvar 'gob/mine_T_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_3perm_1_VSI::libudf\" yes yes udf \"set_3perm_2_VSI::libudf\" yes yes \"udf\" \"set_3perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_3poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
 		)
 
 		(lambda args
@@ -293,19 +250,19 @@
 					; Zone selection
 					(set! table3 (cx-create-table dialog-box "" 'below 0 'right-of table))
 
-					(set! gob/zone_button_box (cx-create-button-box table3 "Zone Type" 'radio-mode #t 'col 0))
+					(set! longwallgobs/zone_button_box (cx-create-button-box table3 "Zone Type" 'radio-mode #t 'col 0))
 
-					(set! gob/startup_center_radio_button (cx-create-toggle-button gob/zone_button_box "Startup Center"))
-					(set! gob/startup_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Startup Headgate"))
-					(set! gob/startup_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Startup Tailgate"))
-					(set! gob/gob_center_radio_button (cx-create-toggle-button gob/zone_button_box "Gob Center"))
-					(set! gob/mid_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Mid-Panel Headgate"))
-					(set! gob/mid_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Mid-Panel Tailgate"))
-					(set! gob/working_center_radio_button (cx-create-toggle-button gob/zone_button_box "Working Center"))
-					(set! gob/working_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Working Headgate"))
-					(set! gob/working_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Working Tailgate"))
+					(set! longwallgobs/startup_room_center_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Startup Center"))
+					(set! longwallgobs/startup_room_corner_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Startup Headgate"))
+					(set! longwallgobs/mid_panel_center_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Mid-Panel Headgate"))
+					(set! longwallgobs/mid_panel_gateroad_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Mid-Panel Tailgate"))
+					(set! longwallgobs/working_face_center_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Center"))
+					(set! longwallgobs/working_face_corner_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Working Headgate"))
+					(set! longwallgobs/single_part_mesh_radio_button (cx-create-toggle-button longwallgobs/zone_button_box "Single-Part Mesh"))
 
-					(set! gob/zone_names (cx-create-list table3 "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
+					(set! longwallgobs/apply_button (cx-create-button table3 "Apply" 'activate-callback button-cb 'row 1 'col 1))
+
+					(set! longwallgobs/zone_names (cx-create-list table3 "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
 				
 				) ;End Of Let Statement
 			) ;End Of If Statement
@@ -315,149 +272,6 @@
 		) ;End Of Args Function
 	) ;End Of Let Statement
 ) ;End Of model-type-and-required-settings-box Definition
-
-; Optional Settings Definition
-(define optional-settings-box
-	;Let Statement, Local Variable Declarations
-	(let ((dialog-box #f)
-		(table)
-
-			(gob/optional_param_table)
-			(gob/resistance-scalar)
-			(gob/maximum-resistance)
-			(gob/minimum-resistance)
-			(gob/maximum-porosity)
-			(gob/initial-porosity)
-			(gob/maximum-vsi)
-
-		)
-
-		; update-cb - invoked when the dialog box is opened
-		(define (update-cb . args)
-
-			(cx-set-real-entry gob/resistance-scalar (rpgetvar 'gob/resistance-scalar))
-			(cx-set-real-entry gob/maximum-resistance (rpgetvar 'gob/maximum-resistance))
-			(cx-set-real-entry gob/minimum-resistance (rpgetvar 'gob/minimum-resistance))
-			(cx-set-real-entry gob/maximum-porosity (rpgetvar 'gob/maximum-porosity))
-			(cx-set-real-entry gob/initial-porosity (rpgetvar 'gob/initial-porosity))
-			(cx-set-real-entry gob/maximum-vsi (rpgetvar 'gob/maximum-vsi))
-
-		)
-
-		; apply-cb - invoked when you click "OK"
-		(define (apply-cb . args)
-
-			(rpsetvar 'gob/resistance-scalar (cx-show-real-entry gob/resistance-scalar))
-			(rpsetvar 'gob/maximum-resistance (cx-show-real-entry gob/maximum-resistance))
-			(rpsetvar 'gob/minimum-resistance (cx-show-real-entry gob/minimum-resistance))
-			(rpsetvar 'gob/maximum-porosity (cx-show-real-entry gob/maximum-porosity))
-			(rpsetvar 'gob/initial-porosity (cx-show-real-entry gob/initial-porosity))
-			(rpsetvar 'gob/maximum-vsi (cx-show-real-entry gob/maximum-vsi))
-
-			(%run-udf-apply 1)
-
-		)
-
-		(lambda args
-			(if (not dialog-box)
-				(let ()
-				
-					(set! dialog-box (cx-create-panel "Optional Settings" apply-cb update-cb))
-					(set! table (cx-create-table dialog-box ""))
-
-					(set! gob/optional_param_table (cx-create-table table "Optional Settings" 'row 0 'col 1))
-					(set! gob/resistance-scalar (cx-create-real-entry gob/optional_param_table "Resistance Scalar" 'row 0))
-					(set! gob/maximum-resistance (cx-create-real-entry gob/optional_param_table "Maximum Resistance" 'row 1))
-					(set! gob/minimum-resistance (cx-create-real-entry gob/optional_param_table "Minimum Resistance" 'row 2))
-					(set! gob/maximum-porosity (cx-create-real-entry gob/optional_param_table "Maximum Porosity" 'row 3))
-					(set! gob/initial-porosity (cx-create-real-entry gob/optional_param_table "Initial Porosity" 'row 4))
-					(set! gob/maximum-vsi (cx-create-real-entry gob/optional_param_table "Maximum VSI" 'row 5))
-				
-				) ;End Of Let Statement
-			) ;End Of If Statement
-			
-			;Call To Open Dialog Box
-			(cx-show-panel dialog-box)
-		) ;End Of Args Function
-	) ;End Of Let Statement
-) ;End Of optional-settings-box Definition
-
-; Zone Selection Definition
-(define zone-selection-box
-	; Let Statement, Local Varaible Declarations
-	(let ((dialog-box #f)
-		(table)
-			(gob/zone_button_box)
-			(gob/startup_center_radio_button)	
-			(gob/startup_headgate_radio_button)
-			(gob/startup_tailgate_radio_button)	
-			(gob/gob_center_radio_button)	
-			(gob/mid_headgate_radio_button)	
-			(gob/mid_tailgate_radio_button)	
-			(gob/working_center_radio_button)	
-			(gob/working_headgate_radio_button)	
-			(gob/working_tailgate_radio_button)
-			(gob/zone_names)
-	)
-
-		; update-cb - invoked when the dialog box is opened
-		(define (update-cb . args)
-			(cx-set-toggle-button gob/startup_center_radio_button (rpgetvar 'gob/startup_center_radio_button))
-			(cx-set-toggle-button gob/startup_headgate_radio_button (rpgetvar 'gob/startup_headgate_radio_button))
-			(cx-set-toggle-button gob/startup_tailgate_radio_button (rpgetvar 'gob/startup_tailgate_radio_button))
-			(cx-set-toggle-button gob/gob_center_radio_button (rpgetvar 'gob/gob_center_radio_button))
-			(cx-set-toggle-button gob/mid_headgate_radio_button (rpgetvar 'gob/mid_headgate_radio_button))
-			(cx-set-toggle-button gob/mid_tailgate_radio_button (rpgetvar 'gob/mid_tailgate_radio_button))
-			(cx-set-toggle-button gob/working_center_radio_button (rpgetvar 'gob/working_center_radio_button))
-			(cx-set-toggle-button gob/working_headgate_radio_button (rpgetvar 'gob/working_headgate_radio_button))
-			(cx-set-toggle-button gob/working_tailgate_radio_button (rpgetvar 'gob/working_tailgate_radio_button))
-			(cx-set-list-items gob/zone_names zone_names)
-		)
-
-		; apply-cb - invoked when you click "OK"
-		(define (apply-cb . args)
-			(rpsetvar 'gob/startup_center_radio_button (cx-show-toggle-button gob/startup_center_radio_button))
-			(rpsetvar 'gob/startup_headgate_radio_button (cx-show-toggle-button gob/startup_headgate_radio_button))
-			(rpsetvar 'gob/startup_tailgate_radio_button (cx-show-toggle-button gob/startup_tailgate_radio_button))
-			(rpsetvar 'gob/gob_center_radio_button (cx-show-toggle-button gob/gob_center_radio_button))
-			(rpsetvar 'gob/mid_headgate_radio_button (cx-show-toggle-button gob/mid_headgate_radio_button))
-			(rpsetvar 'gob/mid_tailgate_radio_button  (cx-show-toggle-button gob/mid_tailgate_radio_button ))
-			(rpsetvar 'gob/working_center_radio_button (cx-show-toggle-button gob/working_center_radio_button))
-			(rpsetvar 'gob/working_headgate_radio_button (cx-show-toggle-button gob/working_headgate_radio_button))
-			(rpsetvar 'gob/working_tailgate_radio_button (cx-show-toggle-button gob/working_tailgate_radio_button))
-			(rpsetvar 'gob/zone_names_selected (cx-show-list-selections gob/zone_names))
-		
-			(%run-udf-apply 1)
-		)
-
-		(lambda args
-			(if (not dialog-box)
-				(let ()
-				
-					(set! dialog-box (cx-create-panel "Zone Selection" apply-cb update-cb))
-					(set! table (cx-create-table dialog-box ""))
-
-					(set! gob/zone_button_box (cx-create-button-box table "Zone Type" 'radio-mode #t 'col 0))
-
-					(set! gob/startup_center_radio_button (cx-create-toggle-button gob/zone_button_box "Startup Center"))
-					(set! gob/startup_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Startup Headgate"))
-					(set! gob/startup_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Startup Tailgate"))
-					(set! gob/gob_center_radio_button (cx-create-toggle-button gob/zone_button_box "Gob Center"))
-					(set! gob/mid_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Mid-Panel Headgate"))
-					(set! gob/mid_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Mid-Panel Tailgate"))
-					(set! gob/working_center_radio_button (cx-create-toggle-button gob/zone_button_box "Working Center"))
-					(set! gob/working_headgate_radio_button (cx-create-toggle-button gob/zone_button_box "Working Headgate"))
-					(set! gob/working_tailgate_radio_button (cx-create-toggle-button gob/zone_button_box "Working Tailgate"))
-
-					(set! gob/zone_names (cx-create-list table "Zone Selection" 'visible-lines 9 'multiple-selections #f 'row 0 'col 1))
-
-				) ;End Of Let Statement
-			) ;End Of If Statement
-			;Call To Open Dialog Box
-			(cx-show-panel dialog-box)
-		) ;End Of Args Function
-	) ;End Of Let Statement
-) ; End of Zone Selection Definition
 
 (cx-add-menu "Model Mine Gob" #f)
 (cx-add-hitem "Model Mine Gob" "Permeability and Porosity" #f #f #t #f)
