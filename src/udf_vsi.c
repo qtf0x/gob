@@ -480,7 +480,7 @@ void vsi_mine_C_stepped()
  * MINE E
  * SUPER CRITIAL PANEL
 *******************************************************************************/
-void VSI_MINE_E_Stepped()
+void vsi_mine_E_stepped()
 {
 	// RP variables (set by user)
 
