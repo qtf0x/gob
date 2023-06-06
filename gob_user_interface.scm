@@ -82,6 +82,7 @@
 (make-new-rpvar 'longwallgobs/single_part_mesh_id 0 'integer)
 ; Declare variables for zone info lists
 (make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
+(make-new-rpvar 'longwallgobs/zone_names '() 'list)
 ; (make-new-rpvar 'longwallgobs/zone_ids zone_ids 'list)
 
 ; Model Type and Required Settings Definition
@@ -277,17 +278,21 @@
 		)
 
 		; Creating 'apply' button
-		;(define counter 0)
 		(define (button-cb . args)
-			;(set! counter (+ counter 1))
-			; (if (equal? (rpgetvar 'longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id (zone-name->id (symbol->string (list-ref '(cx-show-list-selections longwallgobs/zone_names) 0)))))
-			(if (equal? (rpgetvar 'longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id (cx-show-list-selections longwallgobs/zone_names)))
-			(if (equal? (rpgetvar 'longwallgobs/startup_room_corner_radio_button) #t) ()) 
-			(if (equal? (rpgetvar 'longwallgobs/mid_panel_center_radio_button) #t) ()) 
-			(if (equal? (rpgetvar 'longwallgobs/mid_panel_gateroad_radio_button) #t) ()) 
-			(if (equal? (rpgetvar 'longwallgobs/working_face_center_radio_button) #t) ()) 
-			(if (equal? (rpgetvar 'longwallgobs/working_face_corner_radio_button) #t) ()) 
-			(if (equal? (rpgetvar 'longwallgobs/single_part_mesh_radio_button) #t) ()) 
+			; Get zone id for each zone
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0))))
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_corner_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_center_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_gateroad_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (rpsetvar 'longwallgobs/working_face_center_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (rpsetvar 'longwallgobs/working_face_corner_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (rpsetvar 'longwallgobs/single_part_mesh_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
+			
+			; Set up zone conditions based on mine selected
+			(for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::libudf\" yes yes udf \"set_perm_2_VSI::libudf\" yes yes \"udf\" \"set_perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			;(if (equal? (cx-show-toggle-button longwallgobs/mine_C_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_1perm_1_VSI::libudf\" yes yes udf \"set_1perm_2_VSI::libudf\" yes yes \"udf\" \"set_1perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_1poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			;(if (equal? (cx-show-toggle-button longwallgobs/mine_E_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_2perm_1_VSI::libudf\" yes yes udf \"set_2perm_2_VSI::libudf\" yes yes \"udf\" \"set_2perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_2poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			;(if (equal? (cx-show-toggle-button longwallgobs/mine_T_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_3perm_1_VSI::libudf\" yes yes udf \"set_3perm_2_VSI::libudf\" yes yes \"udf\" \"set_3perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_3poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
 		)
 
 		(lambda args
