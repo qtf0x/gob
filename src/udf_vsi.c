@@ -20,12 +20,13 @@
 #include "udf_vsi.h"
 
 #include "fits.h" // for equation fits
+#include "utils.h" // for clamp_positive, clamp_upper
 
 /*******************************************************************************
  * TRONA MINE
  * SUB CRITIAL PANEL
 *******************************************************************************/
-void VSI_MINE_Trona_Stepped()
+void vsi_trona_stepped()
 {
 	// RP variables (set by user)
 
@@ -129,7 +130,7 @@ void VSI_MINE_Trona_Stepped()
 			real x_loc = fabs(loc[0] - panel_x_offset);
 
 			// shift Fluent mesh to FLAC3D data zero point at startup room for equations
-			real y_loc = (panel_length + loc[1]) - panel_y_offset;
+			real y_loc = panel_length + loc[1] - panel_y_offset;
 
 			// limit vsi function to only within panel domain sizing
 			if (x_loc > panel_half_width) {
@@ -190,7 +191,7 @@ void VSI_MINE_Trona_Stepped()
 			}
 
 			// clamp and assign vsi to user-defined-memory location
-			C_UDMI(c, t, 4) = (vsi > max_vsi) ? max_vsi : vsi;
+			C_UDMI(c, t, 4) = clamp_upper(vsi, max_vsi);
 		}
 		end_c_loop(c, t)
 	}
@@ -200,7 +201,7 @@ void VSI_MINE_Trona_Stepped()
  * MINE C
  * SUPER CRITIAL PANEL
 *******************************************************************************/
-void VSI_MINE_C_Stepped()
+void vsi_mine_C_stepped()
 {
 	// RP variables (set by user)
 
@@ -242,8 +243,6 @@ void VSI_MINE_C_Stepped()
 	real vsi = 0; // volumetric strain increment
 	const real BLEND_RANGE = 15;
 	const real BLEND_RANGE_Y = 25; // (half) width of the blend zone
-	real FUN1, FUN2;
-	real x_loc_norm, y_loc_norm;
 
 	const real BOX[7] = { 0, panel_half_width - 100, panel_half_width, 0, 190, panel_length - 300, panel_length };
 
@@ -304,142 +303,174 @@ void VSI_MINE_C_Stepped()
 			real x_loc = fabs(loc[0] - panel_x_offset);
 
 			// shift Fluent mesh to FLAC3D data zero point at startup room for equations
-			real y_loc = (panel_length + loc[1]) - panel_y_offset;
+			real y_loc = panel_length + loc[1] - panel_y_offset;
 
 			// limit vsi function to only within panel domain sizing
 			if (x_loc > panelwidth) {
 				vsi = 0;
-			} else {
-				if (x_loc < (BOX[1] - BLEND_RANGE)) {
-					if (y_loc < 0) {
-						vsi = 0;
-					} else if (y_loc < BOX[4] - BLEND_RANGE_Y - 15) {
-						// normalize to equation
-						x_loc = -(x_loc - BOX[1] + 20) / BOX[1];
-						y_loc = y_loc / BOX[4];
+			} else if (x_loc < BOX[1] - BLEND_RANGE) {
+				if (y_loc < 0) {
+					vsi = 0;
+				} else if (y_loc < BOX[4] - BLEND_RANGE_Y - 15) {
+					// normalize to equation
+					x_loc = -(x_loc - BOX[1] + 20) / BOX[1];
+					y_loc = y_loc / BOX[4];
 
-						vsi = super_critical_mine_C_startup_room_center(x_loc, y_loc);
-					} else if (y_loc < BOX[4] + BLEND_RANGE_Y - 15) {
-						// normalize to equation
-						x_loc_norm = -(x_loc - BOX[1]) / (BOX[1]);
-						y_loc_norm = (BOX[4]);
-						FUN1 = SUPER_CRITICAL_MINE_C_STARTUP_CENTER(x_loc_norm, y_loc_norm);
-						x_loc_norm = (-(x_loc - BOX[1]) / (BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						FUN2 = SUPER_CRITICAL_MINE_C_CENTER_PANEL(x_loc_norm, y_loc_norm);
+					vsi = super_critical_mine_C_startup_room_center(x_loc, y_loc);
+				} else if (y_loc < BOX[4] + BLEND_RANGE_Y - 15) {
+					// normalize to equation
+					const real X_LOC_1 = -(x_loc - BOX[1]) / (BOX[1]);
+					const real X_LOC_2 = -(x_loc - BOX[1]) / BOX[1];
+					const real Y_LOC_1 = BOX[4];
+					const real Y_LOC_2 = (y_loc - BOX[4]) / (BOX[5] - BOX[4]);
 
-						// calculate blending factor
-						const real BLEND_MIX = ((y_loc - BLEND_RANGE_Y - 15) / (2 * BLEND_RANGE_Y + 30));
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_startup_room_center(X_LOC_1, Y_LOC_1);
+					const real FUN2 = super_critical_mine_C_mid_panel_center(X_LOC_2, Y_LOC_2);
 
-						// linearlly interpolate
-						vsi = FUN2 * (BLEND_MIX) + FUN1 * (1 - BLEND_MIX);
-					} else if ((y_loc < (BOX[5] - BLEND_RANGE_Y - 15)) &&
-						   (y_loc > (BOX[4] + BLEND_RANGE_Y - 15))) {
-						x_loc_norm = (-(x_loc - BOX[1] + 10) / (BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						vsi = SUPER_CRITICAL_MINE_C_CENTER_PANEL(x_loc_norm, y_loc_norm);
-					} else if ((y_loc > (BOX[5] - BLEND_RANGE_Y - 15)) &&
-						   (y_loc < BOX[5] + BLEND_RANGE_Y + 15)) {
-						mix = -((y_loc - BOX[5] - BLEND_RANGE_Y - 15) /
-							(2 * BLEND_RANGE_Y + 30));
-						x_loc_norm = (-(x_loc - BOX[1]) / (BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4] - 100) / (BOX[5] - BOX[4]));
-						FUN1 = SUPER_CRITICAL_MINE_C_CENTER_PANEL(x_loc_norm, y_loc_norm);
-						x_loc_norm = ((x_loc - BOX[1] + BLEND_RANGE + 15) / (BOX[1]));
-						y_loc_norm = (1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]));
-						FUN2 = SUPER_CRITICAL_MINE_C_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
-						vsi = (FUN1 * (mix) + FUN2 * (1 - mix));
-					} else if ((y_loc < BOX[6]) &&
-						   (y_loc >
-						    (BOX[5] + BLEND_RANGE_Y -
-						     15))) { /* Remained of data points are in the recovery room 600-1000m */
-						x_loc_norm = ((x_loc - BOX[1] + BLEND_RANGE + 15) / (BOX[1]));
-						y_loc_norm = (1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]));
-						vsi = SUPER_CRITICAL_MINE_C_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
-					} else {
-						vsi = 0;
-					}
-				} else if (x_loc <= (BOX[1] + BLEND_RANGE)) {
-					mix = ((x_loc - BOX[1] + BLEND_RANGE) / (2 * BLEND_RANGE));
-					if (y_loc < 0) {
-						vsi = 0;
-					} else if (y_loc < BOX[4]) {
-						x_loc_norm = (-(x_loc - BOX[1]) / (BOX[1])); /* NORMALIZE to equation */
-						y_loc_norm = (y_loc / BOX[4]);
-						FUN1 = SUPER_CRITICAL_MINE_C_STARTUP_CENTER(x_loc_norm, y_loc_norm);
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = (y_loc / BOX[4]);
-						FUN2 = SUPER_CRITICAL_MINE_C_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
-						vsi = (FUN2 * (mix) + FUN1 * (1 - mix));
-					} else if (y_loc <= BOX[5]) {
-						x_loc_norm = (-(x_loc - BOX[1]) / (BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						FUN1 = SUPER_CRITICAL_MINE_C_CENTER_PANEL(x_loc_norm, y_loc_norm);
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						FUN2 = SUPER_CRITICAL_MINE_C_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-						vsi = (FUN2 * (mix) + FUN1 * (1 - mix));
-					} else if (y_loc < BOX[6]) {
-						x_loc_norm =
-							((x_loc - (BOX[1] - BLEND_RANGE)) / (BOX[1] + BLEND_RANGE));
-						y_loc_norm = (1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]));
-						FUN1 = SUPER_CRITICAL_MINE_C_RECOVERY_CENTER(x_loc_norm, y_loc_norm);
-						x_loc_norm = (1 - (x_loc - (BOX[1])) / (BOX[2] - BOX[1]));
-						y_loc_norm = (1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]));
-						FUN2 = SUPER_CRITICAL_MINE_C_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
-						vsi = (FUN2 * (mix) + FUN1 * (1 - mix));
-					} else {
-						vsi = 0;
-					}
+					// calculate blending factor
+					const real BLEND_MIX = (y_loc - BLEND_RANGE_Y - 15) / (2 * BLEND_RANGE_Y + 30);
+
+					// linearlly interpolate
+					vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);
+				} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 15) {
+					// normalize to equation
+					x_loc = (-(x_loc - BOX[1] + 10) / (BOX[1]));
+					y_loc = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
+
+					vsi = super_critical_mine_C_mid_panel_center(x_loc, y_loc);
+				} else if (y_loc < BOX[5] + BLEND_RANGE_Y + 15) {
+					// normalize to equation
+					const real X_LOC_1 = -(x_loc - BOX[1]) / BOX[1];
+					const real X_LOC_2 = (x_loc - BOX[1] + BLEND_RANGE + 15) / BOX[1];
+					const real Y_LOC_1 = (y_loc - BOX[4] - 100) / (BOX[5] - BOX[4]);
+					const real Y_LOC_2 = 1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]);
+
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_mid_panel_center(X_LOC_1, Y_LOC_1);
+					const real FUN2 = super_critical_mine_C_working_face_center(X_LOC_2, Y_LOC_2);
+
+					// calculate blending factor
+					const real BLEND_MIX =
+						-(y_loc - BOX[5] - BLEND_RANGE_Y - 15) / (2 * BLEND_RANGE_Y + 30);
+
+					// linerally interpolate
+					vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);
+				} else if (y_loc < BOX[6]) {
+					// normalize to equation
+					x_loc = (x_loc - BOX[1] + BLEND_RANGE + 15) / BOX[1];
+					y_loc = 1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]);
+
+					vsi = super_critical_mine_C_working_face_center(x_loc, y_loc);
+				} else {
+					vsi = 0;
 				}
+			} else if (x_loc <= BOX[1] + BLEND_RANGE) {
+				// calculate blending factor
+				const real BLEND_MIX = ((x_loc - BOX[1] + BLEND_RANGE) / (2 * BLEND_RANGE));
 
-				else {
-					if (y_loc < 0) {
-						vsi = 0;
-					} else if (y_loc < BOX[4] - BLEND_RANGE_Y) {
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = (y_loc / BOX[4]);
-						vsi = SUPER_CRITICAL_MINE_C_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
-					} else if ((y_loc > (BOX[4] - BLEND_RANGE_Y)) &&
-						   (y_loc < BOX[4] + BLEND_RANGE_Y)) {
-						mix = ((y_loc - BOX[4] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y));
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = (y_loc / BOX[4]);
-						FUN1 = SUPER_CRITICAL_MINE_C_STARTUP_GATEROADS(x_loc_norm, y_loc_norm);
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						FUN2 = SUPER_CRITICAL_MINE_C_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-						vsi = (FUN2 * (mix) + FUN1 * (1 - mix));
-					} else if ((y_loc < (BOX[5] - BLEND_RANGE_Y - 20)) &&
-						   (y_loc > (BOX[4] + BLEND_RANGE_Y))) {
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						vsi = SUPER_CRITICAL_MINE_C_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-					} else if ((y_loc > (BOX[5] - BLEND_RANGE_Y - 20)) &&
-						   (y_loc < BOX[5] + BLEND_RANGE_Y + 20)) {
-						mix = ((y_loc - BOX[5] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y));
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = ((y_loc - BOX[4]) / (BOX[5] - BOX[4]));
-						FUN1 = SUPER_CRITICAL_MINE_C_CENTER_GATEROADS(x_loc_norm, y_loc_norm);
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = (1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]));
-						FUN2 = SUPER_CRITICAL_MINE_C_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
-						vsi = (FUN2 * (mix) + FUN1 * (1 - mix));
-					} else if (y_loc < panelength) {
-						x_loc_norm = (1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]));
-						y_loc_norm = (1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]));
-						vsi = SUPER_CRITICAL_MINE_C_RECOVERY_GATEROADS(x_loc_norm, y_loc_norm);
-					} else {
-						vsi = 0;
-					}
+				if (y_loc < 0) {
+					vsi = 0;
+				} else if (y_loc < BOX[4]) {
+					// normalize to equation
+					const real X_LOC_1 = -(x_loc - BOX[1]) / BOX[1];
+					const real X_LOC_2 = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					y_loc /= BOX[4];
+
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_startup_room_center(X_LOC_1, y_loc);
+					const real FUN2 = super_critical_mine_C_startup_room_corner(X_LOC_2, y_loc);
+
+					// linearlly interpolate
+					vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);
+				} else if (y_loc <= BOX[5]) {
+					// normalize to equation
+					const real X_LOC_1 = -(x_loc - BOX[1]) / BOX[1];
+					const real X_LOC_2 = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					y_loc = (y_loc - BOX[4]) / (BOX[5] - BOX[4]);
+
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_mid_panel_center(X_LOC_1, y_loc);
+					const real FUN2 = super_critical_mine_C_mid_panel_gateroad(X_LOC_2, y_loc);
+
+					// linearlly interpolate
+					vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);
+				} else if (y_loc < BOX[6]) {
+					// normalize to equation
+					const real X_LOC_1 = (x_loc - (BOX[1] - BLEND_RANGE)) / (BOX[1] + BLEND_RANGE);
+					const real X_LOC_2 = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					y_loc = 1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]);
+
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_working_face_center(X_LOC_1, y_loc);
+					const real FUN2 = super_critical_mine_C_working_face_corner(X_LOC_2, y_loc);
+
+					// linearlly interpolate
+					vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);
+				} else {
+					vsi = 0;
+				}
+			} else {
+				if (y_loc < 0) {
+					vsi = 0;
+				} else if (y_loc < BOX[4] - BLEND_RANGE_Y) {
+					// normalize to equation
+					x_loc = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					y_loc /= BOX[4];
+
+					vsi = super_critical_mine_C_startup_room_corner(x_loc, y_loc);
+				} else if (y_loc < BOX[4] + BLEND_RANGE_Y) {
+					// normalize to equation
+					x_loc = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					const real Y_LOC_1 = y_loc / BOX[4];
+					const real Y_LOC_2 = (y_loc - BOX[4]) / (BOX[5] - BOX[4]);
+
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_startup_room_corner(x_loc, Y_LOC_1);
+					const real FUN2 = super_critical_mine_C_mid_panel_gateroad(x_loc, Y_LOC_2);
+
+					// calculate blending factor
+					const real BLEND_MIX = (y_loc - BOX[4] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);
+
+					// linearlly interpolate
+					vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);
+				} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 20) {
+					// normalize to equation
+					x_loc = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					y_loc = (y_loc - BOX[4]) / (BOX[5] - BOX[4]);
+
+					vsi = super_critical_mine_C_mid_panel_gateroad(x_loc, y_loc);
+				} else if (y_loc < BOX[5] + BLEND_RANGE_Y + 20) {
+					// normalize to equation
+					x_loc = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					const real Y_LOC_1 = (y_loc - BOX[4]) / (BOX[5] - BOX[4]);
+					const real Y_LOC_2 = 1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]);
+
+					// calculate fits for both zones
+					const real FUN1 = super_critical_mine_C_mid_panel_gateroad(x_loc, Y_LOC_1);
+					const real FUN2 = super_critical_mine_C_working_face_corner(x_loc, Y_LOC_2);
+
+					// calculate blending factor
+					const real BLEND_MIX = ((y_loc - BOX[5] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y));
+
+					// linearlly interpolate
+					vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);
+				} else if (y_loc < panelength) {
+					// normalize to equation
+					x_loc = 1 - (x_loc - BOX[1]) / (BOX[2] - BOX[1]);
+					y_loc = 1 - (y_loc - BOX[5]) / (BOX[6] - BOX[5]);
+
+					vsi = super_critical_mine_C_working_face_corner(x_loc, y_loc);
+				} else {
+					vsi = 0;
 				}
 			}
-			vsi = (vsi < 0.0) ? 0 : vsi;
-			vsi = (vsi > maximum_vsi) ? maximum_vsi : vsi;
-			C_UDMI(c, t, 4) = vsi;
 		}
-		end_c_loop(c, t)
+
+		// clamp and assign vsi to user-defined-memory location
+		C_UDMI(c, t, 4) = clamp_upper(clamp_positive(vsi), max_vsi);
 	}
+	end_c_loop(c, t)
 }
 
 /*******************************************************************************
