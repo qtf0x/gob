@@ -126,7 +126,7 @@
       ; (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (display (rpgetvar 'longwallgobs/plasma_button)) (display (rpgetvar 'longwallgobs/plasma_button)) )
       ; (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap") () )
       ; (if (equal? (rpgetvar 'longwallgobs/field_velocity_button) #t) (ti-menu-load-string "preferences/graphics/colormap-settings/colormap/field_velocity\nGo to Contours>Colormap Options...>Currently Defined>field_velocity to apply")) 
-      (if (equal? (rpgetvar 'longwallgobs/field_velocity_button) #t) (display "Go to Contours>Colormap Options...>Currently Defined>field_velocity to apply\n")) 
+      (if (equal? (rpgetvar 'longwallgobs/field_velocity_button) #t) (ti-menu-load-string "file/read-colormap colormaps/field_velocity.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/explosive_plots_button) #t) (ti-menu-load-string "file/read-colormap colormaps/explosive_plots.colormap\n"))
       (if (equal? (rpgetvar 'longwallgobs/blackbody_button) #t) (ti-menu-load-string "file/read-colormap colormaps/blackbody.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/blackbody_extended_button) #t) (ti-menu-load-string "file/read-colormap colormaps/blackbody_extended.colormap\n")) 
