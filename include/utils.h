@@ -3,8 +3,9 @@
 
 #include <stdbool.h>
 
-double Cell_Inertia_Resistance(double cellporo,
-			       double initial_inertia_resistance);
+#include "udf.h"
+
+double Cell_Inertia_Resistance(double cellporo, double initial_inertia_resistance);
 
 double Initial_Inertia_Resistance();
 
@@ -16,6 +17,20 @@ double Cell_Resistance(double cellporo, double initial_permeability);
 !!!!!!!!!!!!!!!!!!!	SCHEME MESSAGES     !!!!!!!!!!!!!!!!!!!
 */
 void Print_Scheme_Variable_Settings();
+
+/**
+ * @brief Calculate the dimensions of the thread with the given ID.
+ * 
+ * @param [in] t_id Fluent identifier of the thread to be queried
+ * @param [out] width total width of the thread (x dimension)
+ * @param [out] length total length of the thread (y dimension)
+ * @param [out] min_x_out minimum x value of any cell in the thread
+ * @param [out] max_x_out maximum x value of any cell in the thread
+ * @param [out] min_y_out minimum y value of any cell in the thread
+ * @param [out] max_y_out maximum y value of any cell in the thread
+ */
+void get_thread_dimensions(const int t_id, real *width, real *length, real *min_x_out, real *max_x_out, real *min_y_out,
+			   real *max_y_out);
 
 /**
  * @brief Determines approximate equality between floating point numbers. Use

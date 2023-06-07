@@ -130,3 +130,53 @@ double clamp(const double num, const double min, const double max);
 
 	return num;
 }
+
+void get_thread_dimensions(const int t_id, real *width, real *length, real *min_x_out, real *max_x_out, real *min_y_out,
+			   real *max_y_out)
+{
+	int t_id = RP_Get_Integer("longwallgobs/startup_room_corner_id");
+
+	// retrieve a pointer to the selected thread
+	Thread *t = Lookup_Thread(domain, t_id);
+
+	// ND_ND is just 2 for 2D, 3 for 3D
+	real loc[ND_ND]; // mesh cell location "vector"
+
+	real min_x = 0;
+	real max_x = 0;
+	real min_y = 0;
+	real max_y = 0;
+
+	cell_t c; // current cell index w/in thread
+
+	begin_c_loop(c, t) // loop over all cells in the thread
+	{
+		// get mesh cell location
+		C_CENTROID(loc, c, t);
+
+		// get min and max x and y locations
+		if (loc[0] < min_x)
+			min_x = loc[0];
+		if (loc[0] > max_x)
+			max_x = loc[0];
+		if (loc[1] < min_y)
+			min_y = loc[1];
+		if (loc[1] > max_y)
+			max_y = loc[1];
+	}
+	end_c_loop(c, t);
+
+	// output thread dimensions
+	if (width)
+		&width = max_x - min_x;
+	if (length)
+		&length = max_y - min_y;
+	if (min_x_out)
+		&min_x_out = min_x;
+	if (max_x_out)
+		&max_x_out = max_x;
+	if (min_y_out)
+		&min_y_out = min_y;
+	if (max_y_out)
+		&max_y_out = max_y;
+}
