@@ -1,14 +1,16 @@
 # gob
 gob
 
-## Colormap Selection 
+## Colormap Selection
 
 ### Using This File
 
-Make sure that the folder titled "colormaps" containing all of the .colormap files is in your working directory. \
+The file colormap_selection.scm can be used to easily select custom colormaps via a button box. \
+Examples of the colormaps can be seen in the acknowledgements. \
+ Make sure that the folder titled "colormaps" containing all of the .colormap files is in your working directory. \
 The file colormap_selection.scm can also be put into the working directory. 
 
-### Load this file in Ansys Fluent
+### Loading This File in Ansys Fluent
 Option 1: Go to File>Read>Scheme...>colormap_selection.scm \
 Option 2: Type the relative path into the console: (load "colormap_selection.scm") \
 Option 3: Type the absolute path into the console: (load "C:/<file path>/colormap_selection.scm") \
