@@ -27,7 +27,7 @@
 ; Using Ansys Fluent Predefined Colormaps
 ; To see built in colormap options using the console: preferences/graphics/colormap-settings/colormap 
 ; To change colormap: preferences/graphics/colormap-settings/colormap/<colormap> 
-; e.g. preferences/graphics/colormap-settings/colormap/field_velocity
+; e.g. preferences/graphics/colormap-settings/colormap/field-velocity
 ; Use "q" or "quit" in the prompt to move back to the previously occupied menu, if needed
 
 ; Adding Ansys Fluent Predefined Colormaps to Selection Box
@@ -216,7 +216,7 @@
 					(set! dialog-box (cx-create-panel "Colormap Selection" apply-cb update-cb))
 					(set! table (cx-create-table dialog-box ""))
           ; Box to put radio buttons in
-					(set! longwallgobs/colormap_button_box (cx-create-button-box table "Colormap" 'radio-mode #t 'col 0))
+					(set! longwallgobs/colormap_button_box (cx-create-button-box table "Colormaps" 'radio-mode #t 'col 0))
           ; Radio buttons for the table
 					(set! longwallgobs/field_velocity_button (cx-create-toggle-button longwallgobs/colormap_button_box "Field Velocity (Default)"))
           (set! longwallgobs/explosive_plots_button (cx-create-toggle-button longwallgobs/colormap_button_box "Explosive Plots"))
@@ -241,6 +241,4 @@
 ) ; End of Zone Selection Definition
 
 (cx-add-menu "Colormap Selection" #f)
-;(cx-add-hitem "Colormap Selection" "Test" #f #f #t #f)
-;(cx-add-item "Test" "Colors" #\U #f #t colormap-selection-box)
-(cx-add-item "Colormap Selection" "" #\U #f #t colormap-selection-box)
+(cx-add-item "Colormap Selection" "Options" #\U #f #t colormap-selection-box)
