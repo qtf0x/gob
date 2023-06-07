@@ -3,6 +3,8 @@
 
 #include "udf.h" // Fluent macros
 
+#include "utils.h" // for fequal
+
 /*
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	!!!!!!!!!!!!!!! EXPLOSIVE METHANE-AIR MIXTURES !!!!!!!!!!!!!
@@ -122,7 +124,7 @@ For strata use: calc_explosive_integral*/
 	{
 		begin_c_loop(c, t)
 		{
-			if (fabs(C_UDMI(c, t, 2) - 1) < 1e-6) {
+			if (fequal(C_UDMI(c, t, 2), 1)) {
 				/* Assign marker value for cell volume that is explosive */
 
 				C_UDMI(c, t, 3) = 1 - C_UDMI(c, t, 1);

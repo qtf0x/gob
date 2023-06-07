@@ -1,3 +1,5 @@
+#include <math.h> // for fabs
+
 #include "utils.h" // Fluent macros
 
 double Cell_Inertia_Resistance(double cellporo, double initial_inertia_resistance)
@@ -109,12 +111,22 @@ void Print_Scheme_Variable_Settings()
 	}
 }
 
+bool fequal(const double num1, const double num2)
+{
+	return fabs(num2 - num1) < 1e-6;
+}
+
 double clamp_positive(const double num)
 {
 	return (num < 0) ? 0 : num;
 }
 
-double clamp_upper(const double num, const double max)
+double clamp(const double num, const double min, const double max);
 {
-	return (num > max) ? max : num;
+	if (num < min)
+		return min;
+	if (num > max)
+		return max;
+
+	return num;
 }
