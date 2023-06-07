@@ -23,4 +23,13 @@
  */
 double clamp_positive(const double num);
 
+/**
+ * @brief Clamps a floating-point value to some upper bound.
+ * 
+ * @param [in] num value to be clamped
+ * @param [in] max upper bound
+ * @return [double] value <= upper
+ */
+double clamp_upper(const double num, const double max);
+
 #endif // GOB_UTILS_H
