@@ -62,55 +62,6 @@ Hoek and Bray (1981). */
 	return (1.0 / cellperm);
 }
 
-void Print_Scheme_Variable_Settings()
-{
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) { /* Returns true if the variable exists */
-		Message("Porosity scaler: %g\n", RP_Get_double("vsi/porosity-scaler"));
-	} /* else default or manual set above is used */
-	else {
-		Message("Porosity scaler at default value: 1\n You may define it with TUI Command: (rp-var-define 'vsi/porosity-scaler VALUE 'double #f)\n");
-	}
-
-	if (RP_Variable_Exists_P("vsi/maximum-porosity")) { /* Returns true if the variable exists */
-		Message("The starting maximum porosity behind shields starts at: %g\n",
-			RP_Get_double("vsi/maximum-porosity"));
-	} /* else default or manual set above is used */
-	else {
-		Message("The starting maximum porostiy is not set. Using default value: 0.40\n You may set it with TUI Command: (rp-var-define 'vsi/maximum-porosity VALUE 'double #f)\n");
-	}
-
-	if (RP_Variable_Exists_P("vsi/initial-porosity")) { /* Returns true if the variable exists */
-		Message("Initial Porosity of host rock is set to: %g\n", RP_Get_double("vsi/initial-porosity"));
-	} /* else default or manual set above is used */
-	else {
-		Message("Initial Porosity of host rock is set to default value: 0.257780\n You may set it with TUI Command: (rp-var-define 'vsi/initial-porosity VALUE 'double #f)\n");
-	}
-
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) { /* Returns true if the variable exists */
-		Message("Resistance Scaler of Carmen-Kozeny relationship is set to: %g\n",
-			RP_Get_double("vsi/resist-scaler"));
-	} /* else default or manual set above is used */
-	else {
-		Message("Resistance Scaler of Carmen-Kozeny relationship is set to default value: 1\n You may set it with TUI Command: (rp-var-define 'vsi/resist-scaler VALUE 'double #f)\n");
-	}
-
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) { /* Returns true if the variable exists */
-		Message("Maximum cropped resistance (before scaler) in the gob center is set to: %g\n",
-			RP_Get_double("vsi/maximum-resist"));
-	} /* else default or manual set above is used */
-	else {
-		Message("Maximum cropped resistane (before scaler) in the gob center is set to default value: 5.00000E6\n You may set it with TUI Command: (rp-var-define 'vsi/maximum-resist VALUE 'double #f)\n");
-	}
-
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) { /* Returns true if the variable exists */
-		Message("Minimum cropped resistance (before scaler) in the edges of the gob is set to: %g\n",
-			RP_Get_double("vsi/minimum-resist"));
-	} /* else default or manual set above is used */
-	else {
-		Message("Minimum cropped resistance (before scaler) in the edges of the gob is set to default value: 1.45000E6\n You may set it with TUI Command: (rp-var-define 'vsi/minimum-resist VALUE 'double #f)\n");
-	}
-}
-
 bool fequal(const double num1, const double num2)
 {
 	return fabs(num2 - num1) < 1e-6;
@@ -121,7 +72,7 @@ double clamp_positive(const double num)
 	return (num < 0) ? 0 : num;
 }
 
-double clamp(const double num, const double min, const double max);
+double clamp(const double num, const double min, const double max)
 {
 	if (num < min)
 		return min;
@@ -131,21 +82,20 @@ double clamp(const double num, const double min, const double max);
 	return num;
 }
 
-void get_thread_dimensions(const int t_id, real *width, real *length, real *min_x_out, real *max_x_out, real *min_y_out,
-			   real *max_y_out)
+void get_thread_dimensions(const int thread_id, real *const width, real *const length)
 {
-	int t_id = RP_Get_Integer("longwallgobs/startup_room_corner_id");
-
 	// retrieve a pointer to the selected thread
-	Thread *t = Lookup_Thread(domain, t_id);
+	Thread *t = Lookup_Thread(domain, thread_id);
 
 	// ND_ND is just 2 for 2D, 3 for 3D
 	real loc[ND_ND]; // mesh cell location "vector"
 
-	real min_x = 0;
-	real max_x = 0;
-	real min_y = 0;
-	real max_y = 0;
+	bool first_iteration = true;
+
+	real min_x;
+	real max_x;
+	real min_y;
+	real max_y;
 
 	cell_t c; // current cell index w/in thread
 
@@ -155,14 +105,16 @@ void get_thread_dimensions(const int t_id, real *width, real *length, real *min_
 		C_CENTROID(loc, c, t);
 
 		// get min and max x and y locations
-		if (loc[0] < min_x)
+		if (loc[0] < min_x || first_iteration)
 			min_x = loc[0];
-		if (loc[0] > max_x)
+		if (loc[0] > max_x || first_iteration)
 			max_x = loc[0];
-		if (loc[1] < min_y)
+		if (loc[1] < min_y || first_iteration)
 			min_y = loc[1];
-		if (loc[1] > max_y)
+		if (loc[1] > max_y || first_iteration)
 			max_y = loc[1];
+
+		first_iteration = false;
 	}
 	end_c_loop(c, t);
 
@@ -171,12 +123,124 @@ void get_thread_dimensions(const int t_id, real *width, real *length, real *min_
 		&width = max_x - min_x;
 	if (length)
 		&length = max_y - min_y;
-	if (min_x_out)
-		&min_x_out = min_x;
-	if (max_x_out)
-		&max_x_out = max_x;
-	if (min_y_out)
-		&min_y_out = min_y;
-	if (max_y_out)
-		&max_y_out = max_y;
+}
+
+void get_offsets_sub_critical(real *const x_offset, real *const y_offset)
+{
+	// ND_ND is just 2 for 2D, 3 for 3D
+	real loc[ND_ND]; // mesh cell location "vector"
+
+	bool first_iteration = true;
+
+	real max_x;
+	real max_y;
+
+	cell_t c; // current cell index w/in thread
+
+	// retrieve the ID for the working face corner thread
+	const int THREAD_ID = RP_Get_Integer("longwallgobs/working_face_corner_id");
+
+	// retrieve a pointer to the selected thread
+	Thread *t = Lookup_Thread(domain, THREAD_ID);
+
+	begin_c_loop(c, t) // loop over all cells in thread
+	{
+		// get mesh cell location
+		C_CENTROID(loc, c, t);
+
+		if (loc[0] > max_x || first_iteration)
+			max_x = loc[0];
+		if (loc[1] > max_y || first_iteration)
+			max_y = loc[1];
+
+		first_iteration = false;
+	}
+	end_c_loop(c, t);
+
+	if (x_offset)
+		&x_offset = max_x;
+	if (y_offset)
+		&y_offset = max_y;
+}
+
+void get_offsets_super_critical(real *const x_offset, real *const y_offset)
+{
+	// ND_ND is just 2 for 2D, 3 for 3D
+	real loc[ND_ND]; // mesh cell location "vector"
+
+	bool first_iteration = true;
+
+	real min_x;
+	real max_x;
+	real max_y;
+
+	cell_t c; // current cell index w/in thread
+
+	// retrieve the ID for the working face corner thread
+	const int THREAD_ID = RP_Get_Integer("longwallgobs/working_face_center_id");
+
+	// retrieve a pointer to the selected thread
+	Thread *t = Lookup_Thread(domain, THREAD_ID);
+
+	begin_c_loop(c, t) // loop over all cells in threads
+	{
+		// get mesh cell location
+		C_CENTROID(loc, c, t);
+
+		if (loc[0] < min_x || first_iteration)
+			min_x = loc[0];
+		if (loc[0] > max_x || first_iteration)
+			max_x = loc[0];
+		if (loc[1] > max_y || first_iteration)
+			max_y = loc[1];
+
+		first_iteration = false;
+	}
+	end_c_loop(c, t);
+
+	if (x_offset)
+		&x_offset = (max_x - min_x) / 2;
+	if (y_offset)
+		&y_offset = max_y;
+}
+
+void get_offsets_single_part(real *const x_offset, real *const y_offset)
+{
+	// ND_ND is just 2 for 2D, 3 for 3D
+	real loc[ND_ND]; // mesh cell location "vector"
+
+	bool first_iteration = true;
+
+	real min_x;
+	real max_x;
+	real max_y;
+
+	cell_t c; // current cell index w/in thread
+
+	// expect all zones/threads to be in a single domain
+	Domain *d = Get_Domain(1);
+
+	thread_loop_c(t, d) // loop over all threads in domain
+	{
+		begin_c_loop(c, t)
+		{
+			// get mesh cell location
+			C_CENTROID(loc, c, t);
+
+			if (loc[0] < min_x || first_iteration)
+				min_x = loc[0];
+			if (loc[0] > max_x || first_iteration)
+				max_x = loc[0];
+			if (loc[1] > max_y || first_iteration)
+				max_y = loc[1];
+
+			first_iteration = false;
+		}
+	}
+	end_c_loop(c, t);
+
+	if (x_offset)
+		&x_offset = (max_x - min_x) / 2;
+	if (y_offset)
+		&y_offset = max_y;
 }

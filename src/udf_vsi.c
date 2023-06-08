@@ -8,14 +8,14 @@
  * @author Will Meinert
  * @author Daniel Nau
  *
- * @date 06/03/2023
+ * @date 06/08/2023
  * @copyright Copyright (c) 2023 Dr. Richard C. Gilmore
  * 
  * @brief Definitions for Ansys Fluent User-Defined Functions used to calculate 
  * volumetric strain increment over various sections and types of gob panels.
  */
 
-#include "udf.h" // Fluent Macros, real typedef
+#include <stdbool.h>
 
 #include "udf_vsi.h"
 
@@ -26,37 +26,12 @@
  * TRONA MINE
  * SUB CRITIAL PANEL
 *******************************************************************************/
-void vsi_trona_stepped()
+
+void vsi_trona_stepped(const bool single_part_mesh, const real panel_x_offset, const real panel_y_offset)
 {
-	// RP variables (set by user)
-
-	real panel_half_width; // half the total panel width
-	real panel_length; // total length of panel
-	real panel_x_offset; // displacement to center of old panel
-	real panel_y_offset; // displacement to recovery room of old panel
-	real max_vsi; // maximum VSI to clamp output to
-
 	// retrieve RP variables from Fluent (or set default values)
 
-	if (RP_Variable_Exists_P("longwallgobs/panel_half_width"))
-		panel_half_width = RP_Get_Real("longwallgobs/panel_half_width");
-	else
-		panel_half_width = 100;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_length"))
-		panel_length = RP_Get_Real("longwallgobs/panel_length");
-	else
-		panel_length = 3078.48;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_x_offset"))
-		panel_x_offset = RP_Get_Real("longwallgobs/panel_x_offset");
-	else
-		panel_x_offset = 0;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_y_offset"))
-		panel_y_offset = RP_Get_Real("longwallgobs/panel_y_offset");
-	else
-		panel_y_offset = 0;
+	real max_vsi; // maximum VSI to clamp output to
 
 	if (RP_Variable_Exists_P("longwallgobs/max_vsi"))
 		max_vsi = RP_Get_Real("longwallgobs/max_vsi");
@@ -67,8 +42,38 @@ void vsi_trona_stepped()
 
 	real vsi = 0; // volumetric strain increment
 	const real BLEND_RANGE_Y = 25; // (half) width of the blend zone
+	real panel_half_width, panel_length;
+	real startup_corner_width, startup_corner_length;
+	real mid_panel_gateroad_length;
+	real working_face_corner_length;
 
-	const real BOX[6] = { 0, panel_half_width, 0, 300, panel_length - 400, panel_length };
+	real BOX[6] = { 0 };
+
+	if (single_part_mesh) {
+		get_thread_dimensions(RP_Get_Integer("longwallobs/single_part_mesh_id"), &panel_half_width,
+				      &panel_length);
+
+		panel_half_width /= 2;
+
+		BOX[3] = 300;
+		BOX[4] = panel_length - 400;
+	} else {
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_corner_id"), &panel_half_width,
+				      &startup_corner_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_gateroad_id"), NULL,
+				      &mid_panel_gateroad_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_corner_id"), NULL,
+				      &working_face_corner_length);
+
+		panel_half_width /= 2;
+		panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length;
+
+		BOX[3] = startup_corner_length;
+		BOX[4] = startup_cornder_length + mid_panel_gateroad_length;
+	}
+
+	BOX[1] = panel_half_width;
+	BOX[5] = panel_length;
 
 	/* Scale each section of the model to the curve fits.
 	UNITS in METERS
@@ -195,37 +200,11 @@ void vsi_trona_stepped()
  * MINE C
  * SUPER CRITIAL PANEL
 *******************************************************************************/
-void vsi_mine_C_stepped()
+void vsi_mine_C_stepped(const bool single_part_mesh, const real panel_x_offset, const real panel_y_offset)
 {
-	// RP variables (set by user)
-
-	real panel_half_width; // half the total panel width
-	real panel_length; // total length of panel
-	real panel_x_offset; // displacement to center of old panel
-	real panel_y_offset; // displacement to recovery room of old panel
-	real max_vsi; // maximum VSI to clamp output to
-
 	// retrieve RP variables from Fluent (or set default values)
 
-	if (RP_Variable_Exists_P("longwallgobs/panel_half_width"))
-		panel_half_width = RP_Get_Real("longwallgobs/panel_half_width");
-	else
-		panel_half_width = 151.4856;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_length"))
-		panel_length = RP_Get_Real("longwallgobs/panel_length");
-	else
-		panel_length = 1000;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_x_offset"))
-		panel_x_offset = RP_Get_Real("longwallgobs/panel_x_offset");
-	else
-		panel_x_offset = 0;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_y_offset"))
-		panel_y_offset = RP_Get_Real("longwallgobs/panel_y_offset");
-	else
-		panel_y_offset = 0;
+	real max_vsi; // maximum VSI to clamp output to
 
 	if (RP_Variable_Exists_P("longwallgobs/max_vsi"))
 		max_vsi = RP_Get_Real("longwallgobs/max_vsi");
@@ -237,8 +216,49 @@ void vsi_mine_C_stepped()
 	real vsi = 0; // volumetric strain increment
 	const real BLEND_RANGE = 15;
 	const real BLEND_RANGE_Y = 25; // (half) width of the blend zone
+	real panel_half_width, panel_length;
+	real startup_corner_length;
+	real startup_center_length;
+	real mid_panel_gateroad_length;
+	real mid_panel_center_length;
+	real working_face_corner_width, working_face_corner_length;
+	real working_face_center_width, working_face_center_length;
 
-	const real BOX[7] = { 0, panel_half_width - 100, panel_half_width, 0, 190, panel_length - 300, panel_length };
+	real BOX[7] = { 0 };
+
+	if (single_part_mesh) {
+		get_thread_dimensions(RP_Get_Integer("longwallobs/single_part_mesh_id"), &panel_half_width,
+				      &panel_length);
+
+		panel_half_width /= 2;
+
+		BOX[1] = panel_half_width - 100;
+		BOX[4] = 190;
+		BOX[5] = panel_length - 300;
+	} else {
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_corner_id"), NULL,
+				      &startup_corner_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_center_id"), NULL,
+				      &startup_center_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_gateroad_id"), NULL,
+				      &mid_panel_gateroad_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_center_id"), NULL,
+				      &mid_panel_center_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_corner_id"), &working_face_corner_width,
+				      &working_face_corner_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_center_id"), &working_face_center_width,
+				      &working_face_center_length);
+
+		panel_half_width = working_face_corner_width + working_face_center_width / 2;
+		panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length;
+
+		BOX[1] = working_face_center_width / 2;
+		BOX[4] = startup_corner_length;
+		BOX[5] = startup_corner_length + mid_panel_gateroad_length;
+	}
+
+	BOX[2] = panel_half_width;
+	BOX[6] = panel_length;
 
 	/* Scale each section of the model to the curve fits.
 	UNITS in METERS
@@ -301,7 +321,7 @@ void vsi_mine_C_stepped()
 	real y_loc = panel_length + loc[1] - panel_y_offset;
 
 	// limit vsi function to only within panel domain sizing
-	if (x_loc > panelwidth) {
+	if (x_loc > panel_half_width) {
 		vsi = 0;
 	} else if (x_loc < BOX[1] - BLEND_RANGE) {
 		if (y_loc < 0) {
@@ -471,37 +491,11 @@ end_c_loop(c, t)
  * MINE E
  * SUPER CRITIAL PANEL
 *******************************************************************************/
-void vsi_mine_E_stepped()
+void vsi_mine_E_stepped(const bool single_part_mesh, const real panel_x_offset, const real panel_y_offset)
 {
-	// RP variables (set by user)
-
-	real panel_half_width; // half the total panel width
-	real panel_length; // total length of panel
-	real panel_x_offset; // displacement to center of old panel
-	real panel_y_offset; // displacement to recovery room of old panel
-	real max_vsi; // maximum VSI to clamp output to
-
 	// retrieve RP variables from Fluent (or set default values)
 
-	if (RP_Variable_Exists_P("longwallgobs/panel_half_width"))
-		panel_half_width = RP_Get_Real("longwallgobs/panel_half_width");
-	else
-		panel_half_width = 151.4856;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_length"))
-		panel_length = RP_Get_Real("longwallgobs/panel_length");
-	else
-		panel_length = 1000;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_x_offset"))
-		panel_x_offset = RP_Get_Real("longwallgobs/panel_x_offset");
-	else
-		panel_x_offset = 0;
-
-	if (RP_Variable_Exists_P("longwallgobs/panel_y_offset"))
-		panel_y_offset = RP_Get_Real("longwallgobs/panel_y_offset");
-	else
-		panel_y_offset = 0;
+	real max_vsi; // maximum VSI to clamp output to
 
 	if (RP_Variable_Exists_P("longwallgobs/max_vsi"))
 		max_vsi = RP_Get_Real("longwallgobs/max_vsi");
@@ -513,8 +507,49 @@ void vsi_mine_E_stepped()
 	real vsi = 0; // volumetric strain increment
 	const real BLEND_RANGE = 20;
 	const real BLEND_RANGE_Y = 20; // (half) width of the blend zone
+	real panel_half_width, panel_length;
+	real startup_corner_length;
+	real startup_center_length;
+	real mid_panel_gateroad_length;
+	real mid_panel_center_length;
+	real working_face_corner_width, working_face_corner_length;
+	real working_face_center_width, working_face_center_length;
 
-	const real BOX[7] = { 0, panel_half_width - 100, panel_half_width, 0, 190, panel_length - 300, panel_length };
+	real BOX[7] = { 0 };
+
+	if (single_part_mesh) {
+		get_thread_dimensions(RP_Get_Integer("longwallobs/single_part_mesh_id"), &panel_half_width,
+				      &panel_length);
+
+		panel_half_width /= 2;
+
+		BOX[1] = panel_half_width - 100;
+		BOX[4] = 190;
+		BOX[5] = panel_length - 300;
+	} else {
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_corner_id"), NULL,
+				      &startup_corner_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_center_id"), NULL,
+				      &startup_center_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_gateroad_id"), NULL,
+				      &mid_panel_gateroad_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_center_id"), NULL,
+				      &mid_panel_center_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_corner_id"), &working_face_corner_width,
+				      &working_face_corner_length);
+		get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_center_id"), &working_face_center_width,
+				      &working_face_center_length);
+
+		panel_half_width = working_face_corner_width + working_face_center_width / 2;
+		panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length;
+
+		BOX[1] = working_face_center_width / 2;
+		BOX[4] = startup_corner_length;
+		BOX[5] = startup_corner_length + mid_panel_gateroad_length;
+	}
+
+	BOX[2] = panel_half_width;
+	BOX[6] = panel_length;
 
 	/*     Scale each section of the model to the curve fits.
 	UNITS in METERS
