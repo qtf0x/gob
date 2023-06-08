@@ -153,7 +153,7 @@ void vsi_trona_stepped(const bool single_part_mesh, const real panel_x_offset, c
 
 				// calculate fits for both zones
 				const real FUN1 = sub_critical_trona_startup_room_corner(x_loc, y_loc);
-				const real FUN2 = sub_critial_trona_mid_panel_gateroad(x_loc);
+				const real FUN2 = sub_critical_trona_mid_panel_gateroad(x_loc);
 
 				// calculate blending factor
 				const real BLEND_MIX = -(y_loc - BOX[3] - BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);
@@ -164,7 +164,7 @@ void vsi_trona_stepped(const bool single_part_mesh, const real panel_x_offset, c
 				// normalize to equation
 				x_loc = -(x_loc - BOX[1]) / BOX[1];
 
-				vsi = sub_critial_trona_mid_panel_gateroad(x_loc);
+				vsi = sub_critical_trona_mid_panel_gateroad(x_loc);
 			} else if (y_loc < BOX[4] + BLEND_RANGE_Y + 20) {
 				// normalize to equation
 				const real X_LOC_1 = -(x_loc - BOX[1]) / BOX[1];
@@ -172,7 +172,7 @@ void vsi_trona_stepped(const bool single_part_mesh, const real panel_x_offset, c
 				y_loc = -(y_loc - BOX[5]) / (BOX[5] - BOX[4]) + 0.012;
 
 				// calculate fits for both zones
-				const real FUN1 = sub_critial_trona_mid_panel_gateroad(X_LOC_1);
+				const real FUN1 = sub_critical_trona_mid_panel_gateroad(X_LOC_1);
 				const real FUN2 = sub_critical_trona_working_face_corner(X_LOC_2, y_loc);
 
 				// calculate blending factor
