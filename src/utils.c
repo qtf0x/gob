@@ -120,9 +120,9 @@ void get_thread_dimensions(const int thread_id, real *const width, real *const l
 
 	// output thread dimensions
 	if (width)
-		&width = max_x - min_x;
+		*width = max_x - min_x;
 	if (length)
-		&length = max_y - min_y;
+		*length = max_y - min_y;
 }
 
 void get_offsets_sub_critical(real *const x_offset, real *const y_offset)
@@ -158,9 +158,9 @@ void get_offsets_sub_critical(real *const x_offset, real *const y_offset)
 	end_c_loop(c, t);
 
 	if (x_offset)
-		&x_offset = max_x;
+		*x_offset = max_x;
 	if (y_offset)
-		&y_offset = max_y;
+		*y_offset = max_y;
 }
 
 void get_offsets_super_critical(real *const x_offset, real *const y_offset)
@@ -199,9 +199,9 @@ void get_offsets_super_critical(real *const x_offset, real *const y_offset)
 	end_c_loop(c, t);
 
 	if (x_offset)
-		&x_offset = (max_x - min_x) / 2;
+		*x_offset = (max_x - min_x) / 2;
 	if (y_offset)
-		&y_offset = max_y;
+		*y_offset = max_y;
 }
 
 void get_offsets_single_part(real *const x_offset, real *const y_offset)
@@ -240,7 +240,7 @@ void get_offsets_single_part(real *const x_offset, real *const y_offset)
 	end_c_loop(c, t);
 
 	if (x_offset)
-		&x_offset = (max_x - min_x) / 2;
+		*x_offset = (max_x - min_x) / 2;
 	if (y_offset)
-		&y_offset = max_y;
+		*y_offset = max_y;
 }
