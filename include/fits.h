@@ -21,17 +21,17 @@
 
 /*******************************************************************************
  * TRONA MINE
- * SUB CRITIAL PANEL
+ * SUB CRITICAL PANEL
  * 3 REGIONS - REFLECTED FOR 6 TOTAL
 *******************************************************************************/
 
 double sub_critical_trona_working_face_corner(const double x, const double y);
-double sub_critial_trona_mid_panel_gateroad(const double x);
+double sub_critical_trona_mid_panel_gateroad(const double x);
 double sub_critical_trona_startup_room_corner(const double x, const double y);
 
 /*******************************************************************************
  * MINE E
- * SUPER CRITIAL PANEL
+ * SUPER CRITICAL PANEL
  * 6 REGIONS - REFLECTED FOR 9 TOTAL
 *******************************************************************************/
 
@@ -48,7 +48,7 @@ double super_critical_mine_E_mid_panel_gateroad(const double x, const double y);
 
 /*******************************************************************************
  * MINE C
- * SUPER CRITIAL PANEL
+ * SUPER CRITICAL PANEL
  * 6 REGIONS - REFLECTED FOR 9 TOTAL
 *******************************************************************************/
 
