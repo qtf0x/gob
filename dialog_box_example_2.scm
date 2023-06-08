@@ -4,7 +4,7 @@
 
 ; compile and load UDF library
 (ti-menu-load-string "define/user-defined/use-built-in-compiler yes")
-(ti-menu-load-string "define/user-defined/compiled-functions compile longwallgobs yes fits.c udf_main.c udf_vsi.c utils.c "" fits.h udf_adjust.h udf_vsi.h utils.h """)
+(ti-menu-load-string "define/user-defined/compiled-functions compile longwallgobs yes fits.c udf_main.c udf_vsi.c utils.c \"\" fits.h udf_adjust.h udf_vsi.h utils.h \"\"")
 (ti-menu-load-string "define/user-defined/compiled-functions load longwallgobs")
 
 ; get names of fluid zones
