@@ -58,7 +58,7 @@
 (make-new-rpvar 'longwallgobs/panel_y_offset 0 'real)
 (make-new-rpvar 'longwallgobs/egz_radio_button #f 'boolean)
 ; Declare variables for Optional Settings Box
-(make-new-rpvar 'longwallgobs/resist_scaler 10 'real)
+(make-new-rpvar 'longwallgobs/resist_scaler 1 'real)
 (make-new-rpvar 'longwallgobs/max_resistance 5.0E6 'real)
 (make-new-rpvar 'longwallgobs/min_resistance 1.45E5 'real)
 (make-new-rpvar 'longwallgobs/max_porosity 0.40 'real)
