@@ -79,7 +79,7 @@
 (make-new-rpvar 'longwallgobs/mid_panel_gateroad_id 0 'integer)
 (make-new-rpvar 'longwallgobs/working_face_center_id 0 'integer)
 (make-new-rpvar 'longwallgobs/working_face_corner_id 0 'integer)
-(make-new-rpvar 'longwallgobs/single_part_mesh_id 0 'integer)
+(make-new-rpvar 'longwallgobs/single_part_mesh_id -1 'integer)
 ; Declare variables for zone info lists
 (make-new-rpvar 'longwallgobs/zone_names_selected '() 'list)
 (make-new-rpvar 'longwallgobs/zone_names '() 'list)
@@ -227,7 +227,7 @@
 			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_gateroad_id 0)) 
 			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (rpsetvar 'longwallgobs/working_face_center_id 0)) 
 			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (rpsetvar 'longwallgobs/working_face_corner_id 0)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (rpsetvar 'longwallgobs/single_part_mesh_id 0)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (rpsetvar 'longwallgobs/single_part_mesh_id -1)) 
 		)
 
 		(lambda args
