@@ -42,7 +42,7 @@ double sub_critical_trona_working_face_corner(const double x, const double y)
 	return clamp_positive(VSI);
 }
 
-double sub_critial_trona_mid_panel_gateroad(const double x)
+double sub_critical_trona_mid_panel_gateroad(const double x)
 {
 	// factor expression in case compiler doesn't feel like doing it
 	const double X_2 = x * x; // x squared
