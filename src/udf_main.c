@@ -20,7 +20,7 @@ DEFINE_EXECUTE_FROM_GUI(udf_main, longwallgobs, mode)
 
 	if (SINGLE_PART_MESH)
 		get_offsets_single_part(&panel_x_offset, &panel_y_offset);
-	else if (MINE_T)
+	else if (RP_Get_Boolean("longwallgobs/mine_T_radio_button"))
 		get_offsets_sub_critical(&panel_x_offset, &panel_y_offset);
 	else
 		get_offsets_super_critical(&panel_x_offset, &panel_y_offset);

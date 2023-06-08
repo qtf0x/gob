@@ -5,13 +5,13 @@
 
 #include "udf.h"
 
-double Cell_Inertia_Resistance(double cellporo, double initial_inertia_resistance);
+// double Cell_Inertia_Resistance(double cellporo, double initial_inertia_resistance);
 
-double Initial_Inertia_Resistance();
+// double Initial_Inertia_Resistance();
 
-double Initial_Perm();
+// double Initial_Perm();
 
-double Cell_Resistance(double cellporo, double initial_permeability);
+// double Cell_Resistance(double cellporo, double initial_permeability);
 
 /**
  * @brief Determines approximate equality between floating point numbers. Use
