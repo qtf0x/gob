@@ -27,7 +27,7 @@
 
 /*******************************************************************************
  * TRONA MINE
- * SUB CRITIAL PANEL
+ * SUB CRITICAL PANEL
 *******************************************************************************/
 
 /* Scale each section of the model to the curve fits.
@@ -40,7 +40,7 @@
 	     |    3               |                  |
 	     | Recovery           |                  |
 	     | Gateroad           |                  |
-	     | Exact-Size    Sub-Critial no-Expansion|
+	     | Exact-Size   Sub-Critical no-Expansion|
 	     |1                  1|1                1|
 	 600 |---------------------------------------| 300
 	     |                    |                  |
@@ -169,7 +169,7 @@
 					const real BLEND_MIX =                                                         \
 						-(y_loc - BOX[3] - BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);               \
                                                                                                                        \
-					/* linearlly interpolate*/                                                     \
+					/* linearly interpolate*/                                                     \
 					vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                               \
 				} else if (y_loc < (BOX[4] - BLEND_RANGE_Y - 20)) {                                    \
 					/* normalize to equation*/                                                     \
@@ -190,7 +190,7 @@
 					const real BLEND_MIX =                                                         \
 						-(y_loc - BOX[4] - BLEND_RANGE_Y - 20) / (2 * BLEND_RANGE_Y + 40);     \
                                                                                                                        \
-					/* linearlly interpolate*/                                                     \
+					/* linearly interpolate*/                                                     \
 					vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                               \
 				} else if (y_loc < BOX[5]) {                                                           \
 					/* normalize to equation*/                                                     \
@@ -210,7 +210,7 @@
 
 /*******************************************************************************
  * MINE C
- * SUPER CRITIAL PANEL
+ * SUPER CRITICAL PANEL
 *******************************************************************************/
 
 /* Scale each section of the model to the curve fits.
@@ -223,7 +223,7 @@
 	     |    5     |    6                       |          |
 	     | Recovery |  Recovery                  |          |
 	     | Gateroad |  Center                    |          |
-	     |Exact-Size|   Super Critial Expansion  |          |
+	     |Exact-Size|  Super Critical Expansion  |          |
 	     |1         |                            |         1|
 	1010 |--------------------------------------------------| 190
 	     |          |                            |          |
@@ -241,7 +241,7 @@
 	     |    1     |     2                      |          |
 	     | Startup  |  Startup                   |          |
 	     | Gateroad |  Center                    |          |
-	     |Exact-Size|   Super Critial Expansion  |          |
+	     |Exact-Size|  Super Critical Expansion  |          |
 	     |0        1|                            |1        0|
 	   0 |--------------------------------------------------| 1200
 	   -152.5      -52.5           0            92.5      +152.5  My Panel
@@ -370,7 +370,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BLEND_RANGE_Y - 15) / (2 * BLEND_RANGE_Y + 30);       \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 15) {                              \
 						/*  normalize to equation */                                           \
@@ -424,7 +424,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_C_startup_room_corner(X_LOC_2, y_loc);     \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc <= BOX[5]) {                                                  \
 						/*  normalize to equation */                                           \
@@ -438,7 +438,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_C_mid_panel_gateroad(X_LOC_2, y_loc);      \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[6]) {                                                   \
 						/*  normalize to equation */                                           \
@@ -453,7 +453,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_C_working_face_corner(X_LOC_2, y_loc);     \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else {                                                                       \
 						vsi = 0;                                                               \
@@ -483,7 +483,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BOX[4] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);        \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 20) {                              \
 						/*  normalize to equation */                                           \
@@ -507,7 +507,7 @@
 						const real BLEND_MIX =                                                 \
 							((y_loc - BOX[5] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y));      \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < panel_length) {                                             \
 						/*  normalize to equation */                                           \
@@ -530,7 +530,7 @@
 
 /*******************************************************************************
  * MINE E
- * SUPER CRITIAL PANEL
+ * SUPER CRITICAL PANEL
 *******************************************************************************/
 
 /*     Scale each section of the model to the curve fits.
@@ -543,7 +543,7 @@
 	     |    5     |    6                       |          |
 	     | Recovery |  Recovery                  |          |
 	     | Gateroad |  Center                    |          |
-	     |Exact-Size|   Super Critial Expansion  |          |
+	     |Exact-Size|  Super Critical Expansion  |          |
 	     |1         |                            |         1|
 	1010 |--------------------------------------------------| 190
 	     |          |                            |          |
@@ -561,7 +561,7 @@
 	     |    1     |     2                      |          |
 	     | Startup  |  Startup                   |          |
 	     | Gateroad |  Center                    |          |
-	     |Exact-Size|   Super Critial Expansion  |          |
+	     |Exact-Size|  Super Critical Expansion  |          |
 	     |0        1|                            |1        0|
 	   0 |--------------------------------------------------| 1200
 	   -152.5      -52.5           0            92.5      +152.5  My Panel
@@ -691,7 +691,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - (BOX[4] + BLEND_RANGE_Y - 15)) / (2 * BLEND_RANGE_Y); \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 15) {                              \
 						/*  normalize to equation */                                           \
@@ -716,7 +716,7 @@
 						const real BLEND_MIX = -((y_loc - (BOX[5] + BLEND_RANGE_Y - 15)) /     \
 									 (2 * BLEND_RANGE_Y));                         \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[6]) {                                                   \
 						/*  normalize to equation */                                           \
@@ -773,7 +773,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_E_working_face_corner(X_LOC_2, y_loc);     \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else {                                                                       \
 						vsi = 0;                                                               \
@@ -803,7 +803,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BOX[4] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);        \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 20) {                              \
 						/*  normalize to equation */                                           \
@@ -827,7 +827,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BOX[5] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);        \
                                                                                                                        \
-						/*  linearlly interpolate */                                           \
+						/*  linearly interpolate */                                           \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < panel_length) {                                             \
 						/*  normalize to equation */                                           \
