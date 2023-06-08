@@ -88,47 +88,51 @@
 ; Model Type and Required Settings Definition
 (define model_type_and_required_settings_box
 	;Let Statement, Local Variable Declarations
-	(let ((dialog-box #f)
+	(let ((panel #f)
 		; Required Settings
+        (tframe)
+        (ttab1)
+        (ttab2)
+        (ttab3)
 		(table)
-			(longwallgobs/mine_button_box)
-			(longwallgobs/mine_C_radio_button)
-			(longwallgobs/mine_E_radio_button)
-			(longwallgobs/mine_T_radio_button)
+        (longwallgobs/mine_button_box)
+        (longwallgobs/mine_C_radio_button)
+        (longwallgobs/mine_E_radio_button)
+        (longwallgobs/mine_T_radio_button)
 
-			(longwallgobs/egz_button_box)
-			(longwallgobs/egz_radio_button)
+        (longwallgobs/egz_button_box)
+        (longwallgobs/egz_radio_button)
 
-			(longwallgobs/required_param_table)
-			(longwallgobs/panel_half_width)
-			(longwallgobs/panel_length)
-			(longwallgobs/panel_x_offset)
-			(longwallgobs/panel_y_offset)
+        (longwallgobs/required_param_table)
+        (longwallgobs/panel_half_width)
+        (longwallgobs/panel_length)
+        (longwallgobs/panel_x_offset)
+        (longwallgobs/panel_y_offset)
 
 		; Optional Settings
 		(table2)
-			(longwallgobs/optional_param_table)
-			(longwallgobs/resist_scaler)
-			(longwallgobs/max_resistance)
-			(longwallgobs/min_resistance)
-			(longwallgobs/max_porosity)
-			(longwallgobs/initial_porosity)
-			(longwallgobs/max_vsi)
+        (longwallgobs/optional_param_table)
+        (longwallgobs/resist_scaler)
+        (longwallgobs/max_resistance)
+        (longwallgobs/min_resistance)
+        (longwallgobs/max_porosity)
+        (longwallgobs/initial_porosity)
+        (longwallgobs/max_vsi)
 
 		; Zone Selection
 		(table3)
-			(longwallgobs/zone_button_box)
-			(longwallgobs/startup_room_center_radio_button)	
-			(longwallgobs/startup_room_corner_radio_button)
-			(longwallgobs/mid_panel_center_radio_button)	
-			(longwallgobs/mid_panel_gateroad_radio_button)	
-			(longwallgobs/working_face_center_radio_button)	
-			(longwallgobs/working_face_corner_radio_button)	
-			(longwallgobs/single_part_mesh_radio_button)
-			(longwallgobs/apply_button)
-			(longwallgobs/clear_button)
-			;(longwallgobs/startup_room_center_id)
-			(longwallgobs/zone_names)
+        (longwallgobs/zone_button_box)
+        (longwallgobs/startup_room_center_radio_button)	
+        (longwallgobs/startup_room_corner_radio_button)
+        (longwallgobs/mid_panel_center_radio_button)	
+        (longwallgobs/mid_panel_gateroad_radio_button)	
+        (longwallgobs/working_face_center_radio_button)	
+        (longwallgobs/working_face_corner_radio_button)	
+        (longwallgobs/single_part_mesh_radio_button)
+        (longwallgobs/apply_button)
+        (longwallgobs/clear_button)
+        ;(longwallgobs/startup_room_center_id)
+        (longwallgobs/zone_names)
 		)
 
 		; update-cb - invoked when the dialog box is opened
@@ -231,11 +235,16 @@
 		)
 
 		(lambda args
-			(if (not dialog-box)
+			(if (not panel)
 				(let ()
 					; Required Settings
-					(set! dialog-box (cx-create-panel "Required Settings" apply-cb update-cb))
-					(set! table (cx-create-table dialog-box "" 'row 0 'col 0))
+                    (set! panel (cx-create-panel "Mine Model Gob" 'update-callback update-cb 'apply-callback apply-cb))
+                    (set! tframe (cx-create-frame-tabbed panel "Tabs" 'border #t 'below 0 'right-of 0))
+                    (set! ttab1 (cx-create-tab tframe "Required Settings"))
+                    (set! ttab2 (cx-create-tab tframe "Optional Settings"))
+                    (set! ttab3 (cx-create-tab tframe "Zone Selection"))
+
+					(set! table (cx-create-table ttab1 ""))
 
 					(set! longwallgobs/mine_button_box (cx-create-button-box table "Mine Model" 'radio-mode #t 'col 0))
 					(set! longwallgobs/mine_C_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine C Model"))
@@ -252,7 +261,7 @@
 					(set! longwallgobs/panel_y_offset (cx-create-real-entry longwallgobs/required_param_table "Panel Y Offset" 'row 3))
 
 					; Optional Settings
-					(set! table2 (cx-create-table dialog-box "" 'below table 'right-of 0))
+					(set! table2 (cx-create-table ttab2 ""))
 
 					(set! longwallgobs/optional_param_table (cx-create-table table2 "Optional Settings" 'row 0 'col 1))
 					(set! longwallgobs/resist_scaler (cx-create-real-entry longwallgobs/optional_param_table "Resistance Scalar" 'row 0 'col 0))
@@ -263,7 +272,7 @@
 					(set! longwallgobs/max_vsi (cx-create-real-entry longwallgobs/optional_param_table "Max VSI" 'row 1 'col 2))
 
 					; Zone Selection
-					(set! table3 (cx-create-table dialog-box "" 'below 0 'right-of table))
+					(set! table3 (cx-create-table ttab3 ""))
 
 					(set! longwallgobs/zone_button_box (cx-create-button-box table3 "Zone Type" 'radio-mode #t 'col 0))
 
@@ -282,12 +291,24 @@
 				) ;End Of Let Statement
 			) ;End Of If Statement
 			;Call To Open Dialog Box
-			(cx-show-panel dialog-box)
+			(cx-show-panel panel)
 		) ;End Of Args Function
 	) ;End Of Let Statement
 ) ;End Of model_type_and_required_settings_box Definition
 
-(cx-add-menu "Model Mine Gob" #f)
-(cx-add-hitem "Model Mine Gob" "Permeability and Porosity" #f #f #t #f)
-;Menu Item Added To Above Created "New Menu->New Submenu" Submenu In Fluent
-(cx-add-item "Permeability and Porosity" "Mine Model Settings" #\U #f #t model_type_and_required_settings_box)
+
+(if (not (cx-get-menu-id "Model Mine Gob"))
+    (cx-add-menu "Model Mine Gob" #\H)
+)
+
+(if (not (cx-get-item-id "Model Mine Gob" "Permeability and Porosity"))
+    (begin 
+        (cx-add-separator "Model Mine Gob")
+        (cx-add-item "Model Mine Gob" "Permeability and Porosity" #\H #f cx-client? model_type_and_required_settings_box)
+    )
+    (begin 
+        (cx-delete-item "Model Mine Gob" "Permeability and Porosity" #\H #f cx-client? model_type_and_required_settings_box)
+        (cx-add-separator "Model Mine Gob")
+        (cx-add-item "Model Mine Gob" "Permeability and Porosity" #\H #f cx-client? model_type_and_required_settings_box)
+    )
+)
