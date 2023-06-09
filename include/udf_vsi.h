@@ -98,22 +98,25 @@
 		real BOX[6] = { 0 };                                                                                   \
                                                                                                                        \
 		if (single_part_mesh) {                                                                                \
-			get_thread_dimensions(RP_Get_Integer("longwallobs/single_part_mesh_id"), &panel_half_width,    \
-					      &panel_length);                                                          \
-                                                                                                                       \
-			panel_half_width /= 2;                                                                         \
+			panel_half_width = (RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                       \
+					    RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                      \
+					   2;                                                                          \
+			panel_length = RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                            \
+				       RP_Get_Real("longwallgobs/single_part_mesh_min_y");                             \
                                                                                                                        \
 			BOX[3] = 300;                                                                                  \
 			BOX[4] = panel_length - 400;                                                                   \
 		} else {                                                                                               \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_corner_id"),                   \
-					      &panel_half_width, &startup_corner_length);                              \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_gateroad_id"), NULL,              \
-					      &mid_panel_gateroad_length);                                             \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_corner_id"), NULL,             \
-					      &working_face_corner_length);                                            \
+			startup_corner_length = RP_Get_Real("longwallgobs/startup_room_corner_max_y") -                \
+						RP_Get_Real("longwallgobs/startup_room_corner_min_y");                 \
+			mid_panel_gateroad_length = RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -             \
+						    RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y");              \
+			working_face_corner_length = RP_Get_Real("longwallgobs/working_face_corner_max_y") -           \
+						     RP_Get_Real("longwallgobs/working_face_corner_min_y");            \
                                                                                                                        \
-			panel_half_width /= 2;                                                                         \
+			panel_half_width = (RP_Get_Real("longwallgobs/startup_room_corner_max_x") -                    \
+					    RP_Get_Real("longwallgobs/startup_room_cornder_min_x")) /                  \
+					   2;                                                                          \
 			panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length; \
                                                                                                                        \
 			BOX[3] = startup_corner_length;                                                                \
@@ -169,7 +172,7 @@
 					const real BLEND_MIX =                                                         \
 						-(y_loc - BOX[3] - BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);               \
                                                                                                                        \
-					/* linearly interpolate*/                                                     \
+					/* linearly interpolate*/                                                      \
 					vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                               \
 				} else if (y_loc < (BOX[4] - BLEND_RANGE_Y - 20)) {                                    \
 					/* normalize to equation*/                                                     \
@@ -190,7 +193,7 @@
 					const real BLEND_MIX =                                                         \
 						-(y_loc - BOX[4] - BLEND_RANGE_Y - 20) / (2 * BLEND_RANGE_Y + 40);     \
                                                                                                                        \
-					/* linearly interpolate*/                                                     \
+					/* linearly interpolate*/                                                      \
 					vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                               \
 				} else if (y_loc < BOX[5]) {                                                           \
 					/* normalize to equation*/                                                     \
@@ -285,27 +288,32 @@
 		real BOX[7] = { 0 };                                                                                   \
                                                                                                                        \
 		if (single_part_mesh) {                                                                                \
-			get_thread_dimensions(RP_Get_Integer("longwallobs/single_part_mesh_id"), &panel_half_width,    \
-					      &panel_length);                                                          \
-                                                                                                                       \
-			panel_half_width /= 2;                                                                         \
+			panel_half_width = (RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                       \
+					    RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                      \
+					   2;                                                                          \
+			panel_length = RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                            \
+				       RP_Get_Real("longwallgobs/single_part_mesh_min_y");                             \
                                                                                                                        \
 			BOX[1] = panel_half_width - 100;                                                               \
 			BOX[4] = 190;                                                                                  \
 			BOX[5] = panel_length - 300;                                                                   \
 		} else {                                                                                               \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_corner_id"), NULL,             \
-					      &startup_corner_length);                                                 \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_center_id"), NULL,             \
-					      &startup_center_length);                                                 \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_gateroad_id"), NULL,              \
-					      &mid_panel_gateroad_length);                                             \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_center_id"), NULL,                \
-					      &mid_panel_center_length);                                               \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_corner_id"),                   \
-					      &working_face_corner_width, &working_face_corner_length);                \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_center_id"),                   \
-					      &working_face_center_width, &working_face_center_length);                \
+			startup_corner_length = RP_Get_Real("longwallgobs/startup_room_corner_max_y") -                \
+						RP_Get_Real("longwallgobs/startup_room_corner_min_y");                 \
+			startup_center_length = RP_Get_Real("longwallgobs/startup_room_center_max_y") -                \
+						RP_Get_Real("longwallgobs/startup_room_center_min_y");                 \
+			mid_panel_gateroad_length = RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -             \
+						    RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y");              \
+			mid_panel_center_length = RP_Get_Real("longwallgobs/mid_panel_center_max_y") -                 \
+						  RP_Get_Real("longwallgobs/mid_panel_center_min_y");                  \
+			working_face_corner_width = RP_Get_Real("longwallgobs/working_face_corner_max_x") -            \
+						    RP_Get_Real("longwallgobs/working_face_corner_min_x");             \
+			working_face_corner_length = RP_Get_Real("longwallgobs/working_face_corner_max_y") -           \
+						     RP_Get_Real("longwallgobs/working_face_corner_min_y");            \
+			working_face_center_width = RP_Get_Real("longwallgobs/working_face_center_max_x") -            \
+						    RP_Get_Real("longwallgobs/working_face_center_min_x");             \
+			working_face_center_length = RP_Get_Real("longwallgobs/working_face_center_max_y") -           \
+						     RP_Get_Real("longwallgobs/working_face_center_min_y");            \
                                                                                                                        \
 			panel_half_width = working_face_corner_width + working_face_center_width / 2;                  \
 			panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length; \
@@ -339,7 +347,7 @@
 				real x_loc = fabs(loc[0] - panel_x_offset);                                            \
                                                                                                                        \
 				/*  shift Fluent mesh to FLAC3D data zero point at startup room for equations */       \
-				real y_loc = panel_length + loc[1] - panel_y_offset;                                   \
+				real y_loc = panel_length - loc[1] - panel_y_offset;                                   \
                                                                                                                        \
 				/*  limit vsi function to only within panel domain sizing */                           \
 				if (x_loc > panel_half_width) {                                                        \
@@ -370,7 +378,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BLEND_RANGE_Y - 15) / (2 * BLEND_RANGE_Y + 30);       \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 15) {                              \
 						/*  normalize to equation */                                           \
@@ -424,7 +432,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_C_startup_room_corner(X_LOC_2, y_loc);     \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc <= BOX[5]) {                                                  \
 						/*  normalize to equation */                                           \
@@ -438,7 +446,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_C_mid_panel_gateroad(X_LOC_2, y_loc);      \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[6]) {                                                   \
 						/*  normalize to equation */                                           \
@@ -453,7 +461,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_C_working_face_corner(X_LOC_2, y_loc);     \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else {                                                                       \
 						vsi = 0;                                                               \
@@ -483,7 +491,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BOX[4] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);        \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 20) {                              \
 						/*  normalize to equation */                                           \
@@ -507,7 +515,7 @@
 						const real BLEND_MIX =                                                 \
 							((y_loc - BOX[5] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y));      \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < panel_length) {                                             \
 						/*  normalize to equation */                                           \
@@ -605,27 +613,32 @@
 		real BOX[7] = { 0 };                                                                                   \
                                                                                                                        \
 		if (single_part_mesh) {                                                                                \
-			get_thread_dimensions(RP_Get_Integer("longwallobs/single_part_mesh_id"), &panel_half_width,    \
-					      &panel_length);                                                          \
-                                                                                                                       \
-			panel_half_width /= 2;                                                                         \
+			panel_half_width = (RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                       \
+					    RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                      \
+					   2;                                                                          \
+			panel_length = RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                            \
+				       RP_Get_Real("longwallgobs/single_part_mesh_min_y");                             \
                                                                                                                        \
 			BOX[1] = panel_half_width - 100;                                                               \
 			BOX[4] = 190;                                                                                  \
 			BOX[5] = panel_length - 300;                                                                   \
 		} else {                                                                                               \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_corner_id"), NULL,             \
-					      &startup_corner_length);                                                 \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/startup_room_center_id"), NULL,             \
-					      &startup_center_length);                                                 \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_gateroad_id"), NULL,              \
-					      &mid_panel_gateroad_length);                                             \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/mid_panel_center_id"), NULL,                \
-					      &mid_panel_center_length);                                               \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_corner_id"),                   \
-					      &working_face_corner_width, &working_face_corner_length);                \
-			get_thread_dimensions(RP_Get_Integer("longwallgobs/working_face_center_id"),                   \
-					      &working_face_center_width, &working_face_center_length);                \
+			startup_corner_length = RP_Get_Real("longwallgobs/startup_room_corner_max_y") -                \
+						RP_Get_Real("longwallgobs/startup_room_corner_min_y");                 \
+			startup_center_length = RP_Get_Real("longwallgobs/startup_room_center_max_y") -                \
+						RP_Get_Real("longwallgobs/startup_room_center_min_y");                 \
+			mid_panel_gateroad_length = RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -             \
+						    RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y");              \
+			mid_panel_center_length = RP_Get_Real("longwallgobs/mid_panel_center_max_y") -                 \
+						  RP_Get_Real("longwallgobs/mid_panel_center_min_y");                  \
+			working_face_corner_width = RP_Get_Real("longwallgobs/working_face_corner_max_x") -            \
+						    RP_Get_Real("longwallgobs/working_face_corner_min_x");             \
+			working_face_corner_length = RP_Get_Real("longwallgobs/working_face_corner_max_y") -           \
+						     RP_Get_Real("longwallgobs/working_face_corner_min_y");            \
+			working_face_center_width = RP_Get_Real("longwallgobs/working_face_center_max_x") -            \
+						    RP_Get_Real("longwallgobs/working_face_center_min_x");             \
+			working_face_center_length = RP_Get_Real("longwallgobs/working_face_center_max_y") -           \
+						     RP_Get_Real("longwallgobs/working_face_center_min_y");            \
                                                                                                                        \
 			panel_half_width = working_face_corner_width + working_face_center_width / 2;                  \
 			panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length; \
@@ -691,7 +704,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - (BOX[4] + BLEND_RANGE_Y - 15)) / (2 * BLEND_RANGE_Y); \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 15) {                              \
 						/*  normalize to equation */                                           \
@@ -716,7 +729,7 @@
 						const real BLEND_MIX = -((y_loc - (BOX[5] + BLEND_RANGE_Y - 15)) /     \
 									 (2 * BLEND_RANGE_Y));                         \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[6]) {                                                   \
 						/*  normalize to equation */                                           \
@@ -773,7 +786,7 @@
 						const real FUN2 =                                                      \
 							super_critical_mine_E_working_face_corner(X_LOC_2, y_loc);     \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else {                                                                       \
 						vsi = 0;                                                               \
@@ -803,7 +816,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BOX[4] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);        \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < BOX[5] - BLEND_RANGE_Y - 20) {                              \
 						/*  normalize to equation */                                           \
@@ -827,7 +840,7 @@
 						const real BLEND_MIX =                                                 \
 							(y_loc - BOX[5] + BLEND_RANGE_Y) / (2 * BLEND_RANGE_Y);        \
                                                                                                                        \
-						/*  linearly interpolate */                                           \
+						/*  linearly interpolate */                                            \
 						vsi = FUN2 * BLEND_MIX + FUN1 * (1 - BLEND_MIX);                       \
 					} else if (y_loc < panel_length) {                                             \
 						/*  normalize to equation */                                           \
