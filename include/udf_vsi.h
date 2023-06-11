@@ -98,25 +98,24 @@
 		real BOX[6] = { 0 };                                                                                   \
                                                                                                                        \
 		if (single_part_mesh) {                                                                                \
-			panel_half_width = (RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                       \
-					    RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                      \
+			panel_half_width = fabs(RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                   \
+						RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                  \
 					   2;                                                                          \
-			panel_length = RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                            \
-				       RP_Get_Real("longwallgobs/single_part_mesh_min_y");                             \
+			panel_length = fabs(RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                       \
+					    RP_Get_Real("longwallgobs/single_part_mesh_min_y"));                       \
                                                                                                                        \
 			BOX[3] = 300;                                                                                  \
 			BOX[4] = panel_length - 400;                                                                   \
 		} else {                                                                                               \
-			startup_corner_length = RP_Get_Real("longwallgobs/startup_room_corner_max_y") -                \
-						RP_Get_Real("longwallgobs/startup_room_corner_min_y");                 \
-			mid_panel_gateroad_length = RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -             \
-						    RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y");              \
-			working_face_corner_length = RP_Get_Real("longwallgobs/working_face_corner_max_y") -           \
-						     RP_Get_Real("longwallgobs/working_face_corner_min_y");            \
+			startup_corner_length = fabs(RP_Get_Real("longwallgobs/startup_room_corner_max_y") -           \
+						     RP_Get_Real("longwallgobs/startup_room_corner_min_y"));           \
+			mid_panel_gateroad_length = fabs(RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -        \
+							 RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y"));        \
+			working_face_corner_length = fabs(RP_Get_Real("longwallgobs/working_face_corner_max_y") -      \
+							  RP_Get_Real("longwallgobs/working_face_corner_min_y"));      \
                                                                                                                        \
-			panel_half_width = (RP_Get_Real("longwallgobs/startup_room_corner_max_x") -                    \
-					    RP_Get_Real("longwallgobs/startup_room_cornder_min_x")) /                  \
-					   2;                                                                          \
+			panel_half_width = fabs(RP_Get_Real("longwallgobs/startup_room_corner_max_x") -                \
+						RP_Get_Real("longwallgobs/startup_room_corner_min_x"));                \
 			panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length; \
                                                                                                                        \
 			BOX[3] = startup_corner_length;                                                                \
@@ -148,10 +147,10 @@
 				real x_loc = fabs(loc[0] - panel_x_offset);                                            \
                                                                                                                        \
 				/* shift Fluent mesh to FLAC3D data zero point at startup room for equations*/         \
-				real y_loc = panel_length + loc[1] - panel_y_offset;                                   \
+				real y_loc = fabs(loc[1] - panel_y_offset);                                            \
                                                                                                                        \
 				/* limit vsi function to only within panel domain sizing*/                             \
-				if (x_loc > panel_half_width || y_loc < 0 || y_loc > BOX[5]) {                         \
+				if (x_loc > BOX[1] || y_loc > BOX[5]) {                                                \
 					vsi = 0;                                                                       \
 				} else if (y_loc < BOX[3] - BLEND_RANGE_Y) {                                           \
 					/* normalize to equation*/                                                     \
@@ -195,17 +194,17 @@
                                                                                                                        \
 					/* linearly interpolate*/                                                      \
 					vsi = FUN1 * BLEND_MIX + FUN2 * (1 - BLEND_MIX);                               \
-				} else if (y_loc < BOX[5]) {                                                           \
+				} else {                                                                               \
 					/* normalize to equation*/                                                     \
 					x_loc = -(x_loc - BOX[1]) / (BOX[1] + 40) + 0.02;                              \
 					y_loc = -(y_loc - BOX[5]) / (BOX[5] - BOX[4]) + 0.012;                         \
                                                                                                                        \
 					vsi = sub_critical_trona_working_face_corner(x_loc, y_loc);                    \
 				}                                                                                      \
-			}                                                                                              \
                                                                                                                        \
-			/* clamp and assign vsi to user-defined-memory location*/                                      \
-			C_UDMI(c, t, 4) = clamp(vsi, 0, max_vsi);                                                      \
+				/* clamp and assign vsi to user-defined-memory location*/                              \
+				C_UDMI(c, t, 4) = clamp(vsi, 0, max_vsi);                                              \
+			}                                                                                              \
 		}                                                                                                      \
 		end_c_loop(c, t);                                                                                      \
 		void;                                                                                                  \
@@ -288,32 +287,32 @@
 		real BOX[7] = { 0 };                                                                                   \
                                                                                                                        \
 		if (single_part_mesh) {                                                                                \
-			panel_half_width = (RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                       \
-					    RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                      \
+			panel_half_width = fabs(RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                   \
+						RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                  \
 					   2;                                                                          \
-			panel_length = RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                            \
-				       RP_Get_Real("longwallgobs/single_part_mesh_min_y");                             \
+			panel_length = fabs(RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                       \
+					    RP_Get_Real("longwallgobs/single_part_mesh_min_y"));                       \
                                                                                                                        \
 			BOX[1] = panel_half_width - 100;                                                               \
 			BOX[4] = 190;                                                                                  \
 			BOX[5] = panel_length - 300;                                                                   \
 		} else {                                                                                               \
-			startup_corner_length = RP_Get_Real("longwallgobs/startup_room_corner_max_y") -                \
-						RP_Get_Real("longwallgobs/startup_room_corner_min_y");                 \
-			startup_center_length = RP_Get_Real("longwallgobs/startup_room_center_max_y") -                \
-						RP_Get_Real("longwallgobs/startup_room_center_min_y");                 \
-			mid_panel_gateroad_length = RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -             \
-						    RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y");              \
-			mid_panel_center_length = RP_Get_Real("longwallgobs/mid_panel_center_max_y") -                 \
-						  RP_Get_Real("longwallgobs/mid_panel_center_min_y");                  \
-			working_face_corner_width = RP_Get_Real("longwallgobs/working_face_corner_max_x") -            \
-						    RP_Get_Real("longwallgobs/working_face_corner_min_x");             \
-			working_face_corner_length = RP_Get_Real("longwallgobs/working_face_corner_max_y") -           \
-						     RP_Get_Real("longwallgobs/working_face_corner_min_y");            \
-			working_face_center_width = RP_Get_Real("longwallgobs/working_face_center_max_x") -            \
-						    RP_Get_Real("longwallgobs/working_face_center_min_x");             \
-			working_face_center_length = RP_Get_Real("longwallgobs/working_face_center_max_y") -           \
-						     RP_Get_Real("longwallgobs/working_face_center_min_y");            \
+			startup_corner_length = fabs(RP_Get_Real("longwallgobs/startup_room_corner_max_y") -           \
+						     RP_Get_Real("longwallgobs/startup_room_corner_min_y"));           \
+			startup_center_length = fabs(RP_Get_Real("longwallgobs/startup_room_center_max_y") -           \
+						     RP_Get_Real("longwallgobs/startup_room_center_min_y"));           \
+			mid_panel_gateroad_length = fabs(RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -        \
+							 RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y"));        \
+			mid_panel_center_length = fabs(RP_Get_Real("longwallgobs/mid_panel_center_max_y") -            \
+						       RP_Get_Real("longwallgobs/mid_panel_center_min_y"));            \
+			working_face_corner_width = fabs(RP_Get_Real("longwallgobs/working_face_corner_max_x") -       \
+							 RP_Get_Real("longwallgobs/working_face_corner_min_x"));       \
+			working_face_corner_length = fabs(RP_Get_Real("longwallgobs/working_face_corner_max_y") -      \
+							  RP_Get_Real("longwallgobs/working_face_corner_min_y"));      \
+			working_face_center_width = fabs(RP_Get_Real("longwallgobs/working_face_center_max_x") -       \
+							 RP_Get_Real("longwallgobs/working_face_center_min_x"));       \
+			working_face_center_length = fabs(RP_Get_Real("longwallgobs/working_face_center_max_y") -      \
+							  RP_Get_Real("longwallgobs/working_face_center_min_y"));      \
                                                                                                                        \
 			panel_half_width = working_face_corner_width + working_face_center_width / 2;                  \
 			panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length; \
@@ -343,11 +342,11 @@
 			{ /*  get mesh cell location */                                                                \
 				C_CENTROID(loc, c, t);                                                                 \
                                                                                                                        \
-				/*  center of panel is zero and mirrored */                                            \
+				/* center of panel is zero and mirrored*/                                              \
 				real x_loc = fabs(loc[0] - panel_x_offset);                                            \
                                                                                                                        \
-				/*  shift Fluent mesh to FLAC3D data zero point at startup room for equations */       \
-				real y_loc = panel_length - loc[1] - panel_y_offset;                                   \
+				/* shift Fluent mesh to FLAC3D data zero point at startup room for equations*/         \
+				real y_loc = fabs(loc[1] - panel_y_offset);                                            \
                                                                                                                        \
 				/*  limit vsi function to only within panel domain sizing */                           \
 				if (x_loc > panel_half_width) {                                                        \
@@ -527,10 +526,10 @@
 						vsi = 0;                                                               \
 					}                                                                              \
 				}                                                                                      \
-			}                                                                                              \
                                                                                                                        \
-			/*  clamp and assign vsi to user-defined-memory location */                                    \
-			C_UDMI(c, t, 4) = clamp(vsi, 0, max_vsi);                                                      \
+				/*  clamp and assign vsi to user-defined-memory location */                            \
+				C_UDMI(c, t, 4) = clamp(vsi, 0, max_vsi);                                              \
+			}                                                                                              \
 		}                                                                                                      \
 		end_c_loop(c, t);                                                                                      \
 		void;                                                                                                  \
@@ -613,32 +612,32 @@
 		real BOX[7] = { 0 };                                                                                   \
                                                                                                                        \
 		if (single_part_mesh) {                                                                                \
-			panel_half_width = (RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                       \
-					    RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                      \
+			panel_half_width = fabs(RP_Get_Real("longwallgobs/single_part_mesh_max_x") -                   \
+						RP_Get_Real("longwallgobs/single_part_mesh_min_x")) /                  \
 					   2;                                                                          \
-			panel_length = RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                            \
-				       RP_Get_Real("longwallgobs/single_part_mesh_min_y");                             \
+			panel_length = fabs(RP_Get_Real("longwallgobs/single_part_mesh_max_y") -                       \
+					    RP_Get_Real("longwallgobs/single_part_mesh_min_y"));                       \
                                                                                                                        \
 			BOX[1] = panel_half_width - 100;                                                               \
 			BOX[4] = 190;                                                                                  \
 			BOX[5] = panel_length - 300;                                                                   \
 		} else {                                                                                               \
-			startup_corner_length = RP_Get_Real("longwallgobs/startup_room_corner_max_y") -                \
-						RP_Get_Real("longwallgobs/startup_room_corner_min_y");                 \
-			startup_center_length = RP_Get_Real("longwallgobs/startup_room_center_max_y") -                \
-						RP_Get_Real("longwallgobs/startup_room_center_min_y");                 \
-			mid_panel_gateroad_length = RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -             \
-						    RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y");              \
-			mid_panel_center_length = RP_Get_Real("longwallgobs/mid_panel_center_max_y") -                 \
-						  RP_Get_Real("longwallgobs/mid_panel_center_min_y");                  \
-			working_face_corner_width = RP_Get_Real("longwallgobs/working_face_corner_max_x") -            \
-						    RP_Get_Real("longwallgobs/working_face_corner_min_x");             \
-			working_face_corner_length = RP_Get_Real("longwallgobs/working_face_corner_max_y") -           \
-						     RP_Get_Real("longwallgobs/working_face_corner_min_y");            \
-			working_face_center_width = RP_Get_Real("longwallgobs/working_face_center_max_x") -            \
-						    RP_Get_Real("longwallgobs/working_face_center_min_x");             \
-			working_face_center_length = RP_Get_Real("longwallgobs/working_face_center_max_y") -           \
-						     RP_Get_Real("longwallgobs/working_face_center_min_y");            \
+			startup_corner_length = fabs(RP_Get_Real("longwallgobs/startup_room_corner_max_y") -           \
+						     RP_Get_Real("longwallgobs/startup_room_corner_min_y"));           \
+			startup_center_length = fabs(RP_Get_Real("longwallgobs/startup_room_center_max_y") -           \
+						     RP_Get_Real("longwallgobs/startup_room_center_min_y"));           \
+			mid_panel_gateroad_length = fabs(RP_Get_Real("longwallgobs/mid_panel_gateroad_max_y") -        \
+							 RP_Get_Real("longwallgobs/mid_panel_gateroad_min_y"));        \
+			mid_panel_center_length = fabs(RP_Get_Real("longwallgobs/mid_panel_center_max_y") -            \
+						       RP_Get_Real("longwallgobs/mid_panel_center_min_y"));            \
+			working_face_corner_width = fabs(RP_Get_Real("longwallgobs/working_face_corner_max_x") -       \
+							 RP_Get_Real("longwallgobs/working_face_corner_min_x"));       \
+			working_face_corner_length = fabs(RP_Get_Real("longwallgobs/working_face_corner_max_y") -      \
+							  RP_Get_Real("longwallgobs/working_face_corner_min_y"));      \
+			working_face_center_width = fabs(RP_Get_Real("longwallgobs/working_face_center_max_x") -       \
+							 RP_Get_Real("longwallgobs/working_face_center_min_x"));       \
+			working_face_center_length = fabs(RP_Get_Real("longwallgobs/working_face_center_max_y") -      \
+							  RP_Get_Real("longwallgobs/working_face_center_min_y"));      \
                                                                                                                        \
 			panel_half_width = working_face_corner_width + working_face_center_width / 2;                  \
 			panel_length = startup_corner_length + mid_panel_gateroad_length + working_face_corner_length; \
@@ -669,11 +668,11 @@
 				/*  get mesh cell location */                                                          \
 				C_CENTROID(loc, c, t);                                                                 \
                                                                                                                        \
-				/*  center of panel is zero and mirrored */                                            \
+				/* center of panel is zero and mirrored*/                                              \
 				real x_loc = fabs(loc[0] - panel_x_offset);                                            \
                                                                                                                        \
-				/*  shift Fluent mesh to FLAC3D data zero point at startup room for equations */       \
-				real y_loc = panel_length + loc[1] - panel_y_offset;                                   \
+				/* shift Fluent mesh to FLAC3D data zero point at startup room for equations*/         \
+				real y_loc = fabs(loc[1] - panel_y_offset);                                            \
                                                                                                                        \
 				/*  limit vsi function to only within panel domain sizing */                           \
 				if (x_loc > panel_half_width) {                                                        \
@@ -852,10 +851,10 @@
 						vsi = 0;                                                               \
 					}                                                                              \
 				}                                                                                      \
-			}                                                                                              \
                                                                                                                        \
-			/*  clamp and assign vsi to user-defined-memory location */                                    \
-			C_UDMI(c, t, 4) = clamp(vsi, 0, max_vsi);                                                      \
+				/*  clamp and assign vsi to user-defined-memory location */                            \
+				C_UDMI(c, t, 4) = clamp(vsi, 0, max_vsi);                                              \
+			}                                                                                              \
 		}                                                                                                      \
 		end_c_loop(c, t);                                                                                      \
 		void;                                                                                                  \
