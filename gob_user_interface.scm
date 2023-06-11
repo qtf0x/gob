@@ -39,9 +39,15 @@
 
 ; RP variable declarations
 ; Declare variables for Model Type and Required Settings Box
-(make-new-rpvar 'longwallgobs/mine_C_radio_button #t 'boolean)
-(make-new-rpvar 'longwallgobs/mine_E_radio_button #f 'boolean)
-(make-new-rpvar 'longwallgobs/mine_T_radio_button #f 'boolean)
+(make-new-rpvar 'mine_c_radio_button #t 'boolean)
+(make-new-rpvar 'mine_e_radio_button #f 'boolean)
+(make-new-rpvar 'mine_t_radio_button #f 'boolean)
+
+; I hate Fluent so much
+(make-new-rpvar 'mine_c #t 'boolean)
+(make-new-rpvar 'mine_e #f 'boolean)
+(make-new-rpvar 'mine_t #f 'boolean)
+
 (make-new-rpvar 'longwallgobs/panel_half_width 0 'real)
 (make-new-rpvar 'longwallgobs/panel_length 0 'real)
 (make-new-rpvar 'longwallgobs/panel_x_offset 0 'real)
@@ -120,9 +126,9 @@
         (ttab3)
 		(table)
         (longwallgobs/mine_button_box)
-        (longwallgobs/mine_C_radio_button)
-        (longwallgobs/mine_E_radio_button)
-        (longwallgobs/mine_T_radio_button)
+        (mine_c_radio_button)
+        (mine_e_radio_button)
+        (mine_t_radio_button)
 
         (longwallgobs/egz_button_box)
         (longwallgobs/egz_radio_button)
@@ -162,9 +168,9 @@
 		; update-cb - invoked when the dialog box is opened
 		(define (update-cb . args)
 			; Required Settings
-			(cx-set-toggle-button longwallgobs/mine_C_radio_button (rpgetvar 'longwallgobs/mine_C_radio_button))
-			(cx-set-toggle-button longwallgobs/mine_E_radio_button (rpgetvar 'longwallgobs/mine_E_radio_button))
-			(cx-set-toggle-button longwallgobs/mine_T_radio_button (rpgetvar 'longwallgobs/mine_T_radio_button))
+			(cx-set-toggle-button mine_c_radio_button (rpgetvar 'mine_c_radio_button))
+			(cx-set-toggle-button mine_e_radio_button (rpgetvar 'mine_e_radio_button))
+			(cx-set-toggle-button mine_t_radio_button (rpgetvar 'mine_t_radio_button))
 
 			(cx-set-toggle-button longwallgobs/egz_radio_button (rpgetvar 'longwallgobs/egz_radio_button))
 
@@ -196,9 +202,14 @@
 		; apply-cb - invoked when you click "OK"
 		(define (apply-cb . args)
 			; Required Settings
-			(rpsetvar 'longwallgobs/mine_C_radio_button (cx-show-toggle-button longwallgobs/mine_C_radio_button))
-			(rpsetvar 'longwallgobs/mine_E_radio_button (cx-show-toggle-button longwallgobs/mine_E_radio_button))
-			(rpsetvar 'longwallgobs/mine_T_radio_button (cx-show-toggle-button longwallgobs/mine_T_radio_button))
+			(rpsetvar 'mine_c_radio_button (cx-show-toggle-button mine_c_radio_button))
+			(rpsetvar 'mine_e_radio_button (cx-show-toggle-button mine_e_radio_button))
+			(rpsetvar 'mine_t_radio_button (cx-show-toggle-button mine_t_radio_button))
+
+			; seriously, Fluent is the worst thing ever created wtf
+			(rpsetvar 'mine_c (cx-show-toggle-button mine_c_radio_button))
+			(rpsetvar 'mine_e (cx-show-toggle-button mine_e_radio_button))
+			(rpsetvar 'mine_t (cx-show-toggle-button mine_t_radio_button))
 
 			(rpsetvar 'longwallgobs/egz_radio_button (cx-show-toggle-button longwallgobs/egz_radio_button))
 
@@ -282,9 +293,9 @@
 			
 			; Set up zone conditions based on mine selected
 			;(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::libudf\" yes yes udf \"set_perm_2_VSI::libudf\" yes yes \"udf\" \"set_perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_poro_VSI::libudf\" constant 1 no"))))
-			;(if (equal? (cx-show-toggle-button longwallgobs/mine_C_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_1perm_1_VSI::libudf\" yes yes udf \"set_1perm_2_VSI::libudf\" yes yes \"udf\" \"set_1perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_1poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
-			;(if (equal? (cx-show-toggle-button longwallgobs/mine_E_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_2perm_1_VSI::libudf\" yes yes udf \"set_2perm_2_VSI::libudf\" yes yes \"udf\" \"set_2perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_2poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
-			;(if (equal? (cx-show-toggle-button longwallgobs/mine_T_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_3perm_1_VSI::libudf\" yes yes udf \"set_3perm_2_VSI::libudf\" yes yes \"udf\" \"set_3perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_3poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			;(if (equal? (cx-show-toggle-button mine_c_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_1perm_1_VSI::libudf\" yes yes udf \"set_1perm_2_VSI::libudf\" yes yes \"udf\" \"set_1perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_1poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			;(if (equal? (cx-show-toggle-button mine_e_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_2perm_1_VSI::libudf\" yes yes udf \"set_2perm_2_VSI::libudf\" yes yes \"udf\" \"set_2perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_2poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
+			;(if (equal? (cx-show-toggle-button mine_t_radio_button) #t) (for-each (lambda (zone_name) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append zone_name " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_3perm_1_VSI::libudf\" yes yes udf \"set_3perm_2_VSI::libudf\" yes yes \"udf\" \"set_3perm_3_VSI::libudf\" no yes yes \"udf\" \"set_inertia_1_VSI::libudf\" yes yes \"udf\" \"set_inertia_2_VSI::libudf\" yes yes \"udf\" \"set_inertia_3_VSI::libudf\" 0 0 yes yes \"udf\" \"set_3poro_VSI::libudf\" constant 1 no")))) (cx-show-list-selections longwallgobs/zone_names)))
 
 		)
 
@@ -311,9 +322,9 @@
 					(set! table (cx-create-table ttab1 ""))
 
 					(set! longwallgobs/mine_button_box (cx-create-button-box table "Mine Model" 'radio-mode #t 'col 0))
-					(set! longwallgobs/mine_C_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine C Model"))
-					(set! longwallgobs/mine_E_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine E Model"))
-					(set! longwallgobs/mine_T_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine T Model"))
+					(set! mine_c_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine C Model"))
+					(set! mine_e_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine E Model"))
+					(set! mine_t_radio_button (cx-create-toggle-button longwallgobs/mine_button_box "Mine T Model"))
 
 					(set! longwallgobs/egz_button_box (cx-create-button-box table "" 'radio-mode #f 'row 1 'col 0))
 					(set! longwallgobs/egz_radio_button (cx-create-toggle-button longwallgobs/egz_button_box "Explosive Gas Zone Colorization"))

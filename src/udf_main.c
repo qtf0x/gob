@@ -33,8 +33,7 @@ DEFINE_EXECUTE_FROM_GUI(udf_main, longwallgobs, mode)
 
 		// assumption: startup room MORE POSITIVE than working face
 		panel_y_offset = RP_Get_Real("longwallgobs/single_part_mesh_max_y");
-	} else if (RP_Variable_Exists_P("longwallgobs/mine_T_radio_button") &&
-		   RP_Get_Boolean("longwallgobs/mine_T_radio_button")) {
+	} else if (RP_Get_Boolean("mine_t")) {
 		if (RP_Get_Real("longwallgobs/startup_room_corner_max_y") >
 		    RP_Get_Real("longwallgobs/working_face_corner_max_y")) {
 			panel_x_offset = RP_Get_Real("longwallgobs/working_face_corner_min_x");
@@ -63,22 +62,13 @@ DEFINE_EXECUTE_FROM_GUI(udf_main, longwallgobs, mode)
 
 	printf("Calculating VSI...\n");
 
-	vsi_mine_C_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
-
-	/*
-
 	// calculate vsi
-	if (RP_Variable_Exists_P("longwallgobs/mine_C_radio_button") &&
-	    RP_Get_Boolean("longwallgobs/mine_C_radio_button"))
+	if (RP_Get_Boolean("mine_c"))
 		vsi_mine_C_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
-	else if (RP_Variable_Exists_P("longwallgobs/mine_E_radio_button") &&
-		 RP_Get_Boolean("longwallgobs/mine_E_radio_button"))
-		vsi_mine_E_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
-	else if (RP_Variable_Exists_P("longwallgobs/mine_T_radio_button") &&
-		 RP_Get_Boolean("longwallgobs/mine_T_radio_button"))
-		vsi_trona_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
-	else
-		printf("Something's gone wrong...\n")
 
-	*/
+	if (RP_Get_Boolean("mine_e"))
+		vsi_mine_E_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
+
+	if (RP_Get_Boolean("mine_t"))
+		vsi_trona_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
 }
