@@ -248,9 +248,9 @@
 			; utility function to insert a string in another before the first instance of "."
 			(define (string-insert n i)
 				(string-append
-					(substring n 0 (string-search-forward(n, #\. 0)))
+					(substring n 0 (string-search-forward (string->list n) #\. 0))
 					i
-					(substring n (string-search-forward(n, #\. 0)))))
+					(substring n (string-search-forward (string->list n) #\. 0)))
 
 			; Get mesh dimensions from Fluent
 			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , x-coordinate yes startup_room_center_min_x.txt no yes")))
