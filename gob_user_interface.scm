@@ -7,6 +7,9 @@
 (ti-menu-load-string "define/user-defined/compiled-functions compile longwallgobs yes fits.c udf_main.c utils.c \"\" fits.h udf_adjust.h udf_explosive_mix.h udf_inertia.h udf_permeability.h udf_porosity.h udf_vsi.h utils.h \"\"")
 (ti-menu-load-string "define/user-defined/compiled-functions load longwallgobs")
 
+; compile string parser
+(ti-menu-load-string "! g++ -o parser parser.cpp -static")
+
 ; get names of fluid zones
 (define zone_names
 	(map symbol->string
@@ -19,10 +22,13 @@
 					)
 					"fluid"
 				)
-				(substring?
-					"gob"
-					(symbol->string
-						name
+				(equal?
+					0
+					(string-search-forward
+						"gob"
+						(symbol->string
+							name
+						)
 					)
 				)
 				)
@@ -236,44 +242,50 @@
 			(rpsetvar 'longwallgobs/single_part_mesh_radio_button (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button))
 			(rpsetvar 'longwallgobs/zone_names_selected (cx-show-list-selections longwallgobs/zone_names))
 
+			; utility function to insert a string in another before the first instance of "."
+			(define (string-insert n i)
+				(string-append
+					(substring n 0 (string-search-forward(n, ".")))
+					i
+					(substring n (string-search-forward(n, ".")))))
+
 			; Get mesh dimensions from Fluent
-			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , x-coordinate yes startup_room_center_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , x-coordinate yes startup_room_center_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , y-coordinate yes startup_room_center_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , y-coordinate yes startup_room_center_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , x-coordinate yes startup_room_center_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , x-coordinate yes startup_room_center_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , y-coordinate yes startup_room_center_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , y-coordinate yes startup_room_center_max_y.txt no yes")))
 
-			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , x-coordinate yes startup_room_corner_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , x-coordinate yes startup_room_corner_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , y-coordinate yes startup_room_corner_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , y-coordinate yes startup_room_corner_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , x-coordinate yes startup_room_corner_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , x-coordinate yes startup_room_corner_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , y-coordinate yes startup_room_corner_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/startup_room_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_corner_id))) ":1")))) " , y-coordinate yes startup_room_corner_max_y.txt no yes")))
 
-			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , x-coordinate yes mid_panel_center_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , x-coordinate yes mid_panel_center_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , y-coordinate yes mid_panel_center_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , y-coordinate yes mid_panel_center_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , x-coordinate yes mid_panel_center_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , x-coordinate yes mid_panel_center_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , y-coordinate yes mid_panel_center_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_center_id))) ":1")))) " , y-coordinate yes mid_panel_center_max_y.txt no yes")))
 
-			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , x-coordinate yes mid_panel_gateroad_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , x-coordinate yes mid_panel_gateroad_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , y-coordinate yes mid_panel_gateroad_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , y-coordinate yes mid_panel_gateroad_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , x-coordinate yes mid_panel_gateroad_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , x-coordinate yes mid_panel_gateroad_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , y-coordinate yes mid_panel_gateroad_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/mid_panel_gateroad_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/mid_panel_gateroad_id))) ":1")))) " , y-coordinate yes mid_panel_gateroad_max_y.txt no yes")))
 
-			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , x-coordinate yes working_face_center_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , x-coordinate yes working_face_center_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , y-coordinate yes working_face_center_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , y-coordinate yes working_face_center_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , x-coordinate yes working_face_center_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , x-coordinate yes working_face_center_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , y-coordinate yes working_face_center_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_center_id))) ":1")))) " , y-coordinate yes working_face_center_max_y.txt no yes")))
 
-			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , x-coordinate yes working_face_corner_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , x-coordinate yes working_face_corner_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , y-coordinate yes working_face_corner_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , y-coordinate yes working_face_corner_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , x-coordinate yes working_face_corner_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , x-coordinate yes working_face_corner_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , y-coordinate yes working_face_corner_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/working_face_corner_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/working_face_corner_id))) ":1")))) " , y-coordinate yes working_face_corner_max_y.txt no yes")))
 
-			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , x-coordinate yes single_part_mesh_min_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , x-coordinate yes single_part_mesh_max_x.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , y-coordinate yes single_part_mesh_min_y.txt no yes")))
-			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-append (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , y-coordinate yes single_part_mesh_max_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , x-coordinate yes single_part_mesh_min_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , x-coordinate yes single_part_mesh_max_x.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , y-coordinate yes single_part_mesh_min_y.txt no yes")))
+			(if (> (rpgetvar 'longwallgobs/single_part_mesh_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-max " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/single_part_mesh_id))) ":1")))) " , y-coordinate yes single_part_mesh_max_y.txt no yes")))
 
-			(ti-menu-load-string "! g++ -o parse parse.cpp -static")
-			(ti-menu-load-string "! ./parse")
+			(ti-menu-load-string "! ./parser")
 			(load "set_dimensions.scm")
 
 			(%run-udf-apply 1)
