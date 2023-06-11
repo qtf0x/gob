@@ -10,6 +10,12 @@
 ; compile string parser
 (ti-menu-load-string "! g++ -o parser parser.cpp -static")
 
+; https://stackoverflow.com/questions/29737958/scheme-how-to-find-a-position-of-a-char-in-a-string
+(define (string-search-forward char-list char pos)
+  (cond ((null? char-list) #f)              ; list was empty
+        ((char=? char (car char-list)) pos) ; we found it!
+        (else (string-search-forward (cdr char-list) char (add1 pos))))) ; char was not found
+
 ; get names of fluid zones
 (define zone_names
 	(map symbol->string
@@ -22,13 +28,10 @@
 					)
 					"fluid"
 				)
-				(equal?
-					0
-					(string-search-forward
-						"gob"
-						(symbol->string
-							name
-						)
+				(substring?
+					"gob"
+					(symbol->string
+						name
 					)
 				)
 				)
@@ -245,9 +248,9 @@
 			; utility function to insert a string in another before the first instance of "."
 			(define (string-insert n i)
 				(string-append
-					(substring n 0 (string-search-forward(n, ".")))
+					(substring n 0 (string-search-forward(n, #\. 0)))
 					i
-					(substring n (string-search-forward(n, ".")))))
+					(substring n (string-search-forward(n, #\. 0)))))
 
 			; Get mesh dimensions from Fluent
 			(if (> (rpgetvar 'longwallgobs/startup_room_center_id) -1) (ti-menu-load-string (string-append (string-append "report/surface-integrals vertex-min " (number->string (surface-name->id (string-insert (symbol->string (zone-id->name (rpgetvar 'longwallgobs/startup_room_center_id))) ":1")))) " , x-coordinate yes startup_room_center_min_x.txt no yes")))
