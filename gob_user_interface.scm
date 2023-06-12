@@ -87,6 +87,9 @@
 (make-new-rpvar 'longwallgobs/max_porosity 0.40 'real)
 (make-new-rpvar 'longwallgobs/initial_porosity 0.25778 'real)
 (make-new-rpvar 'longwallgobs/max_vsi 0.40 'real)
+(make-new-rpvar 'longwallgobs/min_inertial_resistance 0 'real)
+(make-new-rpvar 'longwallgobs/max_inertial_resistance 1.3E5 'real)
+
 ; Declare Variables for Zone Selection box
 (make-new-rpvar 'longwallgobs/startup_room_center_radio_button #t 'boolean)
 (make-new-rpvar 'longwallgobs/startup_room_corner_radio_button #f 'boolean)
@@ -173,6 +176,8 @@
         (longwallgobs/max_porosity)
         (longwallgobs/initial_porosity)
         (longwallgobs/max_vsi)
+		(longwallgobs/min_inertial_resistance)
+		(longwallgobs/max_inertial_resistance)
 
 		; Zone Selection
 		(table3)
@@ -209,6 +214,9 @@
 			(cx-set-real-entry longwallgobs/max_porosity (rpgetvar 'longwallgobs/max_porosity))
 			(cx-set-real-entry longwallgobs/initial_porosity (rpgetvar 'longwallgobs/initial_porosity))
 			(cx-set-real-entry longwallgobs/max_vsi (rpgetvar 'longwallgobs/max_vsi))
+			(cx-set-real-entry longwallgobs/min_inertial_resistance (rpgetvar 'longwallgobs/min_inertial_resistance'))
+			(cx-set-real-entry longwallgobs/max_inertial_resistance (rpgetvar 'longwallgobs/max_inertial_resistance'))
+
 
 			; Zone Selection
 			(cx-set-toggle-button longwallgobs/startup_room_center_radio_button (rpgetvar 'longwallgobs/startup_room_center_radio_button))
@@ -246,6 +254,10 @@
 			(rpsetvar 'longwallgobs/max_porosity (cx-show-real-entry longwallgobs/max_porosity))
 			(rpsetvar 'longwallgobs/initial_porosity (cx-show-real-entry longwallgobs/initial_porosity))
 			(rpsetvar 'longwallgobs/max_vsi (cx-show-real-entry longwallgobs/max_vsi))
+			(rpsetvar 'longwallgobs/min_inertial_resistance (cx-show-real-entry longwallgobs/min_inertial_resistance))
+			(rpsetvar 'longwallgobs/max_inertial_resistance (cx-show-real-entry longwallgobs/max_inertial_resistance))
+
+
 
 			; Zone Selection
 			(rpsetvar 'longwallgobs/startup_room_center_radio_button (cx-show-toggle-button longwallgobs/startup_room_center_radio_button))
@@ -365,6 +377,8 @@
 					(set! longwallgobs/max_porosity (cx-create-real-entry longwallgobs/optional_param_table "Max Porosity" 'row 1 'col 0))
 					(set! longwallgobs/initial_porosity (cx-create-real-entry longwallgobs/optional_param_table "Initial Porosity" 'row 1 'col 1))
 					(set! longwallgobs/max_vsi (cx-create-real-entry longwallgobs/optional_param_table "Max VSI" 'row 1 'col 2))
+					(set! longwallgobs/min_inertial_resistance (cx-create-real-entry longwallgobs/optional_param_table "Min Inertial Resistance" 'row 0 'col 3))
+					(set! longwallgobs/max_inertial_resistance (cx-create-real-entry longwallgobs/optional_param_table "Max Inertial Resistance" 'row 1 'col 3))
 
 					; Zone Selection
 					(set! table3 (cx-create-table ttab3 ""))
