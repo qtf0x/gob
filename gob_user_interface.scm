@@ -345,7 +345,7 @@
 					(set! longwallgobs/egz_button_box (cx-create-button-box table "" 'radio-mode #f 'row 1 'col 0))
 					(set! longwallgobs/egz_radio_button (cx-create-toggle-button longwallgobs/egz_button_box "Explosive Gas Zone Colorization"))
 
-					(set! longwallgobs/os_button_box (cx-create-button-box table "Operating System?" 'radio-mode #t 'row 0 'col 1))
+					(set! longwallgobs/os_button_box (cx-create-button-box table "Operating System" 'radio-mode #t 'row 0 'col 1))
 					(set! longwallgobs/windows_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Windows"))
 					(set! longwallgobs/linux_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Linux"))
 
