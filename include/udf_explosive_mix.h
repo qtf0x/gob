@@ -14,7 +14,7 @@
 	!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 */
 
-#define calc_explosive_mix(x)                                                                               \
+#define calc_explosive_mix()                                                                                \
 	({                                                                                                  \
 		Domain *d;                                                                                  \
 		Thread *t;                                                                                  \
@@ -105,7 +105,7 @@
 	-----------------------------------------
 */
 
-#define calc_explosive_integral_gob(x)                                                                                                                                                                                                                                                                                      \
+#define calc_explosive_integral_gob()                                                                                                                                                                                                                                                                                       \
 	/* For use in the gob - currently porosity in strata is user-defined-variable and this will return a value of zero in the strata because the value of the porosity stored in C_UDMI(c,t,1) is zero. This could be changed by patching a value into C_UDMI for the strata. For strata use: calc_explosive_integral*/ \
 	({                                                                                                                                                                                                                                                                                                                  \
 		Domain *d;                                                                                                                                                                                                                                                                                                  \
@@ -129,7 +129,7 @@
 		void;                                                                                                                                                                                                                                                                                                       \
 	})
 
-#define reset_explosive_integral(x)                                                                  \
+#define reset_explosive_integral()                                                                   \
 	({                                                                                           \
 		/* Required to execute on transient runs - otherwise explosive volume is additive */ \
 		Domain *d;                                                                           \
