@@ -57,10 +57,6 @@
 (make-new-rpvar 'mine_e #f 'boolean)
 (make-new-rpvar 'mine_t #f 'boolean)
 
-(make-new-rpvar 'longwallgobs/panel_half_width 0 'real)
-(make-new-rpvar 'longwallgobs/panel_length 0 'real)
-(make-new-rpvar 'longwallgobs/panel_x_offset 0 'real)
-(make-new-rpvar 'longwallgobs/panel_y_offset 0 'real)
 (make-new-rpvar 'longwallgobs/egz_radio_button #f 'boolean)
 ; Declare variables for Optional Settings Box
 (make-new-rpvar 'longwallgobs/resist_scaler 1 'real)
@@ -142,12 +138,6 @@
         (longwallgobs/egz_button_box)
         (longwallgobs/egz_radio_button)
 
-        (longwallgobs/required_param_table)
-        (longwallgobs/panel_half_width)
-        (longwallgobs/panel_length)
-        (longwallgobs/panel_x_offset)
-        (longwallgobs/panel_y_offset)
-
 		; Optional Settings
 		(table2)
         (longwallgobs/optional_param_table)
@@ -183,11 +173,6 @@
 
 			(cx-set-toggle-button longwallgobs/egz_radio_button (rpgetvar 'longwallgobs/egz_radio_button))
 
-			(cx-set-real-entry longwallgobs/panel_half_width (rpgetvar 'longwallgobs/panel_half_width))
-			(cx-set-real-entry longwallgobs/panel_length (rpgetvar 'longwallgobs/panel_length))
-			(cx-set-real-entry longwallgobs/panel_x_offset (rpgetvar 'longwallgobs/panel_x_offset))
-			(cx-set-real-entry longwallgobs/panel_y_offset (rpgetvar 'longwallgobs/panel_y_offset))
-
 			; Optional Settings
 			(cx-set-real-entry longwallgobs/resist_scaler (rpgetvar 'longwallgobs/resist_scaler))
 			(cx-set-real-entry longwallgobs/max_resistance (rpgetvar 'longwallgobs/max_resistance))
@@ -221,11 +206,6 @@
 			(rpsetvar 'mine_t (cx-show-toggle-button mine_t_radio_button))
 
 			(rpsetvar 'longwallgobs/egz_radio_button (cx-show-toggle-button longwallgobs/egz_radio_button))
-
-			(rpsetvar 'longwallgobs/panel_half_width (cx-show-real-entry longwallgobs/panel_half_width))
-			(rpsetvar 'longwallgobs/panel_length (cx-show-real-entry longwallgobs/panel_length))
-			(rpsetvar 'longwallgobs/panel_x_offset (cx-show-real-entry longwallgobs/panel_x_offset))
-			(rpsetvar 'longwallgobs/panel_y_offset (cx-show-real-entry longwallgobs/panel_y_offset))
 
 			; Optional Settings
 			(rpsetvar 'longwallgobs/resist_scaler (cx-show-real-entry longwallgobs/resist_scaler))
@@ -349,12 +329,6 @@
 
 					(set! longwallgobs/egz_button_box (cx-create-button-box table "" 'radio-mode #f 'row 1 'col 0))
 					(set! longwallgobs/egz_radio_button (cx-create-toggle-button longwallgobs/egz_button_box "Explosive Gas Zone Colorization"))
-
-					(set! longwallgobs/required_param_table (cx-create-table table "Required Settings" 'row 0 'col 1))
-					(set! longwallgobs/panel_half_width (cx-create-real-entry longwallgobs/required_param_table "Panel Half Width" 'row 0))
-					(set! longwallgobs/panel_length (cx-create-real-entry longwallgobs/required_param_table "Panel Length" 'row 1))
-					(set! longwallgobs/panel_x_offset (cx-create-real-entry longwallgobs/required_param_table "Panel X Offset" 'row 2))
-					(set! longwallgobs/panel_y_offset (cx-create-real-entry longwallgobs/required_param_table "Panel Y Offset" 'row 3))
 
 					; Optional Settings
 					(set! table2 (cx-create-table ttab2 ""))
