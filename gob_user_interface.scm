@@ -7,6 +7,9 @@
 (ti-menu-load-string "define/user-defined/compiled-functions compile longwallgobs yes fits.c udf_main.c utils.c \"\" fits.h udf_explosive_mix.h udf_inertia.h udf_permeability.h udf_porosity.h udf_vsi.h utils.h \"\"\n")
 (ti-menu-load-string "define/user-defined/compiled-functions load longwallgobs\n")
 
+; set adjust function hook
+(ti-menu-load-string "define/user-defined/function-hooks/adjust \"demo_calc::longwallgobs\"")
+
 ; compile string parser
 (ti-menu-load-string "! g++ -o parser parser.cpp -static\n")
 
