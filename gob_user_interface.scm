@@ -312,11 +312,11 @@
 			(if (and (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (pair? (cx-show-list-selections longwallgobs/zone_names))) (rpsetvar 'longwallgobs/single_part_mesh_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
 			
 			; Set up zone conditions based on mine selected
-			(if (rpgetvar 'longwallgobs/linux_radio_button)
+			(if (cx-show-toggle-button longwallgobs/linux_radio_button)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 no no no yes no no yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
 			)
 
-			(if (rpgetvar 'longwallgobs/windows_radio_button)
+			(if (cx-show-toggle-button longwallgobs/windows_radio_button)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
 			)
 		)
