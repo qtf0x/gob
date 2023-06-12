@@ -73,7 +73,13 @@
 (make-new-rpvar 'mine_e #f 'boolean)
 (make-new-rpvar 'mine_t #f 'boolean)
 
+
+; Declare variables for Explosive Gas Zone option
 (make-new-rpvar 'longwallgobs/egz_radio_button #f 'boolean)
+
+; Declare variables for Windows (default) and Linux machine
+(make-new-rpvar 'longwallgobs/windows_radio_button #t 'boolean)
+(make-new-rpvar 'longwallgobs/linux_radio_button #f 'boolean)
 ; Declare variables for Optional Settings Box
 (make-new-rpvar 'longwallgobs/resist_scaler 1 'real)
 (make-new-rpvar 'longwallgobs/max_resistance 5.0E6 'real)
@@ -154,6 +160,10 @@
         (longwallgobs/egz_button_box)
         (longwallgobs/egz_radio_button)
 
+		(longwallgobs/os_button_box)
+		(longwallgobs/windows_radio_button)	
+		(longwallgobs/linux_radio_button)	
+
 		; Optional Settings
 		(table2)
         (longwallgobs/optional_param_table)
@@ -188,7 +198,10 @@
 			(cx-set-toggle-button mine_t_radio_button (rpgetvar 'mine_t_radio_button))
 
 			(cx-set-toggle-button longwallgobs/egz_radio_button (rpgetvar 'longwallgobs/egz_radio_button))
-
+			
+			(cx-set-toggle-button longwallgobs/windows_radio_button (rpgetvar 'longwallgobs/windows_radio_button))
+			(cx-set-toggle-button longwallgobs/linux_radio_button (rpgetvar 'longwallgobs/linux_radio_button))
+ 
 			; Optional Settings
 			(cx-set-real-entry longwallgobs/resist_scaler (rpgetvar 'longwallgobs/resist_scaler))
 			(cx-set-real-entry longwallgobs/max_resistance (rpgetvar 'longwallgobs/max_resistance))
@@ -222,6 +235,9 @@
 			(rpsetvar 'mine_t (cx-show-toggle-button mine_t_radio_button))
 
 			(rpsetvar 'longwallgobs/egz_radio_button (cx-show-toggle-button longwallgobs/egz_radio_button))
+
+			(rpsetvar 'longwallgobs/windows_radio_button (cx-show-toggle-button longwallgobs/windows_radio_button))
+			(rpsetvar 'longwallgobs/linux_radio_button (cx-show-toggle-button longwallgobs/linux_radio_button))
 
 			; Optional Settings
 			(rpsetvar 'longwallgobs/resist_scaler (cx-show-real-entry longwallgobs/resist_scaler))
@@ -328,6 +344,10 @@
 
 					(set! longwallgobs/egz_button_box (cx-create-button-box table "" 'radio-mode #f 'row 1 'col 0))
 					(set! longwallgobs/egz_radio_button (cx-create-toggle-button longwallgobs/egz_button_box "Explosive Gas Zone Colorization"))
+
+					(set! longwallgobs/os_button_box (cx-create-button-box table "Operating System?" 'radio-mode #f 'row 1 'col 1))
+					(set! longwallgobs/windows_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Windows"))
+					(set! longwallgobs/linux_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Linux"))
 
 					; Optional Settings
 					(set! table2 (cx-create-table ttab2 ""))
