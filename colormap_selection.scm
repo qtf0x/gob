@@ -116,8 +116,12 @@
   (make-menu-item "write-colormap" #t ti-write-cmap "Write a colormap to a file."))
 ; ------------------------- END ------------------------- 
 
+; Load viridis as the default colormap
+(ti-menu-load-string "file/read-colormap colormaps/viridis.colormap\n")
+
 ; Define variables for menu
-(make-new-rpvar 'longwallgobs/field_velocity_button #t 'boolean)
+(make-new-rpvar 'longwallgobs/viridis_button #t 'boolean) ; Viridis is the Matplotlib default colormap
+(make-new-rpvar 'longwallgobs/field_velocity_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/explosive_plots_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/blackbody_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/blackbody_extended_button #f 'boolean)
@@ -129,7 +133,6 @@
 (make-new-rpvar 'longwallgobs/kindlmann_extended_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/magma_button #f 'boolean)
 (make-new-rpvar 'longwallgobs/plasma_button #f 'boolean)
-(make-new-rpvar 'longwallgobs/viridis_button #f 'boolean) ; Viridis is the Matplotlib default colormap
 ; (make-new-rpvar 'longwallgobs/<button name> #f 'boolean) ; NEW COLORMAP
 
 ; Create a menu for various colormap options 
@@ -138,6 +141,7 @@
 	; Let Statement, Local Variable Declarations
 	(let ((dialog-box #f)
 		(table)
+    	(longwallgobs/viridis_button)
 			(longwallgobs/colormap_button_box)
       (longwallgobs/field_velocity_button)	
       (longwallgobs/explosive_plots_button)
@@ -151,11 +155,11 @@
       (longwallgobs/kindlmann_extended_button)
       (longwallgobs/magma_button)
       (longwallgobs/plasma_button)
-			(longwallgobs/viridis_button)
       ; (longwallgobs/<button name>) ; NEW COLORMAP
 	  )
 		; update-cb - invoked when the dialog box is opened
 		(define (update-cb . args)
+      (cx-set-toggle-button longwallgobs/viridis_button (rpgetvar 'longwallgobs/viridis_button))
 			(cx-set-toggle-button longwallgobs/field_velocity_button (rpgetvar 'longwallgobs/field_velocity_button))
       (cx-set-toggle-button longwallgobs/explosive_plots_button (rpgetvar 'longwallgobs/explosive_plots_button))
 			(cx-set-toggle-button longwallgobs/blackbody_button (rpgetvar 'longwallgobs/blackbody_button))
@@ -168,13 +172,13 @@
       (cx-set-toggle-button longwallgobs/kindlmann_extended_button (rpgetvar 'longwallgobs/kindlmann_extended_button))
       (cx-set-toggle-button longwallgobs/magma_button (rpgetvar 'longwallgobs/magma_button))
       (cx-set-toggle-button longwallgobs/plasma_button (rpgetvar 'longwallgobs/plasma_button))
-      (cx-set-toggle-button longwallgobs/viridis_button (rpgetvar 'longwallgobs/viridis_button))
       ; (cx-set-toggle-button longwallgobs/<button name> (rpgetvar 'longwallgobs/<button name>)) ; NEW COLORMAP
 		)
 
 		; apply-cb - invoked when you click "OK"
 		(define (apply-cb . args)
       ; Set variables based on button selection
+      (rpsetvar 'longwallgobs/viridis_button (cx-show-toggle-button longwallgobs/viridis_button))
       (rpsetvar 'longwallgobs/field_velocity_button (cx-show-toggle-button longwallgobs/field_velocity_button))
       (rpsetvar 'longwallgobs/explosive_plots_button (cx-show-toggle-button longwallgobs/explosive_plots_button))
       (rpsetvar 'longwallgobs/blackbody_button (cx-show-toggle-button longwallgobs/blackbody_button))
@@ -187,12 +191,12 @@
       (rpsetvar 'longwallgobs/kindlmann_extended_button (cx-show-toggle-button longwallgobs/kindlmann_extended_button))
       (rpsetvar 'longwallgobs/magma_button (cx-show-toggle-button longwallgobs/magma_button))
       (rpsetvar 'longwallgobs/plasma_button (cx-show-toggle-button longwallgobs/plasma_button))
-      (rpsetvar 'longwallgobs/viridis_button (cx-show-toggle-button longwallgobs/viridis_button))
       ; (rpsetvar 'longwallgobs/<button name> (cx-show-toggle-button longwallgobs/<button name>)) ; NEW COLORMAP 
       ; Set colormap based on radio button selection
       ; (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (display (rpgetvar 'longwallgobs/plasma_button)) (display (rpgetvar 'longwallgobs/plasma_button)) )
       ; (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap") () )
       ; (if (equal? (rpgetvar 'longwallgobs/field_velocity_button) #t) (ti-menu-load-string "preferences/graphics/colormap-settings/colormap/field_velocity\nGo to Contours>Colormap Options...>Currently Defined>field_velocity to apply")) 
+      (if (equal? (rpgetvar 'longwallgobs/viridis_button) #t) (ti-menu-load-string "file/read-colormap colormaps/viridis.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/field_velocity_button) #t) (ti-menu-load-string "file/read-colormap colormaps/field_velocity.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/explosive_plots_button) #t) (ti-menu-load-string "file/read-colormap colormaps/explosive_plots.colormap\n"))
       (if (equal? (rpgetvar 'longwallgobs/blackbody_button) #t) (ti-menu-load-string "file/read-colormap colormaps/blackbody.colormap\n")) 
@@ -205,7 +209,6 @@
       (if (equal? (rpgetvar 'longwallgobs/kindlmann_extended_button) #t) (ti-menu-load-string "file/read-colormap colormaps/kindlmann_extended.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/magma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/magma.colormap\n")) 
       (if (equal? (rpgetvar 'longwallgobs/plasma_button) #t) (ti-menu-load-string "file/read-colormap colormaps/plasma.colormap\n"))
-      (if (equal? (rpgetvar 'longwallgobs/viridis_button) #t) (ti-menu-load-string "file/read-colormap colormaps/viridis.colormap\n")) 
       ; (if (equal? (rpgetvar 'longwallgobs/<button name>) #t) (ti-menu-load-string "file/read-colormap colormaps/<file name>\n")) ; NEW COLORMAP
     )
 
@@ -218,6 +221,7 @@
           ; Box to put radio buttons in
 					(set! longwallgobs/colormap_button_box (cx-create-button-box table "Colormaps" 'radio-mode #t 'col 0))
           ; Radio buttons for the table
+          (set! longwallgobs/viridis_button (cx-create-toggle-button longwallgobs/colormap_button_box "Viridis"))
 					(set! longwallgobs/field_velocity_button (cx-create-toggle-button longwallgobs/colormap_button_box "Field Velocity (Default)"))
           (set! longwallgobs/explosive_plots_button (cx-create-toggle-button longwallgobs/colormap_button_box "Explosive Plots"))
 					(set! longwallgobs/blackbody_button (cx-create-toggle-button longwallgobs/colormap_button_box "Black Body"))
@@ -230,7 +234,6 @@
 					(set! longwallgobs/kindlmann_extended_button (cx-create-toggle-button longwallgobs/colormap_button_box "Extended Kindlmann"))
 					(set! longwallgobs/magma_button (cx-create-toggle-button longwallgobs/colormap_button_box "Magma"))
 					(set! longwallgobs/plasma_button (cx-create-toggle-button longwallgobs/colormap_button_box "Plasma"))
-					(set! longwallgobs/viridis_button (cx-create-toggle-button longwallgobs/colormap_button_box "Viridis"))
           ; (set! longwallgobs/<button name> (cx-create-toggle-button longwallgobs/colormap_button_box "<name to be displayed>")) ; NEW COLORMAP
 				) ;End Of Let Statement
 			) ;End Of If Statement
