@@ -214,8 +214,8 @@
 			(cx-set-real-entry longwallgobs/max_porosity (rpgetvar 'longwallgobs/max_porosity))
 			(cx-set-real-entry longwallgobs/initial_porosity (rpgetvar 'longwallgobs/initial_porosity))
 			(cx-set-real-entry longwallgobs/max_vsi (rpgetvar 'longwallgobs/max_vsi))
-			(cx-set-real-entry longwallgobs/min_inertial_resistance (rpgetvar 'longwallgobs/min_inertial_resistance'))
-			(cx-set-real-entry longwallgobs/max_inertial_resistance (rpgetvar 'longwallgobs/max_inertial_resistance'))
+			(cx-set-real-entry longwallgobs/min_inertial_resistance (rpgetvar 'longwallgobs/min_inertial_resistance))
+			(cx-set-real-entry longwallgobs/max_inertial_resistance (rpgetvar 'longwallgobs/max_inertial_resistance))
 
 
 			; Zone Selection
