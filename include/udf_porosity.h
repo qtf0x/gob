@@ -16,26 +16,21 @@ vsi is volumetric strain (%), and V_t is total volume (cubic meters). */
 	real cellpor;
 	real V_v = 0.40000;
 	real a = 1; /* for a scalor */
-	if (RP_Variable_Exists_P(
-		    "vsi/porosity-scaler")) { /* Returns true if the variable exists */
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) { /* Returns true if the variable exists */
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-porosity")) {
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) {
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
 
 	begin_c_loop(c, t)
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellpor =
-				((V_v - C_UDMI(c, t, 4)) *
-				 a); /* Initial Maximum gob porosity minus the change in porosity (VSI). */
+			cellpor = ((V_v - C_UDMI(c, t, 4)) *
+				   a); /* Initial Maximum gob porosity minus the change in porosity (VSI). */
 
-			C_PROFILE(c, t, nv) =
-				(cellpor < 0) ?
-					0 :
-					cellpor; /* 'a' scaler for later use */
+			C_PROFILE(c, t, nv) = (cellpor < 0) ? 0 : cellpor; /* 'a' scaler for later use */
 			C_UDMI(c, t, 1) = (cellpor < 0) ? 0 : cellpor;
 		}
 		if (ite > 1) {
@@ -56,26 +51,21 @@ vsi is volumetric strain (%), and V_t is total volume (cubic meters). */
 	real cellpor;
 	real V_v = 0.40000;
 	real a = 1; /* for a scalor */
-	if (RP_Variable_Exists_P(
-		    "vsi/porosity-scaler")) { /* Returns true if the variable exists */
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) { /* Returns true if the variable exists */
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-porosity")) {
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) {
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
 
 	begin_c_loop(c, t)
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellpor =
-				((V_v - C_UDMI(c, t, 4)) *
-				 a); /* Inital Maximum gob porosity minus the change in porosity (VSI). */
+			cellpor = ((V_v - C_UDMI(c, t, 4)) *
+				   a); /* Inital Maximum gob porosity minus the change in porosity (VSI). */
 
-			C_PROFILE(c, t, nv) =
-				(cellpor < 0) ?
-					0 :
-					cellpor; /* 'a' scaler for later use */
+			C_PROFILE(c, t, nv) = (cellpor < 0) ? 0 : cellpor; /* 'a' scaler for later use */
 			C_UDMI(c, t, 1) = (cellpor < 0) ? 0 : cellpor;
 		}
 		if (ite > 1) {
@@ -96,26 +86,21 @@ vsi is volumetric strain (%), and V_t is total volume (cubic meters). */
 	real cellpor;
 	real V_v = 0.40000;
 	real a = 1; /* for a scalor */
-	if (RP_Variable_Exists_P(
-		    "vsi/porosity-scaler")) { /* Returns true if the variable exists */
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) { /* Returns true if the variable exists */
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-porosity")) {
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) {
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
 
 	begin_c_loop(c, t)
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellpor =
-				((V_v - C_UDMI(c, t, 4)) *
-				 a); /* Inital Maximum gob porosity minus the change in porosity (VSI). */
+			cellpor = ((V_v - C_UDMI(c, t, 4)) *
+				   a); /* Inital Maximum gob porosity minus the change in porosity (VSI). */
 
-			C_PROFILE(c, t, nv) =
-				(cellpor < 0) ?
-					0 :
-					cellpor; /* 'a' scaler for later use */
+			C_PROFILE(c, t, nv) = (cellpor < 0) ? 0 : cellpor; /* 'a' scaler for later use */
 			C_UDMI(c, t, 1) = (cellpor < 0) ? 0 : cellpor;
 		}
 		if (ite > 1) {
@@ -136,26 +121,21 @@ vsi is volumetric strain (%), and V_t is total volume (cubic meters). */
 	real cellpor;
 	real V_v = 0.40000;
 	real a = 1; /* for a scalor */
-	if (RP_Variable_Exists_P(
-		    "vsi/porosity-scaler")) { /* Returns true if the variable exists */
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) { /* Returns true if the variable exists */
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-porosity")) {
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) {
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
 
 	begin_c_loop(c, t)
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellpor =
-				((V_v - C_UDMI(c, t, 4)) *
-				 a); /* Inital Maximum gob porosity minus the change in porosity (VSI). */
+			cellpor = ((V_v - C_UDMI(c, t, 4)) *
+				   a); /* Inital Maximum gob porosity minus the change in porosity (VSI). */
 
-			C_PROFILE(c, t, nv) =
-				(cellpor < 0) ?
-					0 :
-					cellpor; /* 'a' scaler for later use */
+			C_PROFILE(c, t, nv) = (cellpor < 0) ? 0 : cellpor; /* 'a' scaler for later use */
 			C_UDMI(c, t, 1) = (cellpor < 0) ? 0 : cellpor;
 		}
 		if (ite > 1) {
@@ -164,6 +144,5 @@ vsi is volumetric strain (%), and V_t is total volume (cubic meters). */
 	}
 	end_c_loop(c, t)
 }
-
 
 #endif // GOB_UDF_POROSITY_H
