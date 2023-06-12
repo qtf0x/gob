@@ -1,14 +1,14 @@
 ; allocate and initialize UDMs
-(ti-menu-load-string "define/user-defined/user-defined-memory 6")
-(ti-menu-load-string "solve/initialize/initialize-flow")
+(ti-menu-load-string "define/user-defined/user-defined-memory 6\n")
+(ti-menu-load-string "solve/initialize/initialize-flow\n")
 
 ; compile and load UDF library
-(ti-menu-load-string "define/user-defined/use-built-in-compiler yes")
-(ti-menu-load-string "define/user-defined/compiled-functions compile longwallgobs yes fits.c udf_main.c utils.c \"\" fits.h udf_adjust.h udf_explosive_mix.h udf_inertia.h udf_permeability.h udf_porosity.h udf_vsi.h utils.h \"\"")
-(ti-menu-load-string "define/user-defined/compiled-functions load longwallgobs")
+(ti-menu-load-string "define/user-defined/use-built-in-compiler yes\n")
+(ti-menu-load-string "define/user-defined/compiled-functions compile longwallgobs yes fits.c udf_main.c utils.c \"\" fits.h udf_adjust.h udf_explosive_mix.h udf_inertia.h udf_permeability.h udf_porosity.h udf_vsi.h utils.h \"\"\n")
+(ti-menu-load-string "define/user-defined/compiled-functions load longwallgobs\n")
 
 ; compile string parser
-(ti-menu-load-string "! g++ -o parser parser.cpp -static")
+(ti-menu-load-string "! g++ -o parser parser.cpp -static\n")
 
 ; https://stackoverflow.com/questions/29737958/scheme-how-to-find-a-position-of-a-char-in-a-string
 (define (string-search-forward char-list char pos)
