@@ -71,4 +71,10 @@ DEFINE_EXECUTE_FROM_GUI(udf_main, longwallgobs, mode)
 
 	if (RP_Get_Boolean("mine_t"))
 		vsi_trona_stepped(SINGLE_PART_MESH, panel_x_offset, panel_y_offset);
+
+	// calculate explosive gas mix + integral
+	if (RP_Get_Boolean("longwallgobs/egz_radio_buttons")) {
+		calc_explosive_mix(void);
+		calc_explosive_integral_gob(void);
+	}
 }

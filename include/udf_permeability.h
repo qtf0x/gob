@@ -38,23 +38,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -63,14 +61,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -79,9 +73,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -110,23 +102,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -135,14 +125,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -151,9 +137,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -182,23 +166,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -207,14 +189,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -223,9 +201,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -254,23 +230,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -279,14 +253,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -295,9 +265,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -326,23 +294,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -351,14 +317,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -367,9 +329,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -398,23 +358,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -423,14 +381,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -439,9 +393,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -472,23 +424,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -497,14 +447,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -513,9 +459,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -544,23 +488,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -569,14 +511,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -585,9 +523,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -616,23 +552,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -641,14 +575,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -657,9 +587,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -691,23 +619,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -716,14 +642,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -732,9 +654,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -763,23 +683,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -788,14 +706,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -804,9 +718,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -835,23 +747,21 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	real a = 1;
 	real resist_scaler = 1;
 	real maximum_resist = 5.000000E6;
-	real minimum_resist =
-		1.45000E5; /* equals 6.91e-6 1/m2 permeability */
-	if (RP_Variable_Exists_P(
-		    "vsi/maximum-porosity")) { /* Get scheme variable and assign it if it exists */
-		V_v = (RP_Get_Real("vsi/maximum-porosity"));
+	real minimum_resist = 1.45000E5; /* equals 6.91e-6 1/m2 permeability */
+	if (RP_Variable_Exists_P("longwallgobs/max_porosity")) { /* Get scheme variable and assign it if it exists */
+		V_v = (RP_Get_Real("longwallgobs/max_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/porosity-scaler")) {
-		a = (RP_Get_Real("vsi/porosity-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/initial_porosity")) {
+		a = (RP_Get_Real("longwallgobs/initial_porosity"));
 	}
-	if (RP_Variable_Exists_P("vsi/resist-scaler")) {
-		resist_scaler = (RP_Get_Real("vsi/resist-scaler"));
+	if (RP_Variable_Exists_P("longwallgobs/resist_scaler")) {
+		resist_scaler = (RP_Get_Real("longwallgobs/resist_scaler"));
 	}
-	if (RP_Variable_Exists_P("vsi/maximum-resist")) {
-		maximum_resist = (RP_Get_Real("vsi/maximum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/max_resistance")) {
+		maximum_resist = (RP_Get_Real("longwallgobs/max_resistance"));
 	}
-	if (RP_Variable_Exists_P("vsi/minimum-resist")) {
-		minimum_resist = (RP_Get_Real("vsi/minimum-resist"));
+	if (RP_Variable_Exists_P("longwallgobs/min_resistance")) {
+		minimum_resist = (RP_Get_Real("longwallgobs/min_resistance"));
 	}
 
 	initial_permeability = Initial_Perm();
@@ -860,14 +770,10 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	{
 		C_CENTROID(x, c, t);
 		if (ite <= 1) {
-			cellporo =
-				((V_v - C_UDMI(c, t, 4)) * a < 0) ?
-					0 :
-					(V_v - C_UDMI(c, t, 4)) *
-						a; /* Limit lowest value of porosity to zero */
-			cellresist = Cell_Resistance(
-				cellporo,
-				initial_permeability); /* Carmen-Kozeny Relationship */
+			cellporo = ((V_v - C_UDMI(c, t, 4)) * a < 0) ?
+					   0 :
+					   (V_v - C_UDMI(c, t, 4)) * a; /* Limit lowest value of porosity to zero */
+			cellresist = Cell_Resistance(cellporo, initial_permeability); /* Carmen-Kozeny Relationship */
 			/* Limit MAX and MIN resistance */
 			if (cellresist < maximum_resist) {
 				if (cellresist < minimum_resist) {
@@ -876,9 +782,7 @@ This equation is valid for use in the momentum conservation equation used by Ans
 			} else {
 				cellresist = maximum_resist;
 			}
-			C_PROFILE(c, t, nv) =
-				cellresist *
-				resist_scaler; /* Scaler applied to cell resistance */
+			C_PROFILE(c, t, nv) = cellresist * resist_scaler; /* Scaler applied to cell resistance */
 			C_UDMI(c, t, 0) = cellresist * resist_scaler;
 		}
 		if (ite > 1) {
@@ -887,6 +791,5 @@ This equation is valid for use in the momentum conservation equation used by Ans
 	}
 	end_c_loop(c, t)
 }
-
 
 #endif // GOB_UDF_PERMEABILITY_H
