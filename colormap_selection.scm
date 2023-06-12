@@ -134,7 +134,7 @@
 
 ; Create a menu for various colormap options 
 ; Colormap Selection Definition
-(define colormap-selection-box
+(define colormap_selection_box
 	; Let Statement, Local Variable Declarations
 	(let ((dialog-box #f)
 		(table)
@@ -240,5 +240,18 @@
 	) ;End Of Let Statement
 ) ; End of Zone Selection Definition
 
-(cx-add-menu "Colormap Selection" #f)
-(cx-add-item "Colormap Selection" "Options" #\U #f #t colormap-selection-box)
+(if (not (cx-get-menu-id "Colormap Selection"))
+    (cx-add-menu "Colormap Selection" #\H)
+)
+
+(if (not (cx-get-item-id "Colormap Selection" "Options"))
+    (begin 
+        (cx-add-separator "Colormap Selection")
+        (cx-add-item "Colormap Selection" "Options" #\H #f cx-client? colormap_selection_box)
+    )
+    (begin 
+        (cx-delete-item "Colormap Selection" "Options" #\H #f cx-client? colormap_selection_box)
+        (cx-add-separator "Colormap Selection")
+        (cx-add-item "Colormap Selection" "Options" #\H #f cx-client? colormap_selection_box)
+    )
+)
