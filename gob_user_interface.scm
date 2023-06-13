@@ -1,6 +1,7 @@
 ; setup egz colormap
 (load "colormap_selection.scm")
 (ti-menu-load-string "file/read-colormap colormaps/explosive_plots.colormap\n")
+(ti-menu-load-string "file/read-colormap colormaps/viridis.colormap\n")
 
 ; allocate and initialize UDMs
 (ti-menu-load-string "define/user-defined/user-defined-memory 6\n")
@@ -346,9 +347,17 @@
 			(define surface-append (lambda (zone_name) (surface-name->id(string-insert zone_name ":1"))))
 			(make-new-rpvar 'longwallgobs/surface_list '() 'list)
 			(rpsetvar 'longwallgobs/surface_list (map surface-append zone_names))
-			(ti-menu-load-string "display/objects/delete egz")
+			; delete any previous contours
+			(ti-menu-load-string "display/objects/delete explosive-gas-zone")
+			(ti-menu-load-string "display/objects/delete volumetric-strain-increment")
+			(ti-menu-load-string "display/objects/delete explosive-integral")
+			(ti-menu-load-string "display/objects/delete inertial-resistance")
+			(ti-menu-load-string "display/objects/delete permeability")
+			(ti-menu-load-string "display/objects/delete porosity")
+
+			; create contours
 			(ti-menu-load-string "display/objects/create contour explosive-gas-zone color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
-			(ti-menu-load-string "display/objects/create contour volumetric-strain-increment color-map color \"viridis\" q field udm-4 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour volumetric-strain-increment color-map color \"viridis\" q field udm-4 range-option auto-range-on q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour explosive-integral color-map color \"viridis\" q field udm-3 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour inertial-resistance color-map color \"viridis\" q field udm-5 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour permeability color-map color \"viridis\" q field udm-0 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
