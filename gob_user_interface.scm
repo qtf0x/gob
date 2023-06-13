@@ -1,3 +1,7 @@
+; setup colormap selection
+(load "colormap_selection.scm")
+(ti-menu-load-string "file/read-colormap colormaps/explosive_plots.colormap\n")
+
 ; allocate and initialize UDMs
 (ti-menu-load-string "define/user-defined/user-defined-memory 6\n")
 (ti-menu-load-string "solve/initialize/initialize-flow\n")
@@ -312,7 +316,9 @@
 
 			(ti-menu-load-string "! ./parser")
 			(load "set_dimensions.scm")
-			(ti-menu-load-stirng "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list gob-single-part-solid:1 , ")
+
+			(ti-menu-load-string "display/objects/delete egz")
+			(ti-menu-load-string "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list gob-single-part-solid:1 , ")
 
 
 			(%run-udf-apply 1)
