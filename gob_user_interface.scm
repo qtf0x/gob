@@ -10,6 +10,11 @@
 ; set adjust function hook
 (ti-menu-load-string "define/user-defined/function-hooks/adjust \"demo_calc::longwallgobs\"")
 
+(ti-menu-load-string "define/models/species/species-transport yes methane-air")
+(ti-menu-load-string "solve/set/number-of-iterations 1")
+(ti-menu-load-string "solve/initialize/set-defaults species-0 0.04")
+(ti-menu-load-string "solve/initialize/set-defaults species-1 0.17")
+
 ; compile string parser
 (ti-menu-load-string "! g++ -o parser parser.cpp -static\n")
 
@@ -85,7 +90,7 @@
 (make-new-rpvar 'longwallgobs/max_resistance 5.0E6 'real)
 (make-new-rpvar 'longwallgobs/min_resistance 1.45E5 'real)
 (make-new-rpvar 'longwallgobs/max_porosity 0.40 'real)
-(make-new-rpvar 'longwallgobs/initial_porosity 0.25778 'real)
+(make-new-rpvar 'longwallgobs/initial_porosity 1 'real)
 (make-new-rpvar 'longwallgobs/max_vsi 0.40 'real)
 (make-new-rpvar 'longwallgobs/min_inertial_resistance 0 'real)
 (make-new-rpvar 'longwallgobs/max_inertial_resistance 1.3E5 'real)
