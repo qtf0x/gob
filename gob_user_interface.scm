@@ -356,13 +356,13 @@
 			(ti-menu-load-string "display/objects/delete porosity")
 
 			; create contours
-			(if (equal? (cx-show-toggle-button longwallgobs/egz_radio_button) #t) ( begin (
+			(if (equal? (cx-show-toggle-button longwallgobs/egz_radio_button) #t) ( begin 
 			(ti-menu-load-string "display/objects/create contour explosive-gas-zone color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour explosive-integral color-map color \"viridis\" q field udm-3 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour inertial-resistance color-map color \"viridis\" q field udm-5 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour permeability color-map color \"viridis\" q field udm-0 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			(ti-menu-load-string "display/objects/create contour porosity color-map color \"viridis\" q field udm-1 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
-			)))
+			))
 			(ti-menu-load-string "display/objects/create contour volumetric-strain-increment color-map color \"viridis\" q field udm-4 range-option auto-range-on q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 			
 		)
@@ -399,20 +399,12 @@
 		)
 
 		(define (clear-button-cb . args)
-			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (delete (rpgetvar 'longwallgobs/startup_room_center_id) longwallgobs/all_zones_selected))
-			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (delete (rpgetvar 'longwallgobs/startup_room_corner_id) longwallgobs/all_zones_selected)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (delete (rpgetvar 'longwallgobs/mid_panel_center_id) longwallgobs/all_zones_selected)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (delete (rpgetvar 'longwallgobs/mid_panel_gateroad_id) longwallgobs/all_zones_selected)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (delete (rpgetvar 'longwallgobs/working_face_center_id) longwallgobs/all_zones_selected)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (delete (rpgetvar 'longwallgobs/working_face_corner_id)longwallgobs/all_zones_selected)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (delete (rpgetvar 'longwallgobs/single_part_mesh_id) longwallgobs/all_zones_selected)) 
-			
-			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id 0))
-			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_corner_id 0)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_center_id 0)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_gateroad_id 0)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (rpsetvar 'longwallgobs/working_face_center_id 0)) 
-			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (rpsetvar 'longwallgobs/working_face_corner_id 0)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id -1))
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_corner_id -1)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_center_id -1)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_gateroad_id -1)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (rpsetvar 'longwallgobs/working_face_center_id -1)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (rpsetvar 'longwallgobs/working_face_corner_id -1)) 
 			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (rpsetvar 'longwallgobs/single_part_mesh_id -1)) 
 			
 		)
