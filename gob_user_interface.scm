@@ -312,6 +312,8 @@
 
 			(ti-menu-load-string "! ./parser")
 			(load "set_dimensions.scm")
+			(ti-menu-load-stirng "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list gob-single-part-solid:1 , ")
+
 
 			(%run-udf-apply 1)
 		)
