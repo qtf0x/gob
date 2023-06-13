@@ -16,8 +16,10 @@
 
 (ti-menu-load-string "define/models/species/species-transport yes methane-air")
 (ti-menu-load-string "solve/set/number-of-iterations 1")
-(ti-menu-load-string "solve/initialize/set-defaults species-0 0.04")
-(ti-menu-load-string "solve/initialize/set-defaults species-1 0.17")
+(ti-menu-load-string "solve/initialize/set-defaults species-0 0.011")
+(ti-menu-load-string "solve/initialize/set-defaults species-1 0.097")
+(ti-menu-load-string "solve/initialize/compute-defaults/all-zones")
+(ti-menu-load-string "solve/initialize/initialize-flow\n")
 
 ; compile string parser
 (ti-menu-load-string "! g++ -o parser parser.cpp -static\n")
@@ -323,14 +325,16 @@
 
 			(ti-menu-load-string "! ./parser")
 			(load "set_dimensions.scm")
-			(define surface-append (lambda (zone_name) (surface-name->id(string-insert (symbol->string (zone-id->name zone_name)) ":1"))))
-			(make-new-rpvar 'longwallgobs/surface_list '() 'list)
-			(rpsetvar 'longwallgobs/surface_list (map surface-append longwallgobs/all_zones_selected))
-			(ti-menu-load-string "display/objects/delete egz")
-			(ti-menu-load-string "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list) , ")
 
-
+			(ti-menu-load-string "solve/initialize/compute-defaults/all-zones")
+			(ti-menu-load-string "solve/initialize/initialize-flow\n")
 			(%run-udf-apply 1)
+
+			(define surface-append (lambda (zone_name) (surface-name->id(string-insert zone_name ":1"))))
+			(make-new-rpvar 'longwallgobs/surface_list '() 'list)
+			(rpsetvar 'longwallgobs/surface_list (map surface-append zone_names))
+			(ti-menu-load-string "display/objects/delete egz")
+			(ti-menu-load-string "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 		)
 
 		; Creating 'apply' button
@@ -353,7 +357,6 @@
 			(if (cx-show-toggle-button longwallgobs/windows_radio_button)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
 			)
-			(append (longwallgobs/all_zones_selected) (list (zone-name->id(car (cx-show-list-selections longwallgobs/zone_names)))))
 		)
 
 		(define (clear-button-cb . args)
