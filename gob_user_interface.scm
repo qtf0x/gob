@@ -95,10 +95,6 @@
 ; Declare variables for Explosive Gas Zone option
 (make-new-rpvar 'longwallgobs/egz_radio_button #f 'boolean)
 
-; Declare variables for Windows (default) and Linux machine
-(make-new-rpvar 'longwallgobs/windows_radio_button #t 'boolean)
-(make-new-rpvar 'longwallgobs/linux_radio_button #f 'boolean)
-
 (make-new-rpvar 'longwallgobs/methane 0 'real)
 (make-new-rpvar 'longwallgobs/oxygen 0 'real)
 
@@ -186,9 +182,6 @@
         (longwallgobs/egz_button_box)
         (longwallgobs/egz_radio_button)
 
-		(longwallgobs/os_button_box)
-		(longwallgobs/windows_radio_button)	
-		(longwallgobs/linux_radio_button)	
 
 		(longwallgobs/gas_table)
 		(longwallgobs/methane)
@@ -231,9 +224,6 @@
 			(cx-set-toggle-button mine_t_radio_button (rpgetvar 'mine_t_radio_button))
 
 			(cx-set-toggle-button longwallgobs/egz_radio_button (rpgetvar 'longwallgobs/egz_radio_button))
-			
-			(cx-set-toggle-button longwallgobs/windows_radio_button (rpgetvar 'longwallgobs/windows_radio_button))
-			(cx-set-toggle-button longwallgobs/linux_radio_button (rpgetvar 'longwallgobs/linux_radio_button))
  
 			(cx-set-real-entry longwallgobs/methane (rpgetvar 'longwallgobs/methane))
 			(cx-set-real-entry longwallgobs/oxygen (rpgetvar 'longwallgobs/oxygen))
@@ -274,9 +264,6 @@
 			(rpsetvar 'mine_t (cx-show-toggle-button mine_t_radio_button))
 
 			(rpsetvar 'longwallgobs/egz_radio_button (cx-show-toggle-button longwallgobs/egz_radio_button))
-
-			(rpsetvar 'longwallgobs/windows_radio_button (cx-show-toggle-button longwallgobs/windows_radio_button))
-			(rpsetvar 'longwallgobs/linux_radio_button (cx-show-toggle-button longwallgobs/linux_radio_button))
 
 			(rpsetvar 'longwallgobs/methane (cx-show-real-entry longwallgobs/methane))
 			(rpsetvar 'longwallgobs/oxygen (cx-show-real-entry longwallgobs/oxygen))
@@ -380,11 +367,8 @@
 			(if (and (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (pair? (cx-show-list-selections longwallgobs/zone_names))) (rpsetvar 'longwallgobs/single_part_mesh_id (zone-name->id (list-ref (cx-show-list-selections longwallgobs/zone_names) 0)))) 
 			
 			; Set up zone conditions based on mine selected
-			(if (cx-show-toggle-button longwallgobs/linux_radio_button)
+			(if (unix?)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 no no no yes no no yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
-			)
-
-			(if (cx-show-toggle-button longwallgobs/windows_radio_button)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
 			)
 		)
@@ -429,11 +413,7 @@
 					(set! longwallgobs/egz_button_box (cx-create-button-box table "" 'radio-mode #f 'row 1 'col 0))
 					(set! longwallgobs/egz_radio_button (cx-create-toggle-button longwallgobs/egz_button_box "Explosive Gas Zone Colorization"))
 
-					(set! longwallgobs/os_button_box (cx-create-button-box table "Operating System" 'radio-mode #t 'row 0 'col 1))
-					(set! longwallgobs/windows_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Windows"))
-					(set! longwallgobs/linux_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Linux"))
-
-					(set! longwallgobs/gas_table (cx-create-table table "Gas Concentrations (Mass Fractions)" 'row 1 'col 1))
+					(set! longwallgobs/gas_table (cx-create-table table "Gas Concentrations (Mass Fractions)" 'row 0 'col 1))
 					(set! longwallgobs/methane (cx-create-real-entry longwallgobs/gas_table "Methane" 'row 0 'col 0))
 					(set! longwallgobs/oxygen (cx-create-real-entry longwallgobs/gas_table "Oxygen" 'row 1 'col 0))
 					(set! longwallgobs/init_gas (cx-create-button longwallgobs/gas_table "Apply" 'activate-callback init-gas-cb 'row 1 'col 1))
