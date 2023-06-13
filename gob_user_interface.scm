@@ -62,6 +62,12 @@
 	)
 )
 
+(define delete
+  (lambda (item list)
+    (cond
+     ((equal? item (car list)) (cdr list))
+     (else (cons (car list) (delete item (cdr list)))))))
+
 ; RP Variable Create Function
 (define (make-new-rpvar name default type)
 	(if (not (rp-var-object name))
@@ -149,6 +155,7 @@
 (make-new-rpvar 'longwallgobs/single_part_mesh_max_x 0 'real)
 (make-new-rpvar 'longwallgobs/single_part_mesh_min_y 0 'real)
 (make-new-rpvar 'longwallgobs/single_part_mesh_max_y 0 'real)
+(define longwallgobs/all_zones_selected '())
 
 ; Model Type and Required Settings Definition
 (define model_type_and_required_settings_box
@@ -312,7 +319,10 @@
 
 			(ti-menu-load-string "! ./parser")
 			(load "set_dimensions.scm")
-			(ti-menu-load-stirng "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list gob-single-part-solid:1 , ")
+			(define surface-append (lambda (zone_name) (surface-name->id(string-insert (symbol->string (zone-id->name zone_name)) ":1"))))
+			(make-new-rpvar 'longwallgobs/surface_list '() 'list)
+			(rpsetvar 'longwallgobs/surface_list (map surface-append longwallgobs/all_zones_selected))
+			(ti-menu-load-string "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list) , ")
 
 
 			(%run-udf-apply 1)
@@ -338,9 +348,18 @@
 			(if (cx-show-toggle-button longwallgobs/windows_radio_button)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
 			)
+			(cons (longwallgobs/all_zones_selected) (zone-name->id(car (cx-show-list-selections longwallgobs/zone_names))))
 		)
 
 		(define (clear-button-cb . args)
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (delete (rpgetvar 'longwallgobs/startup_room_center_id) longwallgobs/all_zones_selected))
+			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (delete (rpgetvar 'longwallgobs/startup_room_corner_id) longwallgobs/all_zones_selected)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (delete (rpgetvar 'longwallgobs/mid_panel_center_id) longwallgobs/all_zones_selected)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_gateroad_radio_button) #t) (delete (rpgetvar 'longwallgobs/mid_panel_gateroad_id) longwallgobs/all_zones_selected)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (delete (rpgetvar 'longwallgobs/working_face_center_id) longwallgobs/all_zones_selected)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (delete (rpgetvar 'longwallgobs/working_face_corner_id)longwallgobs/all_zones_selected)) 
+			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (delete (rpgetvar 'longwallgobs/single_part_mesh_id) longwallgobs/all_zones_selected)) 
+			
 			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_center_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_center_id 0))
 			(if (equal? (cx-show-toggle-button longwallgobs/startup_room_corner_radio_button) #t) (rpsetvar 'longwallgobs/startup_room_corner_id 0)) 
 			(if (equal? (cx-show-toggle-button longwallgobs/mid_panel_center_radio_button) #t) (rpsetvar 'longwallgobs/mid_panel_center_id 0)) 
@@ -348,6 +367,7 @@
 			(if (equal? (cx-show-toggle-button longwallgobs/working_face_center_radio_button) #t) (rpsetvar 'longwallgobs/working_face_center_id 0)) 
 			(if (equal? (cx-show-toggle-button longwallgobs/working_face_corner_radio_button) #t) (rpsetvar 'longwallgobs/working_face_corner_id 0)) 
 			(if (equal? (cx-show-toggle-button longwallgobs/single_part_mesh_radio_button) #t) (rpsetvar 'longwallgobs/single_part_mesh_id -1)) 
+			
 		)
 
 		(lambda args
