@@ -322,6 +322,7 @@
 			(define surface-append (lambda (zone_name) (surface-name->id(string-insert (symbol->string (zone-id->name zone_name)) ":1"))))
 			(make-new-rpvar 'longwallgobs/surface_list '() 'list)
 			(rpsetvar 'longwallgobs/surface_list (map surface-append longwallgobs/all_zones_selected))
+			(ti-menu-load-string "display/objects/delete egz")
 			(ti-menu-load-string "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list) , ")
 
 
