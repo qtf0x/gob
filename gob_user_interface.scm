@@ -1,3 +1,7 @@
+; setup egz colormap
+(load "colormap_selection.scm")
+(ti-menu-load-string "file/read-colormap colormaps/explosive_plots.colormap\n")
+
 ; allocate and initialize UDMs
 (ti-menu-load-string "define/user-defined/user-defined-memory 6\n")
 (ti-menu-load-string "solve/initialize/initialize-flow\n")
