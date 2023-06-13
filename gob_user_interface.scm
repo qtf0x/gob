@@ -4,7 +4,7 @@
 
 ; allocate and initialize UDMs
 (ti-menu-load-string "define/user-defined/user-defined-memory 6\n")
-(ti-menu-load-string "solve/initialize/initialize-flow\n")
+(ti-menu-load-string "solve/initialize/initialize-flow yes\n")
 
 ; compile and load UDF library
 (ti-menu-load-string "define/user-defined/use-built-in-compiler yes\n")
@@ -16,10 +16,10 @@
 
 (ti-menu-load-string "define/models/species/species-transport yes methane-air")
 (ti-menu-load-string "solve/set/number-of-iterations 1")
-(ti-menu-load-string "solve/initialize/set-defaults species-0 0.011")
-(ti-menu-load-string "solve/initialize/set-defaults species-1 0.097")
-(ti-menu-load-string "solve/initialize/compute-defaults/all-zones")
-(ti-menu-load-string "solve/initialize/initialize-flow\n")
+(ti-menu-load-string (string-append "solve/initialize/set-defaults species-0 0"))
+(ti-menu-load-string (string-append "solve/initialize/set-defaults species-1 0"))
+(ti-menu-load-string "solve/initialize/compute-defaults all-zones")
+(ti-menu-load-string "solve/initialize/initialize-flow yes\n")
 
 ; compile string parser
 (ti-menu-load-string "! g++ -o parser parser.cpp -static\n")
@@ -97,6 +97,10 @@
 ; Declare variables for Windows (default) and Linux machine
 (make-new-rpvar 'longwallgobs/windows_radio_button #t 'boolean)
 (make-new-rpvar 'longwallgobs/linux_radio_button #f 'boolean)
+
+(make-new-rpvar 'longwallgobs/methane 0 'real)
+(make-new-rpvar 'longwallgobs/oxygen 0 'real)
+
 ; Declare variables for Optional Settings Box
 (make-new-rpvar 'longwallgobs/resist_scaler 1 'real)
 (make-new-rpvar 'longwallgobs/max_resistance 5.0E6 'real)
@@ -185,6 +189,11 @@
 		(longwallgobs/windows_radio_button)	
 		(longwallgobs/linux_radio_button)	
 
+		(longwallgobs/gas_table)
+		(longwallgobs/methane)
+		(longwallgobs/oxygen)
+		(longwallgobs/init_gas)
+
 		; Optional Settings
 		(table2)
         (longwallgobs/optional_param_table)
@@ -225,6 +234,9 @@
 			(cx-set-toggle-button longwallgobs/windows_radio_button (rpgetvar 'longwallgobs/windows_radio_button))
 			(cx-set-toggle-button longwallgobs/linux_radio_button (rpgetvar 'longwallgobs/linux_radio_button))
  
+			(cx-set-real-entry longwallgobs/methane (rpgetvar 'longwallgobs/methane))
+			(cx-set-real-entry longwallgobs/oxygen (rpgetvar 'longwallgobs/oxygen))
+
 			; Optional Settings
 			(cx-set-real-entry longwallgobs/resist_scaler (rpgetvar 'longwallgobs/resist_scaler))
 			(cx-set-real-entry longwallgobs/max_resistance (rpgetvar 'longwallgobs/max_resistance))
@@ -264,6 +276,9 @@
 
 			(rpsetvar 'longwallgobs/windows_radio_button (cx-show-toggle-button longwallgobs/windows_radio_button))
 			(rpsetvar 'longwallgobs/linux_radio_button (cx-show-toggle-button longwallgobs/linux_radio_button))
+
+			(rpsetvar 'longwallgobs/methane (cx-show-real-entry longwallgobs/methane))
+			(rpsetvar 'longwallgobs/oxygen (cx-show-real-entry longwallgobs/oxygen))
 
 			; Optional Settings
 			(rpsetvar 'longwallgobs/resist_scaler (cx-show-real-entry longwallgobs/resist_scaler))
@@ -326,15 +341,13 @@
 			(ti-menu-load-string "! ./parser")
 			(load "set_dimensions.scm")
 
-			(ti-menu-load-string "solve/initialize/compute-defaults/all-zones")
-			(ti-menu-load-string "solve/initialize/initialize-flow\n")
 			(%run-udf-apply 1)
 
 			(define surface-append (lambda (zone_name) (surface-name->id(string-insert zone_name ":1"))))
 			(make-new-rpvar 'longwallgobs/surface_list '() 'list)
 			(rpsetvar 'longwallgobs/surface_list (map surface-append zone_names))
 			(ti-menu-load-string "display/objects/delete egz")
-			(ti-menu-load-string "display/objects/create contour egz color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour explosive-gas-zone color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 		)
 
 		; Creating 'apply' button
@@ -357,6 +370,15 @@
 			(if (cx-show-toggle-button longwallgobs/windows_radio_button)
 				(if (pair? (cx-show-list-selections longwallgobs/zone_names)) (ti-menu-load-string (string-append "/define/boundary-conditions/fluid " (string-append (list-ref (cx-show-list-selections longwallgobs/zone_names) 0) " no no no no no 0 no 0 no 0 no 0 no 0 no 1 none no no no yes no no 1 no 0 no 0 no 0 no 1 no 0 yes yes yes \"udf\" \"set_perm_1_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_2_VSI::longwallgobs\" yes yes \"udf\" \"set_perm_3_VSI::longwallgobs\" no yes yes \"udf\" \"set_inertia_1_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_2_VSI::longwallgobs\" yes yes \"udf\" \"set_inertia_3_VSI::longwallgobs\" 0 0 yes yes \"udf\" \"set_poro_VSI::longwallgobs\" constant 1 no"))))
 			)
+		)
+
+		(define (init-gas-cb . args)
+			(ti-menu-load-string "define/models/species/species-transport yes methane-air")
+			(ti-menu-load-string "solve/set/number-of-iterations 1")
+			(ti-menu-load-string (string-append "solve/initialize/set-defaults species-0 " (number->string  (cx-show-real-entry longwallgobs/methane))))
+			(ti-menu-load-string (string-append "solve/initialize/set-defaults species-1 " (number->string  (cx-show-real-entry longwallgobs/oxygen))))
+			(ti-menu-load-string "solve/initialize/compute-defaults all-zones")
+			(ti-menu-load-string "solve/initialize/initialize-flow yes\n")
 		)
 
 		(define (clear-button-cb . args)
@@ -401,6 +423,11 @@
 					(set! longwallgobs/os_button_box (cx-create-button-box table "Operating System" 'radio-mode #t 'row 0 'col 1))
 					(set! longwallgobs/windows_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Windows"))
 					(set! longwallgobs/linux_radio_button (cx-create-toggle-button longwallgobs/os_button_box "Linux"))
+
+					(set! longwallgobs/gas_table (cx-create-table table "Gas Concentrations (Mass Fractions)" 'row 1 'col 1))
+					(set! longwallgobs/methane (cx-create-real-entry longwallgobs/gas_table "Methane" 'row 0 'col 0))
+					(set! longwallgobs/oxygen (cx-create-real-entry longwallgobs/gas_table "Oxygen" 'row 1 'col 0))
+					(set! longwallgobs/init_gas (cx-create-button longwallgobs/gas_table "Apply" 'activate-callback init-gas-cb 'row 1 'col 1))
 
 					; Optional Settings
 					(set! table2 (cx-create-table ttab2 ""))
