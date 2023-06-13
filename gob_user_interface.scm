@@ -348,6 +348,11 @@
 			(rpsetvar 'longwallgobs/surface_list (map surface-append zone_names))
 			(ti-menu-load-string "display/objects/delete egz")
 			(ti-menu-load-string "display/objects/create contour explosive-gas-zone color-map color \"explosive_plots\" q field udm-2 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour volumetric-strain-increment color-map color \"viridis\" q field udm-4 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour explosive-integral color-map color \"viridis\" q field udm-3 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour inertial-resistance color-map color \"viridis\" q field udm-5 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour permeability color-map color \"viridis\" q field udm-0 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
+			(ti-menu-load-string "display/objects/create contour porosity color-map color \"viridis\" q field udm-1 range-option auto-range-off minimum 0 maximum 1 q surfaces-list (rpgetvar 'longwallgobs/surface_list)")
 		)
 
 		; Creating 'apply' button
