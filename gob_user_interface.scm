@@ -1,5 +1,12 @@
 ; copy source files up to working directory (b/c Fluent simply cannot handle directories)
-(ti-menu-load-string "! cp -r src/* include/* ..")
+(if (unix?)
+	(ti-menu-load-string "! cp -r src/* include/* .")
+
+	(begin
+		(ti-menu-load-string "! copy src/*")
+		(ti-menu-load-string "! copy include/*")
+	)
+)
 
 ; setup egz colormap
 (load "colormap_selection.scm")
