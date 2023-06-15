@@ -3,8 +3,8 @@
 	(ti-menu-load-string "! cp -r src/* include/* .")
 
 	(begin
-		(ti-menu-load-string "! copy src/*")
-		(ti-menu-load-string "! copy include/*")
+		(ti-menu-load-string "! copy \"src\\*\"")
+		(ti-menu-load-string "! copy \"include\\*\"")
 	)
 )
 
