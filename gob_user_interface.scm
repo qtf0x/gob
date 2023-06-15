@@ -1,3 +1,6 @@
+; copy source files up to working directory (b/c Fluent simply cannot handle directories)
+(ti-menu-load-string "! cp -r src/* include/* ..")
+
 ; setup egz colormap
 (load "colormap_selection.scm")
 (ti-menu-load-string "file/read-colormap colormaps/explosive_plots.colormap\n")
