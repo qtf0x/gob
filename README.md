@@ -15,7 +15,7 @@ This project is a fork/extension of and complete frontend for an Ansys Fluent pl
    a. This should be the working directory when you start Fluent
 2. Load the mesh/case file into Fluent
 3. Load the plugin; either \
-   a. **GUI**: Load > Scheme > `gob_user_interface.scm` \
+   a. **GUI**: File > Read > Scheme > `gob_user_interface.scm` \
    b. **TUI**: `> (load "gob_user_interface.scm")`
 4. Open the GUI by clicking the newly-created "Model Mine Gob" button in the Fluent ribbon menu
 5. Set up simulation; in any order \
@@ -53,7 +53,7 @@ In effect - mesh must be aligned with the axes such that the panel length lies p
 
 - Allow for arbitrary mesh transformations by computing the complete transformation matrix for any given mesh
   - Would likely involve retrieving the 8 corner points of the panel and doing some relatively simple linear algebra
-- Generalize the original VSI fitting equations to scale accurately to any given mine by reworking Dr. Gilmore's math (good luck :)
+- Generalize the original VSI fitting equations to scale accurately to any given mine by reworking Dr. Gilmore's math (good luck :) )
 - Compile the code into a single binary that can be shipped with Fluent as an official add-in
   - Getting the tools to do this from Ansys proved more difficult and ... mysterious than expected
 - There is a small bug where the contour graphs for porosity, permeability, and inertial resistance get cleared to zero before the user can view them (the numbers are obviously there at some point during the simulation, but then they're ... not)
@@ -62,17 +62,21 @@ In effect - mesh must be aligned with the axes such that the panel length lies p
 
 ### Using This File
 
-The file colormap_selection.scm can be used to easily select custom colormaps via a button box. \
+The file `colormap_selection.scm` can be used to easily select and load custom colormaps via a button box. \
 Examples of the colormaps can be seen in the acknowledgements. \
- Make sure that the folder titled "colormaps" containing all of the .colormap files is in your working directory. \
-The file colormap_selection.scm can also be put into the working directory.
+ Make sure that the folder `colormaps` containing all of the `.colormap` files is in your working directory. \
+The file `colormap_selection.scm` should also be put into the working directory. \\
+
+If only the `colormap_selection.scm` file is loaded into Fluent, the colormap selected via the button box GUI will automatically be loaded and will apply to newly created colormaps. \\ 
+
+If `gob_user_interface.scm` is loaded, `colormap_selection.scm` will be automatically loaded. Selecting a new colormap via the GUI will still load the colormap, but the user **must** go to Contours > Colormap Options > Currently Defined > and then select the colormap that was loaded
 
 ### Loading This File in Ansys Fluent
 
-Option 1: Go to File>Read>Scheme...>colormap_selection.scm \
-Option 2: Type the relative path into the console: (load "colormap_selection.scm") \
-Option 3: Type the absolute path into the console: (load "C:/<file path>/colormap_selection.scm") \
-Note: If this is done multiple times, the ribbon cannot be removed unless Ansys Fluent is restarted
+Option 1: Go to File > Read > Scheme > `colormap_selection.scm` \
+Option 2: Type the relative path into the console: `(load "colormap_selection.scm")` \
+Option 3: Type the absolute path into the console: `(load "C:/<file path>/colormap_selection.scm")` \
+Note: The ribbon cannot be removed unless Ansys Fluent is restarted
 
 In the top ribbon menu, select the "Colormap Selection" tab and the dropdown to open the menu. \
 Select your colormap and then click "OK" for it to apply. \
@@ -80,56 +84,53 @@ A command will automatically be applied and it can be seen in the console.
 
 To have a colormap selection apply to an existing model, a new contour must be created.
 
-To load this file automatically, the following command must be added to your .fluent file: \
-(ti-menu-load-string "file read-journal colormap_selection.scm")
-
 ### Using Ansys Fluent Predefined Colormaps
 
-To see built in colormap options using the console: preferences/graphics/colormap-settings/colormap \
-To change colormap: preferences/graphics/colormap-settings/colormap/<colormap> \
-e.g. preferences/graphics/colormap-settings/colormap/field_velocity \
+To see built in colormap options using the TUI: `preferences/graphics/colormap-settings/colormap ` \
+To change colormap: `preferences/graphics/colormap-settings/colormap/<colormap>` \
+e.g. `preferences/graphics/colormap-settings/colormap/field_velocity` \
 Use "q" or "quit" in the prompt to move back to the previously occupied menu, if needed.
 
 ### Adding Ansys Fluent Predefined Colormaps to Selection Box
 
 Step 1: Add this file to Fluent \
-Option 1: Go to File>Read>Scheme...>colormap_selection.scm \
-Option 2: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm" )
+Option 1: Go to File > Read > Scheme > `colormap_selection.scm` \
+Option 2: Type the absolute path into the console: `(load "C:/<path>/colormap_selection.scm" )`
 
 Step 2: In Ansys Fluent, change the currently selected colormap \
-To see colormap options, type into the console: preferences/graphics/colormap-settings/colormap \
-To select a colormap, type into the console: preferences/graphics/colormap-settings/colormap/<colormap> \
-e.g. preferences/graphics/colormap-settings/colormap/field_velocity \
+To see colormap options, type into the console: `preferences/graphics/colormap-settings/colormap` \
+To select a colormap, type into the console: `preferences/graphics/colormap-settings/colormap/<colormap>` \
+e.g. `preferences/graphics/colormap-settings/colormap/field_velocity` \
 Use "q" or "quit" in the prompt to move back to the previously occupied menu, if needed
 
 Step 3: Save the colormap file to the colormaps folder \
-Into the console, type: file/write-colormap colormaps/<file name>.colormap \
-e.g. file/write-colormap colormaps/gray.colormap
+Into the console, type: `file/write-colormap colormaps/<file name>.colormap` \
+e.g. `file/write-colormap colormaps/gray.colormap`
 
 Step 4: Add button for colormap into this .scm file \
 In the code below, there are 6 locations that must be edited. They can be searched for by finding "NEW COLORMAP" \
 Uncomment these lines (comments start with semicolons) \
 Replace what is inside the angle brackets (<>) with the appropriate names
 
-Step 5: Add this .scm file to Fluent again \
-Option 1: Go to File>Read>Scheme...>colormap_selection.scm \
-Option 2: Type the relative path into the console: (load "colormap_selection.scm") \
-Option 3: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm") \
+Step 5: Add the `colormap_selection.scm` file to Fluent again \
+Option 1: Go to File > Read >Scheme > `colormap_selection.scm` \
+Option 2: Type the relative path into the console: `(load "colormap_selection.scm")` \
+Option 3: Type the absolute path into the console: `(load "C:/<path>/colormap_selection.scm")` \
 Note: The previous ribbon cannot be removed from Fluent unless Fluent is restarted
 
 ### Adding Downloaded Colormaps to Selection Box
 
-Step 1: Add the .colormap file to the colormaps folder
+Step 1: Add the `.colormap` file to the colormaps folder
 
-Step 2: Add button for colormap into this .scm file \
+Step 2: Add button for colormap into the `colormap_selection.scm` file \
 In the code below, there are 6 locations that must be edited. They can be searched for by finding "NEW COLORMAP" \
 Uncomment these lines (comments start with semicolons) \
 Replace what is inside the angle brackets (<>) with the appropriate names
 
-Step 3: Add this .scm file to Fluent again \
-Option 1: Go to File>Read>Scheme...>colormap_selection.scm \
-Option 2: Type the relative path into the console: (load "colormap_selection.scm") \
-Option 3: Type the absolute path into the console: (load "C:/<path>/colormap_selection.scm")
+Step 3: Add this `colormap_selection.scm` file to Fluent again \
+Option 1: Go to File > Read > Scheme > `colormap_selection.scm` \
+Option 2: Type the relative path into the console: `(load "colormap_selection.scm")` \
+Option 3: Type the absolute path into the console: `(load "C:/<path>/colormap_selection.scm")`
 
 Note: The previous ribbon cannot be removed from Fluent unless Fluent is restarted
 
