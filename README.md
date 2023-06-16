@@ -4,7 +4,7 @@ This project is a fork/extension of and complete frontend for an Ansys Fluent pl
 
 ## Dependencies
 
-**Architecture**: Linux x86_64 or Windows x64 \
+**Architecture**: x86_64 (Linux or Windows) \
 **C Compiler**: (If using Linux,) C99 compiler available on the system path (probably already the case; check using `$ cc -v`) \
 **C++ Compiler**: A version of [g++](https://gcc.gnu.org/) supporting C++17 or newer available on the system path ([careful](https://stackoverflow.com/a/41379378) about this on Windows!) \
 **Ansys Fluent**: Version 2023 R1 or newer ([software](https://www.ansys.com/products/fluids/ansys-fluent) + active license)
