@@ -65,9 +65,9 @@ In effect - mesh must be aligned with the axes such that the panel length lies p
 The file `colormap_selection.scm` can be used to easily select and load custom colormaps via a button box. \
 Examples of the colormaps can be seen in the acknowledgements. \
  Make sure that the folder `colormaps` containing all of the `.colormap` files is in your working directory. \
-The file `colormap_selection.scm` should also be put into the working directory. \\
+The file `colormap_selection.scm` should also be put into the working directory. 
 
-If only the `colormap_selection.scm` file is loaded into Fluent, the colormap selected via the button box GUI will automatically be loaded and will apply to newly created colormaps. \\ 
+If only the `colormap_selection.scm` file is loaded into Fluent, the colormap selected via the button box GUI will automatically be loaded and will apply to newly created colormaps. 
 
 If `gob_user_interface.scm` is loaded, `colormap_selection.scm` will be automatically loaded. Selecting a new colormap via the GUI will still load the colormap, but the user **must** go to Contours > Colormap Options > Currently Defined > and then select the colormap that was loaded
 
