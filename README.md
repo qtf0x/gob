@@ -1,4 +1,4 @@
-# gob
+# Gob User Interface
 
 This project is a fork/extension of and complete frontend for an Ansys Fluent plugin based on the [PhD work](https://www.proquest.com/docview/1727469797?parentSessionId=dk%2B8XNGTmDGPKcxt8AIw%2Bj9AfFFP9pqKjUxW8XapYE8%3D) of Dr. Richard C. Gilmore at Colorado School of Mines. Dr. Gilmore's research focuses (in part) on performing a multiphase fluid simulation of the mixing of methane and oxygen within panels of gob created by underground longwall coal and trona mining, as well as analyzing the results to determine the likelyhood of an explosive mixture forming in the given mine. This can be useful when designing safe and effective methane ventilation systems for new mines, analyzing previous explosions, or proposing changes to existing ventilation systems.
 
