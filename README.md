@@ -23,7 +23,7 @@ This project is a fork/extension of and complete frontend for an Ansys Fluent pl
    b. **Optional Settings**: Enter whatever values you like (reasonable defaults are entered automatically) \
    c. **Zone Selection**: This is sort of a matching game; one at a time you must choose a zone type, match it to an actual zone in the loaded mesh from the provided list, and click "Select Zone" (if any zone is assigned to "Single Part Mesh", all other selections will be ignored and calculations will be done as a single-part mesh setup)
 6. Click "OK"
-7. Display desired contour graphs under Results > sGraphics > Contours
+7. Display desired contour graphs under Results > Graphics > Contours
 
 See below for how to use the color map selection menu.
 
@@ -47,7 +47,7 @@ The equations assume a coordinate space like the one seen above for the mesh. Fr
 **Rotation**: Interger multiples of &#960;, about the z-axis \
 **Translation**: All translations permitted
 
-In effect - mesh must be aligned with the axes such that the panel length lies along the y-axis and the panel width along the x-axis
+In effect - mesh must be aligned with the axes such that the panel length lies parallel to the y-axis and the panel width parallel to the x-axis
 
 ## Future Work
 
