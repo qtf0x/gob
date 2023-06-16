@@ -1,10 +1,10 @@
 #include <fstream>
 #include <vector>
 #include <string>
-#include <iostream>
 
 int main()
 {
+	// mesh zone names
 	const std::vector<std::string> ZONES{ "startup_room_center_min_x", "startup_room_center_max_x",
 					      "startup_room_center_min_y", "startup_room_center_max_y",
 
@@ -26,20 +26,24 @@ int main()
 					      "single_part_mesh_min_x",	   "single_part_mesh_max_x",
 					      "single_part_mesh_min_y",	   "single_part_mesh_max_y" };
 
+	// Scheme script to set rp variables when loaded by Fluent
 	std::ofstream output{ "set_dimensions.scm" };
+
+	std::string temp;
+	double num{ 0 };
 
 	for (const auto zone : ZONES) {
 		std::ifstream report{ zone + ".txt" };
 		if (report.fail())
-			continue;
+			continue; // zone missing, skip it
 
-		std::string temp;
-		for (std::size_t i{ 0 }; i < 12; ++i)
+		// skip exactly 12 strings before the first value in the report
+		for (std::size_t i{ 0 }; i < 12u; ++i)
 			report >> temp;
 
-		double num{ 0 };
 		report >> num;
 
+		// the actual Scheme command to set this RP variable
 		output << "(rpsetvar 'longwallgobs/" << zone << ' ' << num << ")\n";
 	}
 }
