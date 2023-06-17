@@ -31,7 +31,7 @@ See below for how to use the color map selection menu.
 
 ### Mesh
 
-- Must be 3D
+- 2D or 3D (prefer 3D for modern applications)
 - Can be a super-critical (9 zones) or sub-critical (6 zones) mine panel
 - Can be partitioned into zones (working face, mid-panel, startup room, etc.) **or** a single partition
   - For a single-part mesh, the startup room **must** be at a more positive y-location than the working face (there is simply not enough information present in such a mesh to avoid this limitation)
